@@ -1,27 +1,34 @@
-// ManagePage.js
 import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 
 const buttons = [
-  'Personal Goals',
-  'Preferences',
-  'Passwords',
-  'Relatives',
-  'Jobs',
-  'Education',
-  'Trips',
-  'Significants',
-  'Health',
-  'Favors',
+  { name: 'Personal Goals', componentName: 'PersonalGoal' },
+  { name: 'Preferences', componentName: 'Preferences' },
+  { name: 'Passwords', componentName: 'Passwords' },
+  { name: 'Relatives', componentName: 'Relatives' },
+  { name: 'Jobs', componentName: 'Jobs' },
+  { name: 'Education', componentName: 'Education' },
+  { name: 'Trips', componentName: 'Trips' },
+  { name: 'Significants', componentName: 'Significants' },
+  { name: 'Health', componentName: 'Health' },
+  { name: 'Favors', componentName: 'Favors' },
 ];
 
-const ManagePage = () => {
+const ManagePage = ({ navigation }) => {
+  const handleButtonPress = (componentName) => {
+    navigation.navigate(componentName);
+  };
+
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Manage</Text>
-      {buttons.map((buttonText, index) => (
-        <TouchableOpacity key={index} style={styles.button}>
-          <Text style={styles.buttonText}>{buttonText}</Text>
+      {buttons.map((button, index) => (
+        <TouchableOpacity
+          key={index}
+          style={styles.button}
+          onPress={() => handleButtonPress(button.componentName)}
+        >
+          <Text style={styles.buttonText}>{button.name}</Text>
         </TouchableOpacity>
       ))}
     </View>
