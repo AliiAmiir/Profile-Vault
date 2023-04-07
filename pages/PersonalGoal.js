@@ -1,4 +1,3 @@
-// PersonalGoalsPage.js
 import React, { useState } from 'react';
 import {
   View,
@@ -7,7 +6,9 @@ import {
   TouchableOpacity,
   StyleSheet,
   ScrollView,
-} from 'react-native';
+  KeyboardAvoidingView,
+  Platform,
+} from 'react-native';  
 
 const PersonalGoalsPage = () => {
   const [items, setItems] = useState([]);
@@ -34,23 +35,25 @@ const PersonalGoalsPage = () => {
   };
 
   return (
-    <ScrollView style={styles.container}>
+    <View style={styles.container}>
       <Text style={styles.title}>Personal Goals</Text>
-      {items.map((item, index) => (
-        <View key={index} style={styles.listItem}>
-          <TextInput
-            style={styles.itemText}
-            value={item}
-            onChangeText={(text) => handleEditItem(index, text)}
-          />
-          <TouchableOpacity
-            style={styles.deleteButton}
-            onPress={() => handleDeleteItem(index)}
-          >
-            <Text style={styles.buttonText}>Delete</Text>
-          </TouchableOpacity>
-        </View>
-      ))}
+      <ScrollView style={styles.scrollContainer}>
+        {items.map((item, index) => (
+          <View key={index} style={styles.listItem}>
+            <TextInput
+              style={styles.itemText}
+              value={item}
+              onChangeText={(text) => handleEditItem(index, text)}
+            />
+            <TouchableOpacity
+              style={styles.deleteButton}
+              onPress={() => handleDeleteItem(index)}
+            >
+              <Text style={styles.buttonText}>Delete</Text>
+            </TouchableOpacity>
+          </View>
+        ))}
+      </ScrollView>
       <TextInput
         style={styles.newItemInput}
         value={newItem}
@@ -63,7 +66,7 @@ const PersonalGoalsPage = () => {
       <TouchableOpacity style={styles.saveButton}>
         <Text style={styles.buttonText}>Save Changes</Text>
       </TouchableOpacity>
-    </ScrollView>
+    </View>
   );
 };
 
@@ -77,6 +80,11 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     marginBottom: 20,
     textAlign: 'center',
+    marginTop: 30,
+  },
+  scrollContainer: {
+    maxHeight: '70%',
+    marginBottom: 20,
   },
   listItem: {
     flexDirection: 'row',
@@ -104,7 +112,7 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   saveButton: {
-        backgroundColor: '#6374D1',
+    backgroundColor: '#6374D1',
     paddingVertical: 10,
     paddingHorizontal: 20,
     borderRadius: 5,
@@ -123,4 +131,3 @@ const styles = StyleSheet.create({
 });
 
 export default PersonalGoalsPage;
-

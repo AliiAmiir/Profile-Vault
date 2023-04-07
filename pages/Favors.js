@@ -55,7 +55,7 @@ const PersonalGoalsPage = () => {
         style={styles.newItemInput}
         value={newItem}
         onChangeText={setNewItem}
-        placeholder="Add new goal"
+        placeholder="Add new favor"
       />
       <TouchableOpacity style={styles.addButton} onPress={handleAddItem}>
         <Text style={styles.buttonText}>Add Favors</Text>
@@ -73,6 +73,7 @@ const styles = StyleSheet.create({
     padding: 20,
   },
   title: {
+    paddingTop: 30,
     fontSize: 24,
     fontWeight: 'bold',
     marginBottom: 20,

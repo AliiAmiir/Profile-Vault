@@ -29,58 +29,65 @@ const PasswordsPage = () => {
   };
 
   return (
-    <ScrollView contentContainerStyle={styles.container}>
+    <View style={styles.container}>
       <Text style={styles.title}>Passwords</Text>
-      {passwords.map((entry, index) => (
-        <View key={index} style={styles.entry}>
-          <TextInput
-            style={styles.input}
-            placeholder="Website"
-            value={entry.website}
-            onChangeText={(value) => updatePassword(index, 'website', value)}
-          />
-          <TextInput
-            style={styles.input}
-            placeholder="Email"
-            value={entry.email}
-            onChangeText={(value) => updatePassword(index, 'email', value)}
-          />
-          <View style={styles.passwordContainer}>
+      <ScrollView style={styles.scrollContainer}>
+        {passwords.map((entry, index) => (
+          <View key={index} style={styles.entry}>
             <TextInput
               style={styles.input}
-              placeholder="Password"
-              value={entry.password}
-              onChangeText={(value) => updatePassword(index, 'password', value)}
-              secureTextEntry={entry.hidden}
+              placeholder="Website"
+              value={entry.website}
+              onChangeText={(value) => updatePassword(index, 'website', value)}
             />
-            <TouchableOpacity
-              style={styles.visibilityToggle}
-              onPress={() => togglePasswordVisibility(index)}>
-              <Icon name={entry.hidden ? 'eye-slash' : 'eye'} size={20} color="#6374D1" />
-            </TouchableOpacity>
+            <TextInput
+              style={styles.input}
+              placeholder="Email"
+              value={entry.email}
+              onChangeText={(value) => updatePassword(index, 'email', value)}
+            />
+            <View style={styles.passwordContainer}>
+              <TextInput
+                style={styles.input}
+                placeholder="Password"
+                value={entry.password}
+                onChangeText={(value) => updatePassword(index, 'password', value)}
+                secureTextEntry={entry.hidden}
+              />
+              <TouchableOpacity
+                style={styles.visibilityToggle}
+                onPress={() => togglePasswordVisibility(index)}>
+                <Icon name={entry.hidden ? 'eye-slash' : 'eye'} size={20} color="#6374D1" />
+              </TouchableOpacity>
+            </View>
           </View>
-        </View>
-      ))}
+        ))}
+      </ScrollView>
       <TouchableOpacity style={styles.addButton} onPress={addPassword}>
         <Text style={styles.addButtonText}>Add Password</Text>
       </TouchableOpacity>
       <TouchableOpacity style={styles.saveButton}>
         <Text style={styles.saveButtonText}>Save Changes</Text>
       </TouchableOpacity>
-    </ScrollView>
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    flexGrow: 1,
+    flex: 1,
     padding: 20,
   },
   title: {
+    paddingTop: 30,
     fontSize: 24,
     fontWeight: 'bold',
     marginBottom: 20,
     textAlign: 'center',
+  },
+  scrollContainer: {
+    maxHeight: '70%',
+    marginBottom: 20,
   },
   entry: {
     marginBottom: 10,
@@ -124,5 +131,5 @@ const styles = StyleSheet.create({
     fontWeight: '600',
   },
 });
-
+    
 export default PasswordsPage;

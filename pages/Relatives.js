@@ -102,10 +102,10 @@ const styles = StyleSheet.create({
   },
   input: {
     borderColor: '#6374D1',
-    borderWidth: 0,
+    borderWidth: 1,
     borderRadius: 5,
     padding: 10,
-    width: '100%',
+    width: '30%',
   },
   addRelativeContainer: {
     width: '100%',
