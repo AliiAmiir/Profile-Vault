@@ -1,8 +1,8 @@
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Text } from 'react-native';
 import Home from './../screens/Home';
-import ManagePage from './../ManagePage';
-import SettingsPage from './../SettingsPage';
+import Manage from './../screens/Manage';
+import Settings from './../screens/Settings';
 
 const Tab = createBottomTabNavigator();
 
@@ -28,7 +28,7 @@ export const NavigationTab = () => {
             />
             <Tab.Screen
                 name="Manage"
-                component={ManagePage}
+                component={Manage}
                 options={{
                     tabBarIcon: () => null, // Remove the default icon
                     tabBarLabel: ({ focused, color }) => (
@@ -39,7 +39,7 @@ export const NavigationTab = () => {
             />
             <Tab.Screen
                 name="Settings"
-                component={SettingsPage}
+                component={Settings}
                 options={{
                     tabBarIcon: () => null, // Remove the default icon
                     tabBarLabel: ({ focused, color }) => (

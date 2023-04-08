@@ -14,7 +14,7 @@ const buttons = [
   { name: 'Favors', componentName: 'Favors' },
 ];
 
-const ManagePage = ({ navigation }) => {
+export default function Manage({ navigation }) {
   const handleButtonPress = (componentName) => {
     navigation.navigate(componentName);
   };
@@ -61,5 +61,3 @@ const styles = StyleSheet.create({
     fontWeight: '700',
   },
 });
-
-export default ManagePage;

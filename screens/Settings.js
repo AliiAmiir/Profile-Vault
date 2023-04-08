@@ -1,8 +1,7 @@
-// SettingsPage.js
 import React from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
 
-const SettingsPage = () => {
+export default function Settings() {
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Settings</Text>
@@ -67,5 +66,3 @@ const styles = StyleSheet.create({
     fontWeight: '700',
   },
 });
-
-export default SettingsPage;
