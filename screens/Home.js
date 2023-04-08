@@ -9,7 +9,7 @@ const dummyData = {
   UpcomingTrips: ['New York City', 'San Francisco'],
 };
 
-const HomePage = () => {
+const Home = () => {
   const handleProfilePicturePress = () => {
     // Implement the function to open the camera
     console.log('Profile picture pressed');
@@ -19,7 +19,7 @@ const HomePage = () => {
     <ScrollView contentContainerStyle={styles.container}>
       <TouchableOpacity onPress={handleProfilePicturePress} style={styles.profilePictureContainer}>
         <Image
-          source={require('./assets/icon.png')} // Replace with the path to your placeholder image
+          source={require('./../assets/icon.png')} // Replace with the path to your placeholder image
           style={styles.profilePicture}
         />
       </TouchableOpacity>
@@ -77,4 +77,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default HomePage;
+export default Home;

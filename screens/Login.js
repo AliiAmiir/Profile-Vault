@@ -6,7 +6,7 @@ const LoginPage = () => {
     <View style={styles.container}>
       <View style={styles.logoContainer}>
         {/* Add your logo image here */}
-        <Image source={require('./assets/logo.png')} style={styles.logo} />
+        <Image source={require('./../assets/icon.png')} style={styles.logo} />
       </View>
       <View style={styles.inputContainer}>
         <TextInput

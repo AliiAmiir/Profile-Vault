@@ -1,5 +1,25 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, Image } from 'react-native';
+import { createUserWithEmailAndPassword } from "firebase/auth";
+import { auth } from './../config/firebaseConfig';
+
+const onRegister = () => {
+  const email = 'test@test.com';
+  const password = 'test123';
+  // const auth = getAuth();
+  
+  createUserWithEmailAndPassword(auth, email, password)
+    .then((userCredential) => {
+      // Signed in 
+      const user = userCredential.user;
+      // ...
+    })
+    .catch((error) => {
+      const errorCode = error.code;
+      const errorMessage = error.message;
+      console.log(errorMessage)
+    });
+}
 
 const RegisterPage = () => {
   const [date, setDate] = useState('');
@@ -8,7 +28,7 @@ const RegisterPage = () => {
     <View style={styles.container}>
       <View style={styles.logoContainer}>
         {/* Add your logo image here */}
-        <Image source={require('./assets/logo.png')} style={styles.logo} />
+        <Image source={require('./../assets/icon.png')} style={styles.logo} />
       </View>
       <View style={styles.formContainer}>
         <View style={styles.column}>
@@ -80,7 +100,7 @@ const RegisterPage = () => {
         </View>
       </View>
       <View style={styles.buttonContainer}>
-        <TouchableOpacity style={styles.signupButton}>
+        <TouchableOpacity style={styles.signupButton} onPress={() => onRegister()}>
           <Text style={styles.signupButtonText}>Sign Up</Text>
         </TouchableOpacity>
       </View>

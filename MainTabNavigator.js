@@ -1,7 +1,7 @@
 // MainTabNavigator.js
 import React from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import HomePage from './HomePage';
+import Home from './screens/Home';
 import ManagePage from './ManagePage';
 import SettingsPage from './SettingsPage';
 
@@ -22,7 +22,7 @@ const Tab = createBottomTabNavigator();
 const MainTabNavigator = () => {
   return (
     <Tab.Navigator>
-      <Tab.Screen name="Home" component={createStack(HomePage)} />
+      <Tab.Screen name="Home" component={createStack(Home)} />
       <Tab.Screen name="Manage" component={createStack(ManagePage)} />
       <Tab.Screen name="Settings" component={createStack(SettingsPage)} />
 

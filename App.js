@@ -5,7 +5,9 @@ import { createStackNavigator } from '@react-navigation/stack';
 import { Text } from 'react-native';
 
 // Import your screens here
-import HomePage from './HomePage';
+import Home from './screens/Home';
+import Login from './screens/Login';
+import Register from './screens/Register';
 import ManagePage from './ManagePage';
 import SettingsPage from './SettingsPage';
 
@@ -24,6 +26,11 @@ import Trips from './pages/Trips';
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
 
+const getIsSignedIn = () => {
+  // custom logic
+  return false;
+};
+
 function Tabs() {
   return (
     <Tab.Navigator
@@ -35,7 +42,7 @@ function Tabs() {
     >
       <Tab.Screen
         name="Home"
-        component={HomePage}
+        component={Home}
         options={{
           tabBarIcon: () => null, // Remove the default icon
           tabBarLabel: ({ focused, color }) => (
@@ -71,20 +78,31 @@ function Tabs() {
 }
 
 export default function App() {
+  const isSignedIn = getIsSignedIn();
+
   return (
     <NavigationContainer>
       <Stack.Navigator screenOptions={{ headerShown: false }}>
-        <Stack.Screen name="Tabs" component={Tabs} />
-        <Stack.Screen name="Education" component={Education} />
-        <Stack.Screen name="Health" component={Health} />
-        <Stack.Screen name="Passwords" component={Passwords} />
-        <Stack.Screen name="Preferences" component={Preferences} />
-        <Stack.Screen name="Significants" component={Significants} />
-        <Stack.Screen name="Favors" component={Favors} />
-        <Stack.Screen name="Jobs" component={Jobs} />
-        <Stack.Screen name="PersonalGoal" component={PersonalGoal} />
-        <Stack.Screen name="Relatives" component={Relatives} />
-        <Stack.Screen name="Trips" component={Trips} />
+        {isSignedIn ? (
+          <>
+            <Stack.Screen name="Tabs" component={Tabs} />
+            <Stack.Screen name="Education" component={Education} />
+            <Stack.Screen name="Health" component={Health} />
+            <Stack.Screen name="Passwords" component={Passwords} />
+            <Stack.Screen name="Preferences" component={Preferences} />
+            <Stack.Screen name="Significants" component={Significants} />
+            <Stack.Screen name="Favors" component={Favors} />
+            <Stack.Screen name="Jobs" component={Jobs} />
+            <Stack.Screen name="PersonalGoal" component={PersonalGoal} />
+            <Stack.Screen name="Relatives" component={Relatives} />
+            <Stack.Screen name="Trips" component={Trips} />
+          </>
+        ) : (
+          <>
+            {/* <Stack.Screen name="SignIn" component={Login} /> */}
+            <Stack.Screen name="SignUp" component={Register} />
+          </>
+        )}
       </Stack.Navigator>
     </NavigationContainer>
   );
