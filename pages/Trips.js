@@ -20,59 +20,63 @@ const TripsPage = () => {
   };
 
   return (
-    <ScrollView style={styles.container}>
+    <View style={styles.container}>
       <Text style={styles.title}>Trips</Text>
-      {trips.map((trip, index) => (
-        <View key={index} style={styles.item}>
-          <TextInput
-            style={styles.input}
-            placeholder="City"
-            value={trip.city}
-            onChangeText={(text) => {
-              const newTrips = [...trips];
-              newTrips[index].city = text;
-              setTrips(newTrips);
-            }}
-          />
-          <TextInput
-            style={styles.input}
-            placeholder="Dates"
-            value={trip.dates}
-            onChangeText={(text) => {
-              const newTrips = [...trips];
-              newTrips[index].dates = text;
-              setTrips(newTrips);
-            }}
-          />
-          <TextInput
-            style={styles.input}
-            placeholder="Cost"
-            value={trip.cost}
-            onChangeText={(text) => {
-              const newTrips = [...trips];
-              newTrips[index].cost = text;
-              setTrips(newTrips);
-            }}
-          />
-          <TextInput
-            style={styles.input}
-            placeholder="Hotel"
-            value={trip.hotel}
-            onChangeText={(text) => {
-              const newTrips = [...trips];
-              newTrips[index].hotel = text;
-              setTrips(newTrips);
-            }}
-          />
-        </View>
-      ))}
-      <TouchableOpacity style={styles.addButton} onPress={addTrip}>
-        <Text style={styles.addButtonText}>Add Trip</Text>
-      </TouchableOpacity>
-      <TouchableOpacity style={styles.saveButton} onPress={saveChanges}>
-        <Text style={styles.saveButtonText}>Save Changes</Text>
-      </TouchableOpacity>
-    </ScrollView>
+      <ScrollView style={styles.scrollContainer}>
+        {trips.map((trip, index) => (
+          <View key={index} style={styles.item}>
+            <TextInput
+              style={styles.input}
+              placeholder="City"
+              value={trip.city}
+              onChangeText={(text) => {
+                const newTrips = [...trips];
+                newTrips[index].city = text;
+                setTrips(newTrips);
+              }}
+            />
+            <TextInput
+              style={styles.input}
+              placeholder="Dates"
+              value={trip.dates}
+              onChangeText={(text) => {
+                const newTrips = [...trips];
+                newTrips[index].dates = text;
+                setTrips(newTrips);
+              }}
+            />
+            <TextInput
+              style={styles.input}
+              placeholder="Cost"
+              value={trip.cost}
+              onChangeText={(text) => {
+                const newTrips = [...trips];
+                newTrips[index].cost = text;
+                setTrips(newTrips);
+              }}
+            />
+            <TextInput
+              style={styles.input}
+              placeholder="Hotel"
+              value={trip.hotel}
+              onChangeText={(text) => {
+                const newTrips = [...trips];
+                newTrips[index].hotel = text;
+                setTrips(newTrips);
+              }}
+            />
+          </View>
+        ))}
+      </ScrollView>
+      <View style={styles.buttonsContainer}>
+        <TouchableOpacity style={styles.addButton} onPress={addTrip}>
+          <Text style={styles.addButtonText}>Add Trip</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.saveButton} onPress={saveChanges}>
+          <Text style={styles.saveButtonText}>Save Changes</Text>
+        </TouchableOpacity>
+      </View>
+    </View>
   );
 };
 
@@ -86,6 +90,10 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontWeight: 'bold',
     textAlign: 'center',
+    marginBottom: 20,
+  },
+  scrollContainer: {
+    maxHeight: '70%',
     marginBottom: 20,
   },
   item: {
@@ -102,7 +110,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#6374D1',
     borderRadius: 5,
     padding: 10,
-    marginBottom: 20,
+    marginBottom: 10,
   },
   addButtonText: {
     color: '#ffffff',
@@ -113,13 +121,17 @@ const styles = StyleSheet.create({
     backgroundColor: '#6374D1',
     borderRadius: 5,
     padding: 10,
-    marginBottom: 20,
   },
   saveButtonText: {
     color: '#ffffff',
     fontWeight: '600',
     textAlign: 'center',
   },
-});
-
+  buttonsContainer: {
+  flexDirection: 'column',
+  justifyContent: 'center',
+  alignItems: 'stretch',
+  },
+  });
+  
 export default TripsPage;

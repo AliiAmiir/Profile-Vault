@@ -23,59 +23,63 @@ const EducationPage = () => {
   };
 
   return (
-    <ScrollView style={styles.container}>
+    <View style={styles.container}>
       <Text style={styles.title}>Education</Text>
-      {educations.map((education, index) => (
-        <View key={index} style={styles.item}>
-          <TextInput
-            style={styles.input}
-            placeholder="University"
-            value={education.university}
-            onChangeText={(text) => {
-              const newEducations = [...educations];
-              newEducations[index].university = text;
-              setEducations(newEducations);
-            }}
-          />
-          <TextInput
-            style={styles.input}
-            placeholder="Degree"
-            value={education.degree}
-            onChangeText={(text) => {
-              const newEducations = [...educations];
-              newEducations[index].degree = text;
-              setEducations(newEducations);
-            }}
-          />
-          <TextInput
-            style={styles.input}
-            placeholder="Enrollment Date"
-            value={education.enrollmentDate}
-            onChangeText={(text) => {
-              const newEducations = [...educations];
-              newEducations[index].enrollmentDate = text;
-              setEducations(newEducations);
-            }}
-          />
-          <TextInput
-            style={styles.input}
-            placeholder="Graduation Date"
-            value={education.graduationDate}
-            onChangeText={(text) => {
-              const newEducations = [...educations];
-              newEducations[index].graduationDate = text;
-              setEducations(newEducations);
-            }}
-          />
-        </View>
-      ))}
-      <TouchableOpacity style={styles.addButton} onPress={addEducation}>
-        <Text style={styles.addButtonText}>Add Education</Text>
-      </TouchableOpacity>
-      <TouchableOpacity style={styles.saveButton} onPress={saveChanges}>
-        <Text style={styles.saveButtonText}>Save Changes</Text>
-      </TouchableOpacity>
-    </ScrollView>
+      <ScrollView style={styles.scrollContainer}>
+        {educations.map((education, index) => (
+          <View key={index} style={styles.item}>
+            <TextInput
+              style={styles.input}
+              placeholder="University"
+              value={education.university}
+              onChangeText={(text) => {
+                const newEducations = [...educations];
+                newEducations[index].university = text;
+                setEducations(newEducations);
+              }}
+            />
+            <TextInput
+              style={styles.input}
+              placeholder="Degree"
+              value={education.degree}
+              onChangeText={(text) => {
+                const newEducations = [...educations];
+                newEducations[index].degree = text;
+                setEducations(newEducations);
+              }}
+            />
+            <TextInput
+              style={styles.input}
+              placeholder="Enrollment Date"
+              value={education.enrollmentDate}
+              onChangeText={(text) => {
+                const newEducations = [...educations];
+                newEducations[index].enrollmentDate = text;
+                setEducations(newEducations);
+              }}
+            />
+            <TextInput
+              style={styles.input}
+              placeholder="Graduation Date"
+              value={education.graduationDate}
+              onChangeText={(text) => {
+                const newEducations = [...educations];
+                newEducations[index].graduationDate = text;
+                setEducations(newEducations);
+              }}
+            />
+          </View>
+        ))}
+      </ScrollView>
+      <View style={styles.buttonsContainer}>
+        <TouchableOpacity style={styles.addButton} onPress={addEducation}>
+          <Text style={styles.addButtonText}>Add Education</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.saveButton} onPress={saveChanges}>
+          <Text style={styles.saveButtonText}>Save Changes</Text>
+        </TouchableOpacity>
+      </View>
+    </View>
   );
 };
 
@@ -89,6 +93,10 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontWeight: 'bold',
     textAlign: 'center',
+    marginBottom: 20,
+  },
+  scrollContainer: {
+    maxHeight: '70%',
     marginBottom: 20,
   },
   item: {
@@ -105,7 +113,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#6374D1',
     borderRadius: 5,
     padding: 10,
-    marginBottom: 20,
+    marginBottom: 10,
   },
   addButtonText: {
     color: '#ffffff',
@@ -122,6 +130,10 @@ const styles = StyleSheet.create({
     color: '#ffffff',
     fontWeight: '600',
     textAlign: 'center',
+  },
+  buttonsContainer: {
+    flexDirection: 'column',
+    justifyContent: 'flex-end',
   },
 });
 

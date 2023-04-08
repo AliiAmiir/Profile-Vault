@@ -1,4 +1,3 @@
-// PersonalGoalsPage.js
 import React, { useState } from 'react';
 import {
   View,
@@ -7,9 +6,9 @@ import {
   TouchableOpacity,
   StyleSheet,
   ScrollView,
-} from 'react-native';
+} from 'react-native';  
 
-const PersonalGoalsPage = () => {
+const FavorsPage = () => {
   const [items, setItems] = useState([]);
   const [newItem, setNewItem] = useState('');
 
@@ -34,36 +33,38 @@ const PersonalGoalsPage = () => {
   };
 
   return (
-    <ScrollView style={styles.container}>
+    <View style={styles.container}>
       <Text style={styles.title}>Favors</Text>
-      {items.map((item, index) => (
-        <View key={index} style={styles.listItem}>
-          <TextInput
-            style={styles.itemText}
-            value={item}
-            onChangeText={(text) => handleEditItem(index, text)}
-          />
-          <TouchableOpacity
-            style={styles.deleteButton}
-            onPress={() => handleDeleteItem(index)}
-          >
-            <Text style={styles.buttonText}>Delete</Text>
-          </TouchableOpacity>
-        </View>
-      ))}
+      <ScrollView style={styles.scrollContainer}>
+        {items.map((item, index) => (
+          <View key={index} style={styles.listItem}>
+            <TextInput
+              style={styles.itemText}
+              value={item}
+              onChangeText={(text) => handleEditItem(index, text)}
+            />
+            <TouchableOpacity
+              style={styles.deleteButton}
+              onPress={() => handleDeleteItem(index)}
+            >
+              <Text style={styles.buttonText}>Delete</Text>
+            </TouchableOpacity>
+          </View>
+        ))}
+      </ScrollView>
       <TextInput
         style={styles.newItemInput}
         value={newItem}
         onChangeText={setNewItem}
-        placeholder="Add new favor"
+        placeholder="Add new Favor"
       />
       <TouchableOpacity style={styles.addButton} onPress={handleAddItem}>
-        <Text style={styles.buttonText}>Add Favors</Text>
+        <Text style={styles.buttonText}>Add Favor</Text>
       </TouchableOpacity>
       <TouchableOpacity style={styles.saveButton}>
         <Text style={styles.buttonText}>Save Changes</Text>
       </TouchableOpacity>
-    </ScrollView>
+    </View>
   );
 };
 
@@ -73,11 +74,15 @@ const styles = StyleSheet.create({
     padding: 20,
   },
   title: {
-    paddingTop: 30,
     fontSize: 24,
     fontWeight: 'bold',
     marginBottom: 20,
     textAlign: 'center',
+    marginTop: 30,
+  },
+  scrollContainer: {
+    maxHeight: '70%',
+    marginBottom: 20,
   },
   listItem: {
     flexDirection: 'row',
@@ -105,10 +110,11 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   saveButton: {
-        backgroundColor: '#6374D1',
+    backgroundColor: '#6374D1',
     paddingVertical: 10,
     paddingHorizontal: 20,
     borderRadius: 5,
+    marginBottom: 60,
   },
   buttonText: {
     color: '#ffffff',
@@ -123,5 +129,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default PersonalGoalsPage;
-
+export default FavorsPage;

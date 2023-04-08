@@ -138,7 +138,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#6374D1',
     borderRadius: 5,
     padding: 10,
-    marginBottom: 20,
+    marginBottom: 60,
     width: '100%',
   },
   saveButtonText: {
