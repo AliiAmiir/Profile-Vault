@@ -109,22 +109,22 @@ const styles = StyleSheet.create({
     marginLeft: 10,
   },
   addButton: {
+    marginTop: 40,
     backgroundColor: '#6374D1',
     paddingVertical: 10,
     paddingHorizontal: 20,
     borderRadius: 5,
     marginBottom: 10,
-  },
-  addButtonText: {
-    color: '#ffffff',
-    fontWeight: '600',
   },
   saveButton: {
     backgroundColor: '#6374D1',
     paddingVertical: 10,
     paddingHorizontal: 20,
     borderRadius: 5,
-    marginBottom: 10,
+  },
+  addButtonText: {
+    color: '#ffffff',
+    fontWeight: '600',
   },
   saveButtonText: {
     color: '#ffffff',
