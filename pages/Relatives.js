@@ -16,42 +16,46 @@ const RelativesPage = () => {
   };
 
   return (
-    <ScrollView contentContainerStyle={styles.container}>
+    <View style={styles.container}>
       <Text style={styles.title}>Relatives</Text>
-      {relatives.map((relative, index) => (
-        <View key={index} style={styles.relativeContainer}>
-          <TextInput
-            value={relative.name}
-            onChangeText={(text) => {
-              const updatedRelatives = [...relatives];
-              updatedRelatives[index].name = text;
-              setRelatives(updatedRelatives);
-            }}
-            placeholder="Name"
-            style={styles.input}
-          />
-          <TextInput
-            value={relative.relation}
-            onChangeText={(text) => {
-              const updatedRelatives = [...relatives];
-              updatedRelatives[index].relation = text;
-              setRelatives(updatedRelatives);
-            }}
-            placeholder="Relation"
-            style={styles.input}
-          />
-          <TextInput
-            value={relative.dateOfBirth}
-            onChangeText={(text) => {
-              const updatedRelatives = [...relatives];
-              updatedRelatives[index].dateOfBirth = text;
-              setRelatives(updatedRelatives);
-            }}
-            placeholder="Date of Birth (MM/DD/YYYY)"
-            style={styles.input}
-          />
-        </View>
-      ))}
+      <ScrollView style={styles.scrollContainer}>
+        {relatives.map((relative, index) => (
+          <View key={index} style={styles.relativeContainer}>
+            <View style={styles.inputsWrapper}>
+              <TextInput
+                value={relative.name}
+                onChangeText={(text) => {
+                  const updatedRelatives = [...relatives];
+                  updatedRelatives[index].name = text;
+                  setRelatives(updatedRelatives);
+                }}
+                placeholder="Name"
+                style={styles.input}
+              />
+              <TextInput
+                value={relative.relation}
+                onChangeText={(text) => {
+                  const updatedRelatives = [...relatives];
+                  updatedRelatives[index].relation = text;
+                  setRelatives(updatedRelatives);
+                }}
+                placeholder="Relation"
+                style={styles.input}
+              />
+              <TextInput
+                value={relative.dateOfBirth}
+                onChangeText={(text) => {
+                  const updatedRelatives = [...relatives];
+                  updatedRelatives[index].dateOfBirth = text;
+                  setRelatives(updatedRelatives);
+                }}
+                placeholder="Date of Birth (MM/DD/YYYY)"
+                style={styles.input}
+              />
+            </View>
+          </View>
+        ))}
+      </ScrollView>
       <View style={styles.addRelativeContainer}>
         <TextInput
           value={name}
@@ -78,38 +82,46 @@ const RelativesPage = () => {
       <TouchableOpacity style={styles.saveButton}>
         <Text style={styles.saveButtonText}>Save Changes</Text>
       </TouchableOpacity>
-    </ScrollView>
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    flexGrow: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
+    flex: 1,
     padding: 20,
   },
   title: {
     fontSize: 24,
     fontWeight: 'bold',
     marginBottom: 20,
+    textAlign: 'center',
+    marginTop: 30,
+  },
+  scrollContainer: {
+    maxHeight: '70%',
+    marginBottom: 20,
   },
   relativeContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
     width: '100%',
     marginBottom: 10,
+  },
+  inputsWrapper: {
+    flexDirection: 'column',
+    justifyContent: 'space-between',
+    width: '100%',
   },
   input: {
     borderColor: '#6374D1',
     borderWidth: 1,
     borderRadius: 5,
     padding: 10,
-    width: '30%',
+    width: '100%',
+    marginBottom: 5,
   },
   addRelativeContainer: {
     width: '100%',
-    marginBottom: 20,
+    marginBottom: 10,
   },
   addButton: {
     backgroundColor: '#6374D1',
@@ -123,11 +135,11 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   saveButton: {
-    backgroundColor:'#6374D1',
+    backgroundColor: '#6374D1',
     borderRadius: 5,
     padding: 10,
-    marginTop: 10,
-    marginBottom: 20,
+    marginBottom: 60,
+    width: '100%',
   },
   saveButtonText: {
     color: '#ffffff',
