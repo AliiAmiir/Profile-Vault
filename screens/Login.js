@@ -1,89 +1,28 @@
 import React from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, Image } from 'react-native';
+import { View } from 'react-native';
+import Logo from '../components/Logo';
+import FormButton from '../components/FormButton';
+import FormInputText from '../components/FormInputText';
+import { containerStyles } from '../styles/globalStyle';
 
-const LoginPage = () => {
+export default function LoginPage({ navigation }) {
+  const handleRegistrationNavigation = () => {
+    navigation.navigate('Register');
+  };
+
   return (
-    <View style={styles.container}>
-      <View style={styles.logoContainer}>
-        {/* Add your logo image here */}
-        <Image source={require('./../assets/icon.png')} style={styles.logo} />
+    <View style={containerStyles.defaultContainer}>
+      <Logo />
+      <View style={containerStyles.textInputContainer}>
+        <FormInputText label="Email" placeholder="john.smith@comany.com" autoCapitalize="sentences" />
+        <FormInputText label="Password" placeholder="password" secureTextEntry />
       </View>
-      <View style={styles.inputContainer}>
-        <TextInput
-          style={styles.input}
-          placeholder="Email"
-          keyboardType="email-address"
-          autoCapitalize="none"
-        />
-        <TextInput
-          style={styles.input}
-          placeholder="Password"
-          secureTextEntry
-        />
-        <TouchableOpacity style={styles.loginButton}>
-          <Text style={styles.loginButtonText}>Login</Text>
-        </TouchableOpacity>
-        <View style={styles.signupContainer}>
-          <TouchableOpacity style={styles.signupButton}>
-            <Text style={styles.signupButtonText}>New user? Sign up here</Text>
-          </TouchableOpacity>
-        </View>
+      <View style={containerStyles.buttonContainer}>
+        <FormButton title='Login' />
+        <FormButton title='New User? Sign Up Here!' color={'#F2F2F7'} textColor={'#000000'} onPress={() => handleRegistrationNavigation()} />
       </View>
     </View>
   );
 };
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#ffffff',
-    justifyContent: 'center',
-  },
-  logoContainer: {
-    alignItems: 'center',
-    flexGrow: 1,
-    justifyContent: 'center',
-  },
-  logo: {
-    width: 150,
-    height: 150,
-  },
-  inputContainer: {
-    paddingHorizontal: 20,
-  },
-  input: {
-    height: 40,
-    backgroundColor: '#f2f2f7',
-    marginBottom: 10,
-    paddingHorizontal: 10,
-    borderRadius: 5,
-  },
-  loginButton: {
-    backgroundColor: '#6374D1',
-    paddingVertical: 15,
-    borderRadius: 5,
-    marginBottom: 10,
-  },
-  loginButtonText: {
-    textAlign: 'center',
-    color: '#ffffff',
-    fontWeight: '700',
-  },
-  signupContainer: {
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginBottom: 10,
-  },
-  signupButton: {
-    backgroundColor: '#F2F2F7',
-    paddingVertical: 15,
-    paddingHorizontal: 100,
-    borderRadius: 5,
-  },
-  signupButtonText: {
-    color: '#000',
-    fontWeight: 'bold',
-  },
-});
 
-export default LoginPage;

@@ -21,7 +21,7 @@ export const NavigatorStack = (loginDetails) => {
     const isSignedIn = loginDetails.isSignedIn;
 
     return (
-        <Stack.Navigator screenOptions={{ headerShown: false }}>
+        <Stack.Navigator>
             {isSignedIn ? (
                 <>
                     <Stack.Screen name="NavigationTab" component={NavigationTab} />
@@ -38,7 +38,7 @@ export const NavigatorStack = (loginDetails) => {
                 </>
             ) : (
                 <>
-                    {/* <Stack.Screen name="SignIn" component={Login} /> */}
+                    <Stack.Screen name="Login" component={Login} />
                     <Stack.Screen name="Register" component={Register} />
                 </>
             )}

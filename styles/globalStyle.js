@@ -15,7 +15,7 @@ export const containerStyles = StyleSheet.create({
     justifyContent: 'space-around',
   },
   textInputContainer: {
-    padding: 5
+    paddingHorizontal: 15
   },
   buttonContainer: {
     paddingHorizontal: 20,
@@ -51,10 +51,12 @@ export const formButtonStyles = StyleSheet.create({
     backgroundColor: '#6374D1',
     paddingVertical: 15,
     borderRadius: 5,
+    marginVertical: 15,
   },
   formButtonText: {
     textAlign: 'center',
-    color: '#ffffff',
-    fontWeight: '700',
+    color: '#FFFFFF',
+    fontWeight: '500',
   },
 });
+
