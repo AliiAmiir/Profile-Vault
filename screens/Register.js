@@ -110,10 +110,10 @@ export default class Register extends Component {
       <View style={containerStyles.defaultContainer}>
         <Logo />
         <RegisterationForm
-        firstName={this.state.firstName}
-        handleFirstNameChange={this.handleFirstNameChange}
-        lastName={this.state.lastName}
-        handleLastNameChange={this.handleLastNameChange}
+          firstName={this.state.firstName}
+          handleFirstNameChange={this.handleFirstNameChange}
+          lastName={this.state.lastName}
+          handleLastNameChange={this.handleLastNameChange}
           email={this.state.email}
           handleEmailChange={this.handleEmailChange}
           phone={this.state.phone}

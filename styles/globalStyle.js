@@ -42,7 +42,7 @@ export const formInputTextStyles = StyleSheet.create({
     minWidth: 150,
     marginBottom: 10,
     borderBottomWidth: 1,
-    borderBottomColor: 'lightgray'
+    borderBottomColor: '#F2F2F7',
   },
 });
 
