@@ -4,7 +4,8 @@ import { NavigatorStack } from './routes/NavigationStack';
 import { ActivityIndicator } from 'react-native';
 
 const getIsSignedIn = () => {
-  return true;
+
+  return false;
 };
 
 export default class App extends Component {
@@ -25,6 +26,10 @@ export default class App extends Component {
       loading: false,
       isSignedIn: isSignedIn
     });
+  }
+
+  componentWillUnmount() {
+    
   }
 
   render() {

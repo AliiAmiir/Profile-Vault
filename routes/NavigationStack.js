@@ -38,7 +38,7 @@ export const NavigatorStack = (loginDetails) => {
                 </>
             ) : (
                 <>
-                    <Stack.Screen name="SignIn" component={Login} />
+                    {/* <Stack.Screen name="SignIn" component={Login} /> */}
                     <Stack.Screen name="Register" component={Register} />
                 </>
             )}
