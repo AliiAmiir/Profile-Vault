@@ -17,7 +17,6 @@ export default class App extends Component {
 
   componentDidMount() {
     this.setAuth = auth.onAuthStateChanged((user) => {
-      console.log(user);
       if(!user) {
         this.setState({
           loading: false,

@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import { View } from 'react-native';
 import { createUserWithEmailAndPassword } from "firebase/auth";
-import { auth } from '../config/FirebaseConfig';
+import { collection, addDoc } from "firebase/firestore";
+import { db, auth } from '../config/FirebaseConfig';
 
 // Import StyleSheets
 import { containerStyles } from '../styles/globalStyle';
@@ -81,17 +82,28 @@ export default class Register extends Component {
   };
 
   onRegister = async () => {
-    console.log(this.state)
     try {
       const email = this.state.email;
       const password = this.state.password;
-
       const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+
       const user = userCredential.user;
+
+      await addDoc(collection(db, 'users'), {
+        uid: user.uid,
+        firstName: this.state.firstName,
+        lastName: this.state.lastName,
+        email: this.state.email,
+        phone: this.state.phone,
+        gender: this.state.gender,
+        dateOfBirth: this.state.dateOfBirth,
+        hobbies: this.state.hobbies,
+        movieGenres: this.state.movieGenres,
+        favors: this.state.favors,
+        degrees: this.state.degrees,
+      });
     } catch (error) {
-      const errorCode = error.code;
-      const errorMessage = error.message;
-      console.log(errorMessage)
+      console.log(error.message);
     }
   }
 

@@ -21,7 +21,6 @@ export default function Manage({ navigation }) {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Manage</Text>
       {buttons.map((button, index) => (
         <TouchableOpacity
           key={index}

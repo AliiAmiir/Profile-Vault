@@ -1,68 +1,114 @@
-import React from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
+import React, { Component } from 'react';
+import { View } from 'react-native';
+import { auth } from '../config/FirebaseConfig';
+import { collection, query, where, doc, getDocs, limit } from 'firebase/firestore';
+import { db } from '../config/FirebaseConfig';
 
-export default function Settings() {
-  return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Settings</Text>
-      <TextInput style={styles.input} placeholder="Name" />
-      <TextInput style={styles.input} placeholder="Date of Birth" />
-      <TextInput style={styles.input} placeholder="Email" />
-      <TextInput style={styles.input} placeholder="Phone" />
-      <TextInput style={styles.input} placeholder="Gender" />
-      <TextInput style={styles.input} placeholder="Current Password" secureTextEntry />
-      <TextInput style={styles.input} placeholder="New Password" secureTextEntry />
-      <TouchableOpacity style={styles.saveButton}>
-        <Text style={styles.saveButtonText}>Save Changes</Text>
-      </TouchableOpacity>
-      <TouchableOpacity style={styles.logoutButton}>
-        <Text style={styles.logoutButtonText}>Logout</Text>
-      </TouchableOpacity>
-    </View>
-  );
-};
+// Import StyleSheets
+import { containerStyles } from '../styles/globalStyle';
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    paddingHorizontal: 20,
-  },
-  title: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    marginBottom: 20,
-  },
-  input: {
-    height: 40,
-    backgroundColor: '#f2f2f7',
-    marginBottom: 10,
-    paddingHorizontal: 10,
-    borderRadius: 5,
-    width: '100%',
-  },
-  saveButton: {
-    backgroundColor: '#6374D1',
-    paddingVertical: 15,
-    borderRadius: 5,
-    width: '100%',
-    marginBottom: 10,
-  },
-  saveButtonText: {
-    textAlign: 'center',
-    color: '#ffffff',
-    fontWeight: '700',
-  },
-  logoutButton: {
-    backgroundColor: '#FFA6A6',
-    paddingVertical: 15,
-    borderRadius: 5,
-    width: '100%',
-  },
-  logoutButtonText: {
-    textAlign: 'center',
-    color: '#ffffff',
-    fontWeight: '700',
-  },
-});
+// Import Componenets
+import FormButton from '../components/FormButton';
+import FormInputText from '../components/FormInputText';
+
+export default class Settings extends Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      loading: true,
+      isSignedIn: false,
+      firstName: '',
+      lastName: '',
+      email: '',
+      currentPassword: '',
+      newPassword: '',
+      dateOfBirth: '',
+      phone: ''
+    }
+  }
+
+  handleSignOut = async () => {
+    try {
+      await auth.signOut();
+
+      const { navigation } = this.props;
+      navigation.navigate('Login');
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  componentDidMount() {
+    this.fetchUserData();
+  }
+
+  async fetchUserData() {
+    const q = query(collection(db, 'users'), where('uid', '==', 'ZKOjKJfr5faBxMpSRGDLAONNnDR2'));
+
+    const querySnapshot = await getDocs(q);
+    const userData = querySnapshot.docs[0].data();
+
+    this.setState({
+      loading: false,
+      firstName: userData.firstName,
+      lastName: userData.lastName,
+      email: userData.email,
+      dateOfBirth: userData.dateOfBirth,
+      phone: userData.phone
+    });
+  }
+
+  componentWillUnmount() {
+
+  }
+
+  handleFirstNameChange = (firstName) => {
+    this.setState({ firstName: firstName }); ``
+  };
+
+  handleLastNameChange = (lastName) => {
+    this.setState({ lastName: lastName }); ``
+  };
+
+  handleEmailChange = (email) => {
+    this.setState({ email: email }); ``
+  };
+
+  handlePhoneChange = (phone) => {
+    this.setState({ phone: phone }); ``
+  };
+
+  handleDateOfBirthChange = (dateOfBirth) => {
+    this.setState({ dateOfBirth: dateOfBirth }); ``
+  };
+
+  handleCurrentPasswordChange = (currentPassword) => {
+    this.setState({ currentPassword: currentPassword });
+  };
+
+  handleNewPasswordChange = (newPassword) => {
+    this.setState({ newPassword: newPassword });
+  };
+
+  render() {
+    return (
+      <View style={containerStyles.defaultContainer}>
+        <View style={containerStyles.textInputContainer}>
+          <FormInputText label="First Name" value={this.state.firstName} onChangeText={this.handleFirstNameChange} autoCapitalize="sentences" />
+          <FormInputText label="Last Name" value={this.state.lastName} onChangeText={this.handleLastNameChange} autoCapitalize="sentences" />
+          <FormInputText label="Date of Birth" value={this.state.dateOfBirth} onChangeText={this.handleDateOfBirthChange} autoCapitalize="sentences" />
+          <FormInputText label="Email" value={this.state.email} onChangeText={this.handleEmailChange} autoCapitalize="sentences" />
+          <FormInputText label="Phone" value={this.state.phone} onChangeText={this.handlePhoneChange} autoCapitalize="sentences" />
+          <FormInputText label="Current Password" value={this.state.gender} onChangeText={this.handleCurrentPasswordChange} secureTextEntry />
+          <FormInputText label="New Password" value={this.state.gender} onChangeText={this.handleNewPasswordChange} secureTextEntry />
+        </View>
+
+        <View style={containerStyles.buttonContainer}>
+          <FormButton title='Save Changes' />
+          <FormButton title='Logout' color={'#CD5151'} textColor={'#FFFFFF'} onPress={this.handleSignOut} />
+        </View>
+      </View>
+    );
+  }
+}
