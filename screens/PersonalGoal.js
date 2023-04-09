@@ -1,4 +1,3 @@
-// Preferences.js
 import React, { useState } from 'react';
 import {
   View,
@@ -7,9 +6,11 @@ import {
   TouchableOpacity,
   StyleSheet,
   ScrollView,
+  KeyboardAvoidingView,
+  Platform,
 } from 'react-native';
 
-const Preferences = () => {
+const PersonalGoals = () => {
   const [items, setItems] = useState([]);
   const [newItem, setNewItem] = useState('');
 
@@ -35,7 +36,7 @@ const Preferences = () => {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Preferences</Text>
+      <Text style={styles.title}>Personal Goals</Text>
       <ScrollView style={styles.scrollContainer}>
         {items.map((item, index) => (
           <View key={index} style={styles.listItem}>
@@ -57,10 +58,10 @@ const Preferences = () => {
         style={styles.newItemInput}
         value={newItem}
         onChangeText={setNewItem}
-        placeholder="Add new Preference"
+        placeholder="Add new goal"
       />
       <TouchableOpacity style={styles.addButton} onPress={handleAddItem}>
-        <Text style={styles.buttonText}>Add Preferences</Text>
+        <Text style={styles.buttonText}>Add Goal</Text>
       </TouchableOpacity>
       <TouchableOpacity style={styles.saveButton}>
         <Text style={styles.buttonText}>Save Changes</Text>
@@ -130,4 +131,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Preferences;
+export default PersonalGoals;

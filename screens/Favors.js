@@ -6,11 +6,9 @@ import {
   TouchableOpacity,
   StyleSheet,
   ScrollView,
-  KeyboardAvoidingView,
-  Platform,
-} from 'react-native';  
+} from 'react-native';
 
-const PersonalGoalsPage = () => {
+const Favors = () => {
   const [items, setItems] = useState([]);
   const [newItem, setNewItem] = useState('');
 
@@ -36,7 +34,7 @@ const PersonalGoalsPage = () => {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Personal Goals</Text>
+      <Text style={styles.title}>Favors</Text>
       <ScrollView style={styles.scrollContainer}>
         {items.map((item, index) => (
           <View key={index} style={styles.listItem}>
@@ -58,10 +56,10 @@ const PersonalGoalsPage = () => {
         style={styles.newItemInput}
         value={newItem}
         onChangeText={setNewItem}
-        placeholder="Add new goal"
+        placeholder="Add new Favor"
       />
       <TouchableOpacity style={styles.addButton} onPress={handleAddItem}>
-        <Text style={styles.buttonText}>Add Goal</Text>
+        <Text style={styles.buttonText}>Add Favor</Text>
       </TouchableOpacity>
       <TouchableOpacity style={styles.saveButton}>
         <Text style={styles.buttonText}>Save Changes</Text>
@@ -131,4 +129,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default PersonalGoalsPage;
+export default Favors;

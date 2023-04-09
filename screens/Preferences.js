@@ -6,9 +6,9 @@ import {
   TouchableOpacity,
   StyleSheet,
   ScrollView,
-} from 'react-native';  
+} from 'react-native';
 
-const FavorsPage = () => {
+const Preferences = () => {
   const [items, setItems] = useState([]);
   const [newItem, setNewItem] = useState('');
 
@@ -34,7 +34,7 @@ const FavorsPage = () => {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Favors</Text>
+      <Text style={styles.title}>Preferences</Text>
       <ScrollView style={styles.scrollContainer}>
         {items.map((item, index) => (
           <View key={index} style={styles.listItem}>
@@ -56,10 +56,10 @@ const FavorsPage = () => {
         style={styles.newItemInput}
         value={newItem}
         onChangeText={setNewItem}
-        placeholder="Add new Favor"
+        placeholder="Add new Preference"
       />
       <TouchableOpacity style={styles.addButton} onPress={handleAddItem}>
-        <Text style={styles.buttonText}>Add Favor</Text>
+        <Text style={styles.buttonText}>Add Preferences</Text>
       </TouchableOpacity>
       <TouchableOpacity style={styles.saveButton}>
         <Text style={styles.buttonText}>Save Changes</Text>
@@ -129,4 +129,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default FavorsPage;
+export default Preferences;

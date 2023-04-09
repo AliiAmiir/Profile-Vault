@@ -4,16 +4,16 @@ import { NavigationTab } from './NavigationTab';
 import Login from './../screens/Login';
 import Register from './../screens/Register';
 
-import Education from './../pages/Education';
-import Health from './../pages/Health';
-import Passwords from './../pages/Passwords';
-import Preferences from './../pages/Preferences';
-import Significants from './../pages/Significants';
-import Favors from './../pages/Favors';
-import Jobs from './../pages/Jobs';
-import PersonalGoal from './../pages/PersonalGoal';
-import Relatives from './../pages/Relatives';
-import Trips from './../pages/Trips';
+import Education from '../screens/Education';
+import Health from '../screens/Health';
+import Passwords from '../screens/Passwords';
+import Preferences from '../screens/Preferences';
+import Significants from '../screens/Significants';
+import Favors from '../screens/Favors';
+import Jobs from '../screens/Jobs';
+import PersonalGoal from '../screens/PersonalGoal';
+import Relatives from '../screens/Relatives';
+import Trips from '../screens/Trips';
 
 const Stack = createStackNavigator();
 

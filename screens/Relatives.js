@@ -1,8 +1,7 @@
-// RelativesPage.js
 import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, ScrollView, StyleSheet } from 'react-native';
 
-const RelativesPage = () => {
+const Relatives = () => {
   const [relatives, setRelatives] = useState([]);
   const [name, setName] = useState('');
   const [relation, setRelation] = useState('');
@@ -148,4 +147,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default RelativesPage;
+export default Relatives;

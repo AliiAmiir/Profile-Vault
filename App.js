@@ -1,10 +1,9 @@
 import React, { Component } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { NavigatorStack } from './routes/NavigationStack';
-import { ActivityIndicator, View } from 'react-native';
+import { ActivityIndicator } from 'react-native';
 
 const getIsSignedIn = () => {
-  // custom logic
   return true;
 };
 
@@ -14,12 +13,14 @@ export default class App extends Component {
 
     this.state = {
       loading: true,
-      isSignedIn: false
+      isSignedIn: false,
+      user: null
     }
   }
 
   componentDidMount() {
     const isSignedIn = getIsSignedIn();
+
     this.setState({
       loading: false,
       isSignedIn: isSignedIn
@@ -31,7 +32,7 @@ export default class App extends Component {
       <NavigationContainer>
         {
           this.state.loading ? (<ActivityIndicator size="large" />) : (
-              <NavigatorStack isSignedIn={this.state.isSignedIn} />
+            <NavigatorStack isSignedIn={this.state.isSignedIn} />
           )}
       </NavigationContainer>
     );

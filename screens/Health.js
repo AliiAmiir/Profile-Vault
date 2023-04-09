@@ -8,11 +8,14 @@ import {
   ScrollView,
 } from 'react-native';
 
-const TripsPage = () => {
-  const [trips, setTrips] = useState([]);
+const Health = () => {
+  const [healthRecords, setHealthRecords] = useState([]);
 
-  const addTrip = () => {
-    setTrips([...trips, { city: '', dates: '', cost: '', hotel: '' }]);
+  const addRecord = () => {
+    setHealthRecords([
+      ...healthRecords,
+      { lastCheckUp: '', diagnosis: '', medicines: '', duration: '' },
+    ]);
   };
 
   const saveChanges = () => {
@@ -21,56 +24,56 @@ const TripsPage = () => {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Trips</Text>
+      <Text style={styles.title}>Health</Text>
       <ScrollView style={styles.scrollContainer}>
-        {trips.map((trip, index) => (
+        {healthRecords.map((record, index) => (
           <View key={index} style={styles.item}>
             <TextInput
               style={styles.input}
-              placeholder="City"
-              value={trip.city}
+              placeholder="Last Check-up Date"
+              value={record.lastCheckUp}
               onChangeText={(text) => {
-                const newTrips = [...trips];
-                newTrips[index].city = text;
-                setTrips(newTrips);
+                const newRecords = [...healthRecords];
+                newRecords[index].lastCheckUp = text;
+                setHealthRecords(newRecords);
               }}
             />
             <TextInput
               style={styles.input}
-              placeholder="Dates"
-              value={trip.dates}
+              placeholder="Diagnosis"
+              value={record.diagnosis}
               onChangeText={(text) => {
-                const newTrips = [...trips];
-                newTrips[index].dates = text;
-                setTrips(newTrips);
+                const newRecords = [...healthRecords];
+                newRecords[index].diagnosis = text;
+                setHealthRecords(newRecords);
               }}
             />
             <TextInput
               style={styles.input}
-              placeholder="Cost"
-              value={trip.cost}
+              placeholder="Medicines"
+              value={record.medicines}
               onChangeText={(text) => {
-                const newTrips = [...trips];
-                newTrips[index].cost = text;
-                setTrips(newTrips);
+                const newRecords = [...healthRecords];
+                newRecords[index].medicines = text;
+                setHealthRecords(newRecords);
               }}
             />
             <TextInput
               style={styles.input}
-              placeholder="Hotel"
-              value={trip.hotel}
+              placeholder="Duration"
+              value={record.duration}
               onChangeText={(text) => {
-                const newTrips = [...trips];
-                newTrips[index].hotel = text;
-                setTrips(newTrips);
+                const newRecords = [...healthRecords];
+                newRecords[index].duration = text;
+                setHealthRecords(newRecords);
               }}
             />
           </View>
         ))}
       </ScrollView>
       <View style={styles.buttonsContainer}>
-        <TouchableOpacity style={styles.addButton} onPress={addTrip}>
-          <Text style={styles.addButtonText}>Add Trip</Text>
+        <TouchableOpacity style={styles.addButton} onPress={addRecord}>
+          <Text style={styles.addButtonText}>Add Health Record</Text>
         </TouchableOpacity>
         <TouchableOpacity style={styles.saveButton} onPress={saveChanges}>
           <Text style={styles.saveButtonText}>Save Changes</Text>
@@ -93,7 +96,7 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   scrollContainer: {
-    maxHeight: '70%',
+    flex: 1,
     marginBottom: 20,
   },
   item: {
@@ -121,6 +124,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#6374D1',
     borderRadius: 5,
     padding: 10,
+    marginBottom: 60,
   },
   saveButtonText: {
     color: '#ffffff',
@@ -128,10 +132,9 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   buttonsContainer: {
-  flexDirection: 'column',
-  justifyContent: 'center',
-  alignItems: 'stretch',
+    flex: 1,
+    justifyContent: 'flex-end',
   },
-  });
-  
-export default TripsPage;
+});
+
+export default Health;
