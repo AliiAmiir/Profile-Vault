@@ -43,8 +43,14 @@ export default class Settings extends Component {
     this.fetchUserData();
   }
 
+  componentWillUnmount() {
+    if(this.fetchUserData) {
+      this.fetchUserData(); 
+    }
+  }
+
   async fetchUserData() {
-    const q = query(collection(db, 'users'), where('uid', '==', 'ZKOjKJfr5faBxMpSRGDLAONNnDR2'));
+    const q = query(collection(db, 'users'), where('uid', '==', auth.currentUser.uid));
 
     const querySnapshot = await getDocs(q);
     const userData = querySnapshot.docs[0].data();
@@ -57,10 +63,6 @@ export default class Settings extends Component {
       dateOfBirth: userData.dateOfBirth,
       phone: userData.phone
     });
-  }
-
-  componentWillUnmount() {
-
   }
 
   handleFirstNameChange = (firstName) => {
