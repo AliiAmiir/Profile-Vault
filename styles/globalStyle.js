@@ -8,12 +8,14 @@ export const containerStyles = StyleSheet.create({
   },
   logoContainer: {
     alignItems: 'center',
-    flexGrow: 1,
     justifyContent: 'center',
   },
   formContainer: {
     flexDirection: 'row',
     justifyContent: 'space-around',
+  },
+  textInputContainer: {
+    padding: 5
   },
   buttonContainer: {
     paddingHorizontal: 20,
@@ -31,13 +33,16 @@ export const logoStyles = StyleSheet.create({
 });
 
 export const formInputTextStyles = StyleSheet.create({
+  label: {
+    fontWeight: 500,
+    paddingBottom: 5
+  },
   input: {
-    height: 40,
-    backgroundColor: '#f2f2f7',
+    minHeight: 40,
+    minWidth: 150,
     marginBottom: 10,
-    paddingHorizontal: 10,
-    borderRadius: 5,
-    width: 150,
+    borderBottomWidth: 1,
+    borderBottomColor: 'lightgray'
   },
 });
 

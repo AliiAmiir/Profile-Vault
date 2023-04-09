@@ -1,19 +1,25 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { TextInput  } from 'react-native';
-import { formInputTextStyles } from '../styles/globalStyle';
+import { View, Text, TextInput } from 'react-native';
+import { containerStyles, formInputTextStyles } from '../styles/globalStyle';
 
-export default function FormInputText({ placeholder, autoCapitalize, keyboardType, secureTextEntry }) {
+export default function FormInputText({ label, placeholder, value, onChangeText, autoCapitalize, keyboardType, secureTextEntry }) {
     return (
-        <TextInput placeholder={placeholder} autoCapitalize={autoCapitalize} keyboardType={keyboardType} secureTextEntry={secureTextEntry} style={formInputTextStyles.input} />
+        <View style={containerStyles.textInputContainer}>
+            <Text style={formInputTextStyles.label}>{label}</Text>
+            <TextInput placeholder={placeholder} value={value} onChangeText={onChangeText} autoCapitalize={autoCapitalize} keyboardType={keyboardType} secureTextEntry={secureTextEntry} style={formInputTextStyles.input} />
+        </View>
     );
 }
 
 FormInputText.propTypes = {
+    label: PropTypes.string.isRequired,
     placeholder: PropTypes.string.isRequired,
+    value: PropTypes.any,
     autoCapitalize: PropTypes.string,
     keyboardType: PropTypes.string,
     secureTextEntry: PropTypes.bool,
+    onChangeText: PropTypes.func.isRequired,
 };
 
 FormInputText.defaultProps = {
