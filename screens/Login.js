@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 import { View } from 'react-native';
+import { signInWithEmailAndPassword } from "firebase/auth";
+import { auth } from '../config/FirebaseConfig';
 
 // Import StyleSheets
 import { containerStyles } from '../styles/globalStyle';
@@ -35,18 +37,19 @@ export default class Register extends Component {
   };
 
   onLogin = async () => {
-    console.log(this.state)
-    // try {
-    //   const email = this.state.email;
-    //   const password = this.state.password;
+    try {
+      const email = this.state.email;
+      const password = this.state.password;
 
-    //   const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-    //   const user = userCredential.user;
-    // } catch (error) {
-    //   const errorCode = error.code;
-    //   const errorMessage = error.message;
-    //   console.log(errorMessage)
-    // }
+      const userCredential = await signInWithEmailAndPassword(auth, email, password);
+      console.log(userCredential)
+
+      const user = userCredential.user;
+    } catch (error) {
+      const errorCode = error.code;
+      const errorMessage = error.message;
+      console.log(errorMessage)
+    }
   }
 
   componentDidMount() {

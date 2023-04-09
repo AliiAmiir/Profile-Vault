@@ -2,11 +2,7 @@ import React, { Component } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { NavigatorStack } from './routes/NavigationStack';
 import { ActivityIndicator } from 'react-native';
-
-const getIsSignedIn = () => {
-
-  return false;
-};
+import { auth } from './config/FirebaseConfig';
 
 export default class App extends Component {
   constructor(props) {
@@ -20,16 +16,26 @@ export default class App extends Component {
   }
 
   componentDidMount() {
-    const isSignedIn = getIsSignedIn();
-
-    this.setState({
-      loading: false,
-      isSignedIn: isSignedIn
+    this.setAuth = auth.onAuthStateChanged((user) => {
+      console.log(user);
+      if(!user) {
+        this.setState({
+          loading: false,
+          isSignedIn: false
+        });
+      } else {
+        this.setState({
+          user, 
+          isSignedIn: true
+        })
+      }
     });
   }
 
   componentWillUnmount() {
-    
+    if(this.setAuth) {
+      this.setAuth();
+    }
   }
 
   render() {
