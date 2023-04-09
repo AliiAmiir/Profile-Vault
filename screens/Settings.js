@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View } from 'react-native';
+import { View, ScrollView } from 'react-native';
 import { auth } from '../config/FirebaseConfig';
 import { collection, query, where, doc, getDocs, limit } from 'firebase/firestore';
 import { db } from '../config/FirebaseConfig';
@@ -44,8 +44,8 @@ export default class Settings extends Component {
   }
 
   componentWillUnmount() {
-    if(this.fetchUserData) {
-      this.fetchUserData(); 
+    if (this.fetchUserData) {
+      this.fetchUserData();
     }
   }
 
@@ -96,20 +96,21 @@ export default class Settings extends Component {
   render() {
     return (
       <View style={containerStyles.defaultContainer}>
-        <View style={containerStyles.textInputContainer}>
-          <FormInputText label="First Name" value={this.state.firstName} onChangeText={this.handleFirstNameChange} autoCapitalize="sentences" />
-          <FormInputText label="Last Name" value={this.state.lastName} onChangeText={this.handleLastNameChange} autoCapitalize="sentences" />
-          <FormInputText label="Date of Birth" value={this.state.dateOfBirth} onChangeText={this.handleDateOfBirthChange} autoCapitalize="sentences" />
-          <FormInputText label="Email" value={this.state.email} onChangeText={this.handleEmailChange} autoCapitalize="sentences" />
-          <FormInputText label="Phone" value={this.state.phone} onChangeText={this.handlePhoneChange} autoCapitalize="sentences" />
-          <FormInputText label="Current Password" value={this.state.gender} onChangeText={this.handleCurrentPasswordChange} secureTextEntry />
-          <FormInputText label="New Password" value={this.state.gender} onChangeText={this.handleNewPasswordChange} secureTextEntry />
-        </View>
-
-        <View style={containerStyles.buttonContainer}>
-          <FormButton title='Save Changes' />
-          <FormButton title='Logout' color={'#CD5151'} textColor={'#FFFFFF'} onPress={this.handleSignOut} />
-        </View>
+        <ScrollView >
+          <View style={containerStyles.textInputContainer}>
+            <FormInputText label="First Name" value={this.state.firstName} onChangeText={this.handleFirstNameChange} autoCapitalize="sentences" />
+            <FormInputText label="Last Name" value={this.state.lastName} onChangeText={this.handleLastNameChange} autoCapitalize="sentences" />
+            <FormInputText label="Date of Birth" value={this.state.dateOfBirth} onChangeText={this.handleDateOfBirthChange} autoCapitalize="sentences" />
+            <FormInputText label="Email" value={this.state.email} onChangeText={this.handleEmailChange} autoCapitalize="sentences" />
+            <FormInputText label="Phone" value={this.state.phone} onChangeText={this.handlePhoneChange} autoCapitalize="sentences" />
+            <FormInputText label="Current Password" value={this.state.gender} onChangeText={this.handleCurrentPasswordChange} secureTextEntry />
+            <FormInputText label="New Password" value={this.state.gender} onChangeText={this.handleNewPasswordChange} secureTextEntry />
+          </View>
+          <View style={containerStyles.buttonContainer}>
+            <FormButton title='Save Changes' />
+            <FormButton title='Logout' color={'#CD5151'} textColor={'#FFFFFF'} onPress={this.handleSignOut} />
+          </View>
+        </ScrollView>
       </View>
     );
   }

@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View } from 'react-native';
+import { View, Alert } from 'react-native';
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { collection, addDoc } from "firebase/firestore";
 import { db, auth } from '../config/FirebaseConfig';
@@ -102,8 +102,11 @@ export default class Register extends Component {
         favors: this.state.favors,
         degrees: this.state.degrees,
       });
+
+      Alert.alert('User Registered Successfully');
     } catch (error) {
       console.log(error.message);
+      Alert.alert('Error occurred while registering a new user');
     }
   }
 

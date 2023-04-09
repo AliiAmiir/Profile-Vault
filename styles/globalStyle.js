@@ -15,6 +15,7 @@ export const containerStyles = StyleSheet.create({
     justifyContent: 'space-around',
   },
   textInputContainer: {
+    paddingVertical: 10,
     paddingHorizontal: 15
   },
   buttonContainer: {
