@@ -1,8 +1,7 @@
 import React, { Component } from 'react';
 import { View, ScrollView } from 'react-native';
 import { auth } from '../config/FirebaseConfig';
-import { collection, query, where, doc, getDocs, limit } from 'firebase/firestore';
-import { db } from '../config/FirebaseConfig';
+import { fetchUserById } from '../repository/userRepository';
 
 // Import StyleSheets
 import { containerStyles } from '../styles/globalStyle';
@@ -50,10 +49,7 @@ export default class Settings extends Component {
   }
 
   async fetchUserData() {
-    const q = query(collection(db, 'users'), where('uid', '==', auth.currentUser.uid));
-
-    const querySnapshot = await getDocs(q);
-    const userData = querySnapshot.docs[0].data();
+    const userData = await fetchUserById(auth.currentUser.uid);
 
     this.setState({
       loading: false,

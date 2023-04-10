@@ -1,24 +1,11 @@
 import React, { Component } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Image, ScrollView } from 'react-native';
+import { View, Text, ScrollView } from 'react-native';
 import { auth } from '../config/FirebaseConfig';
-import { collection, query, where, doc, getDocs, limit } from 'firebase/firestore';
-import { db } from '../config/FirebaseConfig';
 import { Avatar } from 'react-native-elements';
-
+import { fetchUserById } from '../repository/userRepository';
+import UserAvatar from '../components/UserAvatar';
 // Import StyleSheets
 import { containerStyles, textStyles } from '../styles/globalStyle';
-
-// Import Componenets
-import FormButton from '../components/FormButton';
-import FormInputText from '../components/FormInputText';
-
-// const dummyData = {
-//   Hobbies: ['Reading', 'Gardening', 'Cooking'],
-//   Goals: ['Learn a new language', 'Travel to Europe'],
-//   Preferences: ['Vegan', 'Morning person'],
-//   FavorCategories: ['Help with moving', 'Pet sitting'],
-//   UpcomingTrips: ['New York City', 'San Francisco'],
-// };
 
 export default class Home extends Component {
   constructor(props) {
@@ -47,10 +34,7 @@ export default class Home extends Component {
   }
 
   async fetchUserData() {
-    const q = query(collection(db, 'users'), where('uid', '==', auth.currentUser.uid));
-
-    const querySnapshot = await getDocs(q);
-    const userData = querySnapshot.docs[0].data();
+    const userData = await fetchUserById(auth.currentUser.uid);
 
     this.setState({
       loading: false,
@@ -68,9 +52,7 @@ export default class Home extends Component {
         <ScrollView>
           <View style={containerStyles.textContainer}>
             <View style={containerStyles.rowContainer}>
-              <View style={containerStyles.avatarContainer}>
-                <Avatar size={120} rounded title='SR' overlayContainerStyle={{ backgroundColor: '#F2F2F7' }} />
-              </View>
+              <UserAvatar firstName={this.state.firstName} lastName={this.state.lastName} />
 
               <View style={containerStyles.rowAlignContainer}>
                 <Text style={textStyles.textHeading}>{this.state.firstName}, 27</Text>
