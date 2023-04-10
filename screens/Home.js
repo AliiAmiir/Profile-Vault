@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
 import { View, Text, ScrollView } from 'react-native';
 import { auth } from '../config/FirebaseConfig';
-import { Avatar } from 'react-native-elements';
 import { fetchUserById } from '../repository/userRepository';
 import UserAvatar from '../components/UserAvatar';
+import { computeAge } from '../utils/computeUtil';
+
 // Import StyleSheets
 import { containerStyles, textStyles } from '../styles/globalStyle';
 
@@ -35,6 +36,7 @@ export default class Home extends Component {
 
   async fetchUserData() {
     const userData = await fetchUserById(auth.currentUser.uid);
+    const age = computeAge(userData.dateOfBirth)
 
     this.setState({
       loading: false,
@@ -42,7 +44,8 @@ export default class Home extends Component {
       lastName: userData.lastName,
       email: userData.email,
       dateOfBirth: userData.dateOfBirth,
-      phone: userData.phone
+      phone: userData.phone,
+      age: age,
     });
   }
 
@@ -55,7 +58,7 @@ export default class Home extends Component {
               <UserAvatar firstName={this.state.firstName} lastName={this.state.lastName} />
 
               <View style={containerStyles.rowAlignContainer}>
-                <Text style={textStyles.textHeading}>{this.state.firstName}, 27</Text>
+                <Text style={textStyles.textHeading}>{this.state.firstName}, {this.state.age}</Text>
               </View>
             </View>
             <View style={containerStyles.textContainer}>
@@ -86,73 +89,3 @@ export default class Home extends Component {
     );
   }
 }
-
-// const Home = () => {
-//   const handleProfilePicturePress = () => {
-//     // Implement the function to open the camera
-//     console.log('Profile picture pressed');
-//   };
-
-//   return (
-//     <ScrollView contentContainerStyle={styles.container}>
-//       <TouchableOpacity onPress={handleProfilePicturePress} style={styles.profilePictureContainer}>
-//         <Image
-//           source={require('./../assets/icon.png')} // Replace with the path to your placeholder image
-//           style={styles.profilePicture}
-//         />
-//       </TouchableOpacity>
-//       <Text style={styles.nameAge}>John, 31</Text>
-//       {Object.entries(dummyData).map(([sectionTitle, items], index) => (
-//         <View key={index} style={styles.section}>
-//           <Text style={styles.sectionTitle}>{sectionTitle}</Text>
-//           {items.map((item, index) => (
-//             <Text key={index} style={styles.itemText}>
-//               {item}
-//             </Text>
-//           ))}
-//         </View>
-//       ))}
-//     </ScrollView>
-//   );
-// };
-
-// const styles = StyleSheet.create({
-//   container: {
-//     flexGrow: 1,
-//     justifyContent: 'center',
-//     alignItems: 'center',
-//     paddingTop: 50,
-//     paddingHorizontal: 20,
-//   },
-//   profilePictureContainer: {
-//     width: 100,
-//     height: 100,
-//     borderRadius: 50,
-//     marginBottom: 10,
-//     overflow: 'hidden',
-//   },
-//   profilePicture: {
-//     width: '100%',
-//     height: '100%',
-//   },
-//   nameAge: {
-//     fontSize: 24,
-//     fontWeight: 'bold',
-//     marginBottom: 20,
-//   },
-//   section: {
-//     width: '100%',
-//     marginBottom: 20,
-//   },
-//   sectionTitle: {
-//     fontSize: 18,
-//     fontWeight: 'bold',
-//     marginBottom: 10,
-//   },
-//   itemText: {
-//     fontSize: 16,
-//     marginBottom: 5,
-//   },
-// });
-
-// export default Home;
