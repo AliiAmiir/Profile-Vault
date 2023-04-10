@@ -21,7 +21,7 @@ export default function RegisterationForm({
   onFormSubmit }) {
   return (
     <View>
-      <View style={containerStyles.formContainer}>
+      <View style={containerStyles.rowContainer}>
         <View>
           <FormInputText label="First Name" placeholder="John" value={firstName} onChangeText={handleFirstNameChange} autoCapitalize="sentences" />
           <FormInputText label="Email" placeholder="john.smith@company.com" value={email} onChangeText={handleEmailChange} keyboardType="email-address" />

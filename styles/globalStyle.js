@@ -3,14 +3,14 @@ import { StyleSheet } from 'react-native';
 export const containerStyles = StyleSheet.create({
   defaultContainer: {
     flex: 1,
-    backgroundColor: '#ffffff',
+    backgroundColor: '#FFFFFF',
     justifyContent: 'center',
   },
   logoContainer: {
     alignItems: 'center',
     justifyContent: 'center',
   },
-  formContainer: {
+  rowContainer: {
     flexDirection: 'row',
     justifyContent: 'space-around',
   },
@@ -18,10 +18,24 @@ export const containerStyles = StyleSheet.create({
     paddingVertical: 10,
     paddingHorizontal: 15
   },
+  textContainer: {
+    paddingVertical: 15,
+    paddingHorizontal: 15
+  },
   buttonContainer: {
     paddingHorizontal: 20,
     paddingTop: 20,
     paddingBottom: 30,
+  },
+  avatarContainer: {
+    backgroundColor: '#FFFFFF',
+    justifyContent: 'flex-end',
+    paddingEnd: 15 
+  },
+  rowAlignContainer: {
+    flex: 1,
+    backgroundColor: '#FFFFFF',
+    justifyContent: 'flex-end',
   },
 });
 
@@ -57,7 +71,19 @@ export const formButtonStyles = StyleSheet.create({
   formButtonText: {
     textAlign: 'center',
     color: '#FFFFFF',
-    fontWeight: '500',
+    fontWeight: 500,
   },
+});
+
+export const textStyles = StyleSheet.create({
+  textHeading: {
+    fontWeight: 500,
+    fontSize: 30,
+  },
+  textSubHeading: {
+    fontWeight: 500,
+    fontSize: 20,
+    paddingBottom: 10,
+  }
 });
 

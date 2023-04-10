@@ -96,7 +96,7 @@ export default class Settings extends Component {
   render() {
     return (
       <View style={containerStyles.defaultContainer}>
-        <ScrollView >
+        <ScrollView>
           <View style={containerStyles.textInputContainer}>
             <FormInputText label="First Name" value={this.state.firstName} onChangeText={this.handleFirstNameChange} autoCapitalize="sentences" />
             <FormInputText label="Last Name" value={this.state.lastName} onChangeText={this.handleLastNameChange} autoCapitalize="sentences" />

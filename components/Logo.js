@@ -9,5 +9,3 @@ export default function Logo() {
             <Image style={logoStyles.image} source={logo} />
         </View>);
 }
-
-Logo.propTypes = {};
