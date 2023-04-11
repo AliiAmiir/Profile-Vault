@@ -1,9 +1,13 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 import { View } from 'react-native';
+
+// Import StyleSheets
+import { containerStyles } from '../styles/globalStyle';
+
+// Import Components
 import FormInputText from './FormInputText';
 import FormButton from './FormButton';
-import { containerStyles } from '../styles/globalStyle';
 
 export default function RegisterationForm({ firstName, lastName, email, phone, gender, dateOfBirth, password, confirmPassword, hobbies, movieGenres, favors, degrees, handleChange, onFormSubmit }) {
   return (

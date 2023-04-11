@@ -1,12 +1,14 @@
 import React, { Component } from 'react';
 import { View } from 'react-native';
 import { signInWithEmailAndPassword } from "firebase/auth";
+
+// Import Configs
 import { auth } from '../config/FirebaseConfig';
 
 // Import StyleSheets
 import { containerStyles } from '../styles/globalStyle';
 
-// Import Componenets
+// Import Components
 import Logo from '../components/Logo';
 import FormButton from '../components/FormButton';
 import FormInputText from '../components/FormInputText';

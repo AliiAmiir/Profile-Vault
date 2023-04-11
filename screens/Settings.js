@@ -1,12 +1,16 @@
 import React, { Component } from 'react';
 import { View, ScrollView } from 'react-native';
+
+// Import Configs
 import { auth } from '../config/FirebaseConfig';
+
+// Import Repositories
 import { fetchUserById } from '../repository/userRepository';
 
 // Import StyleSheets
 import { containerStyles } from '../styles/globalStyle';
 
-// Import Componenets
+// Import Components
 import FormButton from '../components/FormButton';
 import FormInputText from '../components/FormInputText';
 

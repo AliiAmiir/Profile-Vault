@@ -1,12 +1,20 @@
 import React, { Component } from 'react';
 import { View, Text, ScrollView } from 'react-native';
-import { auth } from '../config/FirebaseConfig';
-import { fetchUserById } from '../repository/userRepository';
-import UserAvatar from '../components/UserAvatar';
+
+// Import Utils
 import { computeAge } from '../utils/computeUtil';
+
+// Import Repositories
+import { fetchUserById } from '../repository/userRepository';
+
+// Import Configs
+import { auth } from '../config/FirebaseConfig';
 
 // Import StyleSheets
 import { containerStyles, textStyles } from '../styles/globalStyle';
+
+// Import Components
+import UserAvatar from '../components/UserAvatar';
 
 export default class Home extends Component {
   constructor(props) {

@@ -2,12 +2,14 @@ import React, { Component } from 'react';
 import { View, Alert } from 'react-native';
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { collection, addDoc } from "firebase/firestore";
+
+// Import Configs
 import { db, auth } from '../config/FirebaseConfig';
 
 // Import StyleSheets
 import { containerStyles } from '../styles/globalStyle';
 
-// Import Componenets
+// Import Components
 import Logo from '../components/Logo';
 import RegisterationForm from '../components/RegistrationForm';
 

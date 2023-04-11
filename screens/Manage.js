@@ -1,10 +1,14 @@
 import React, { Component } from 'react';
-import { View, Text, FlatList, Button } from 'react-native';
+import { View, FlatList } from 'react-native';
+
+// Import Utils
 import { manageScreenButtons } from '../utils/buttonComponentsUtil';
-import FormButton from '../components/FormButton';
 
 // Import StyleSheets
-import { containerStyles, textStyles } from '../styles/globalStyle';
+import { containerStyles } from '../styles/globalStyle';
+
+// Import Components
+import FormButton from '../components/FormButton';
 
 export default class Manage extends Component {
   constructor(props) {
