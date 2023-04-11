@@ -17,7 +17,8 @@ export default class Register extends Component {
 
     this.state = {
       loading: true,
-      isSignedIn: false,
+      isSignUpEnabled: false,
+      errors: {},
       firstName: '',
       lastName: '',
       email: '',
@@ -33,52 +34,8 @@ export default class Register extends Component {
     }
   }
 
-  handleFirstNameChange = (firstName) => {
-    this.setState({ firstName: firstName }); ``
-  };
-
-  handleLastNameChange = (lastName) => {
-    this.setState({ lastName: lastName }); ``
-  };
-
-  handleEmailChange = (email) => {
-    this.setState({ email: email }); ``
-  };
-
-  handlePhoneChange = (phone) => {
-    this.setState({ phone: phone }); ``
-  };
-
-  handleGenderChange = (gender) => {
-    this.setState({ gender: gender }); ``
-  };
-
-  handleDateOfBirthChange = (dateOfBirth) => {
-    this.setState({ dateOfBirth: dateOfBirth }); ``
-  };
-
-  handlePasswordChange = (password) => {
-    this.setState({ password: password });
-  };
-
-  handleConfirmPasswordChange = (confirmPassword) => {
-    this.setState({ confirmPassword: confirmPassword });
-  };
-
-  handleHobbiesChange = (hobbies) => {
-    this.setState({ hobbies: hobbies });
-  };
-
-  handleMovieGenresChange = (movieGenres) => {
-    this.setState({ movieGenres: movieGenres });
-  };
-
-  handleFavorsChange = (favors) => {
-    this.setState({ favors: favors });
-  };
-
-  handleDegreesChange = (degrees) => {
-    this.setState({ degrees: degrees });
+  handleChange = (key, value) => {
+    this.setState({[key]: value});
   };
 
   onRegister = async () => {
@@ -126,29 +83,18 @@ export default class Register extends Component {
         <Logo />
         <RegisterationForm
           firstName={this.state.firstName}
-          handleFirstNameChange={this.handleFirstNameChange}
+          handleChange={this.handleChange}
           lastName={this.state.lastName}
-          handleLastNameChange={this.handleLastNameChange}
           email={this.state.email}
-          handleEmailChange={this.handleEmailChange}
           phone={this.state.phone}
-          handlePhoneChange={this.handlePhoneChange}
           gender={this.state.gender}
-          handleGenderChange={this.handleGenderChange}
           dateOfBirth={this.state.dateOfBirth}
-          handleDateOfBirthChange={this.handleDateOfBirthChange}
           password={this.state.password}
-          handlePasswordChange={this.handlePasswordChange}
           confirmPassword={this.state.confirmPassword}
-          handleConfirmPasswordChange={this.handleConfirmPasswordChange}
           hobbies={this.state.hobbies}
-          handleHobbiesChange={this.handleHobbiesChange}
           movieGenres={this.state.movieGenres}
-          handleMovieGenresChange={this.handleMovieGenresChange}
           favors={this.state.favors}
-          handleFavorsChange={this.handleFavorsChange}
           degrees={this.state.degrees}
-          handleDegreesChange={this.handleDegreesChange}
           onFormSubmit={this.onRegister} />
       </View>
     );
