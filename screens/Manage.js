@@ -1,62 +1,41 @@
-import React from 'react';
-import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import React, { Component } from 'react';
+import { View, Text, FlatList, Button } from 'react-native';
+import { manageScreenButtons } from '../utils/buttonComponentsUtil';
+import FormButton from '../components/FormButton';
 
-const buttons = [
-  { name: 'Personal Goals', componentName: 'PersonalGoal' },
-  { name: 'Preferences', componentName: 'Preferences' },
-  { name: 'Passwords', componentName: 'Passwords' },
-  { name: 'Relatives', componentName: 'Relatives' },
-  { name: 'Jobs', componentName: 'Jobs' },
-  { name: 'Education', componentName: 'Education' },
-  { name: 'Trips', componentName: 'Trips' },
-  { name: 'Significants', componentName: 'Significants' },
-  { name: 'Health', componentName: 'Health' },
-  { name: 'Favors', componentName: 'Favors' },
-];
+// Import StyleSheets
+import { containerStyles, textStyles } from '../styles/globalStyle';
 
-export default function Manage({ navigation }) {
-  const handleButtonPress = (componentName) => {
+export default class Manage extends Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      loading: true,
+      isSignedIn: false,
+    }
+  }
+
+  componentDidMount() {
+  }
+
+  componentWillUnmount() {
+  }
+
+
+  handleNavigation = (componentName) => {
+    const { navigation } = this.props;
     navigation.navigate(componentName);
   };
 
-  return (
-    <View style={styles.container}>
-      {buttons.map((button, index) => (
-        <TouchableOpacity
-          key={index}
-          style={styles.button}
-          onPress={() => handleButtonPress(button.componentName)}
-        >
-          <Text style={styles.buttonText}>{button.name}</Text>
-        </TouchableOpacity>
-      ))}
-    </View>
-  );
-};
-
-const styles = StyleSheet.create({
-  container: {
-    paddingTop: 50,
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    paddingHorizontal: 20,
-  },
-  title: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    marginBottom: 20,
-  },
-  button: {
-    backgroundColor: '#6374D1',
-    paddingVertical: 15,
-    borderRadius: 5,
-    marginBottom: 10,
-    width: '100%',
-  },
-  buttonText: {
-    textAlign: 'center',
-    color: '#ffffff',
-    fontWeight: '700',
-  },
-});
+  render() {
+    return (
+      <View style={containerStyles.defaultContainer}>
+        <FlatList data={manageScreenButtons} keyExtractor={(item) => item.componentName} renderItem={({item}) => (
+          <FormButton title={item.name} onPress={() => this.handleNavigation(item.componentName)} />
+        )} style={containerStyles.buttonContainer}>
+        </FlatList>
+      </View>
+    );
+  }
+}

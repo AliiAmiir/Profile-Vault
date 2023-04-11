@@ -1,6 +1,7 @@
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Home from './../screens/Home';
 import Settings from './../screens/Settings';
+import Manage from '../screens/Manage';
 import { AuthScreenStack, ManageScreenStack } from './NavigationStack';
 import { NavigationContainer } from '@react-navigation/native';
 const Tab = createBottomTabNavigator();

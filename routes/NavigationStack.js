@@ -11,6 +11,7 @@ import Jobs from '../screens/Jobs';
 import PersonalGoal from '../screens/PersonalGoal';
 import Relatives from '../screens/Relatives';
 import Trips from '../screens/Trips';
+import Manage from '../screens/Manage';
 
 const AuthStack = createStackNavigator();
 const ManageStack = createStackNavigator();
@@ -27,6 +28,7 @@ export const AuthScreenStack = () => {
 export const ManageScreenStack = () => {
     return (
         <ManageStack.Navigator>
+            <ManageStack.Screen name="ManageMain" component={Manage} options={{ headerShown: false }} />
             <ManageStack.Screen name="Education" component={Education} />
             <ManageStack.Screen name="Health" component={Health} />
             <ManageStack.Screen name="Passwords" component={Passwords} />
