@@ -1,53 +1,24 @@
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { Text } from 'react-native';
 import Home from './../screens/Home';
-import Manage from './../screens/Manage';
 import Settings from './../screens/Settings';
-
+import { AuthScreenStack, ManageScreenStack } from './NavigationStack';
+import { NavigationContainer } from '@react-navigation/native';
 const Tab = createBottomTabNavigator();
 
-export const NavigationTab = () => {
+export const NavigatorTab = (loginDetails) => {
+    const isSignedIn = loginDetails.isSignedIn;
+
     return (
-        <Tab.Navigator
-            initialRouteName="Home"
-            screenOptions={{
-                tabBarActiveTintColor: 'black',
-                tabBarInactiveTintColor: 'black',
-            }}
-        >
-            <Tab.Screen
-                name="Home"
-                component={Home}
-                options={{
-                    tabBarIcon: () => null, // Remove the default icon
-                    tabBarLabel: ({ focused, color }) => (
-                        <Text style={{ color, fontSize: focused ? 16 : 14, paddingBottom: 10 }}>Home</Text>
-                    ),
-                    headerShown: false,
-                }}
-            />
-            <Tab.Screen
-                name="Manage"
-                component={Manage}
-                options={{
-                    tabBarIcon: () => null, // Remove the default icon
-                    tabBarLabel: ({ focused, color }) => (
-                        <Text style={{ color, fontSize: focused ? 16 : 14, paddingBottom: 10 }}>Manage</Text>
-                    ),
-                    headerShown: false,
-                }}
-            />
-            <Tab.Screen
-                name="Settings"
-                component={Settings}
-                options={{
-                    tabBarIcon: () => null, // Remove the default icon
-                    tabBarLabel: ({ focused, color }) => (
-                        <Text style={{ color, fontSize: focused ? 16 : 14, paddingBottom: 10 }}>Settings</Text>
-                    ),
-                    headerShown: false,
-                }}
-            />
-        </Tab.Navigator>
+        <NavigationContainer>
+            {isSignedIn ? (
+                <Tab.Navigator initialRouteName="Home">
+                    <Tab.Screen name="Home" component={Home} />
+                    <Tab.Screen name="Manage" component={ManageScreenStack} />
+                    <Tab.Screen name="Settings" component={Settings} />
+                </Tab.Navigator>
+            ) : (
+                <AuthScreenStack />
+            )}
+        </NavigationContainer>
     );
 }

@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
-import { NavigationContainer } from '@react-navigation/native';
-import { NavigatorStack } from './routes/NavigationStack';
-import { ActivityIndicator } from 'react-native';
+import { NavigatorTab } from './routes/NavigationTab';
+import { ActivityIndicator, View } from 'react-native';
 import { auth } from './config/FirebaseConfig';
 
 export default class App extends Component {
@@ -17,14 +16,14 @@ export default class App extends Component {
 
   componentDidMount() {
     this.setAuth = auth.onAuthStateChanged((user) => {
-      if(!user) {
+      if (!user) {
         this.setState({
           loading: false,
           isSignedIn: false
         });
       } else {
         this.setState({
-          user, 
+          user,
           isSignedIn: true
         })
       }
@@ -32,19 +31,14 @@ export default class App extends Component {
   }
 
   componentWillUnmount() {
-    if(this.setAuth) {
+    if (this.setAuth) {
       this.setAuth();
     }
   }
 
   render() {
     return (
-      <NavigationContainer>
-        {
-          this.state.loading ? (<ActivityIndicator size="large" />) : (
-            <NavigatorStack isSignedIn={this.state.isSignedIn} />
-          )}
-      </NavigationContainer>
+      <NavigatorTab isSignedIn={this.state.isSignedIn} />
     );
   }
 

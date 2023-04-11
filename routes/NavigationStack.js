@@ -1,9 +1,6 @@
 import { createStackNavigator } from '@react-navigation/stack';
-import { NavigationTab } from './NavigationTab';
-
 import Login from './../screens/Login';
 import Register from './../screens/Register';
-
 import Education from '../screens/Education';
 import Health from '../screens/Health';
 import Passwords from '../screens/Passwords';
@@ -15,33 +12,31 @@ import PersonalGoal from '../screens/PersonalGoal';
 import Relatives from '../screens/Relatives';
 import Trips from '../screens/Trips';
 
-const Stack = createStackNavigator();
+const AuthStack = createStackNavigator();
+const ManageStack = createStackNavigator();
 
-export const NavigatorStack = (loginDetails) => {
-    const isSignedIn = loginDetails.isSignedIn;
-
+export const AuthScreenStack = () => {
     return (
-        <Stack.Navigator>
-            {isSignedIn ? (
-                <>
-                    <Stack.Screen name="NavigationTab" component={NavigationTab} />
-                    <Stack.Screen name="Education" component={Education} />
-                    <Stack.Screen name="Health" component={Health} />
-                    <Stack.Screen name="Passwords" component={Passwords} />
-                    <Stack.Screen name="Preferences" component={Preferences} />
-                    <Stack.Screen name="Significants" component={Significants} />
-                    <Stack.Screen name="Favors" component={Favors} />
-                    <Stack.Screen name="Jobs" component={Jobs} />
-                    <Stack.Screen name="PersonalGoal" component={PersonalGoal} />
-                    <Stack.Screen name="Relatives" component={Relatives} />
-                    <Stack.Screen name="Trips" component={Trips} />
-                </>
-            ) : (
-                <>
-                    <Stack.Screen name="Login" component={Login} />
-                    <Stack.Screen name="Register" component={Register} />
-                </>
-            )}
-        </Stack.Navigator>
-    );
-}
+        <AuthStack.Navigator>
+            <AuthStack.Screen name="Login" component={Login} />
+            <AuthStack.Screen name="Register" component={Register} />
+        </AuthStack.Navigator>
+    )
+};
+
+export const ManageScreenStack = () => {
+    return (
+        <ManageStack.Navigator>
+            <ManageStack.Screen name="Education" component={Education} />
+            <ManageStack.Screen name="Health" component={Health} />
+            <ManageStack.Screen name="Passwords" component={Passwords} />
+            <ManageStack.Screen name="Preferences" component={Preferences} />
+            <ManageStack.Screen name="Significants" component={Significants} />
+            <ManageStack.Screen name="Favors" component={Favors} />
+            <ManageStack.Screen name="Jobs" component={Jobs} />
+            <ManageStack.Screen name="PersonalGoal" component={PersonalGoal} />
+            <ManageStack.Screen name="Relatives" component={Relatives} />
+            <ManageStack.Screen name="Trips" component={Trips} />
+        </ManageStack.Navigator>
+    )
+};
