@@ -1,4 +1,4 @@
-import { collection, query, where, getDocs, addDoc } from 'firebase/firestore';
+import { collection, query, where, getDocs, addDoc, updateDoc, doc } from 'firebase/firestore';
 import { db } from '../config/FirebaseConfig';
 
 export const fetchGoalsByUserId = async (userId) => {
@@ -33,28 +33,19 @@ export const saveGoal = async (userId, goalName) => {
     }
 };
 
-// export const updateGoalById = async (userId, firstName, lastName, email, phone, gender, dateOfBirth, hobbies, movieGenres, favors, degrees) => {
-//     try {
-//         const savedUser = await addDoc(collection(db, 'goals'), {
-//             uid: userId,
-//             firstName: firstName,
-//             lastName: lastName,
-//             email: email,
-//             phone: phone,
-//             gender: gender,
-//             dateOfBirth: dateOfBirth,
-//             hobbies: hobbies,
-//             movieGenres: movieGenres,
-//             favors: favors,
-//             degrees: degrees,
-//         });
+export const updateGoalById = async (goal) => {
+    try {;
+        const updatedGoal = await updateDoc(doc(db, 'goals', goal.key), {
+            name: goal.name,
+            counter: goal.counter,
+        });
 
-//         return savedUser;
-//     } catch (error) {
-//         console.log(error);
-//         return error;
-//     }
-// };
+        return updatedGoal;
+    } catch (error) {
+        console.log(error);
+        return error;
+    }
+};
 
 
 // export const deleteGoalById = async (userId, firstName, lastName, email, phone, gender, dateOfBirth, hobbies, movieGenres, favors, degrees) => {

@@ -5,7 +5,7 @@ import { View, FlatList, Alert, TouchableWithoutFeedback, Keyboard } from 'react
 import { auth } from '../config/FirebaseConfig';
 
 // Import Repositories
-import { fetchGoalsByUserId, saveGoal } from '../repository/goalsRepository';
+import { fetchGoalsByUserId, saveGoal, updateGoalById } from '../repository/goalsRepository';
 
 // Import StyleSheets
 import { containerStyles } from '../styles/globalStyle';
@@ -47,7 +47,7 @@ export default class PersonalGoals extends Component {
       await saveGoal(auth.currentUser.uid, this.state.newGoalName);
 
       Alert.alert('Added Goal');
-
+      this.setState({ newGoalName: '' })
       await this.fetchUserGoals();
     } catch (error) {
       console.log(error.message);
@@ -55,8 +55,17 @@ export default class PersonalGoals extends Component {
     }
   }
 
-  handleUpdateItem = (key, value) => {
-    // Handle Update
+  handleUpdateItem = async (item) => {
+    try {
+      await updateGoalById(item);
+
+      Alert.alert('Updated Goal');
+
+      await this.fetchUserGoals();
+    } catch (error) {
+      console.log(error.message);
+      Alert.alert('Error occurred while adding a new goal');
+    }
   }
 
   // handleDeleteItem
@@ -102,7 +111,7 @@ export default class PersonalGoals extends Component {
           </View>
           <View style={[containerStyles.textInputContainer, { flex: 1 }]}>
             <FlatList data={this.state.savedGoals} renderItem={({ item }) => (
-              <FormUpdateInputText value={item.name} autoCapitalize="sentences" onChangeText={(value) => this.handleUpdateChange(item.key, value)} onBlurUpdate={() => this.handleUpdateItem(item.key, item.name)} />
+              <FormUpdateInputText value={item.name} autoCapitalize="sentences" onChangeText={(value) => this.handleUpdateChange(item.key, value)} onBlurUpdate={() => this.handleUpdateItem(item)} />
             )} style={containerStyles.buttonContainer}>
             </FlatList>
           </View>
