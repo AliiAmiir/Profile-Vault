@@ -1,14 +1,13 @@
 import React, { Component } from 'react';
 import { View, Alert } from 'react-native';
 import { createUserWithEmailAndPassword } from "firebase/auth";
-import { collection, addDoc } from "firebase/firestore";
 
 // Import Utils
 import { isSignUpEnabledCheck, validateRegistrationFields } from '../utils/validationUtil';
 import { genderPickerOptions } from '../utils/pickerOptions';
 
 // Import Configs
-import { db, auth } from '../config/FirebaseConfig';
+import { auth } from '../config/FirebaseConfig';
 
 // Import StyleSheets
 import { containerStyles } from '../styles/globalStyle';
@@ -16,6 +15,9 @@ import { containerStyles } from '../styles/globalStyle';
 // Import Components
 import Logo from '../components/Logo';
 import RegisterationForm from '../components/RegistrationForm';
+
+// Import Repositories
+import { saveUserDetails } from '../repository/userRepository';
 
 export default class Register extends Component {
   constructor(props) {
@@ -49,16 +51,16 @@ export default class Register extends Component {
   handleShowDatePicker = () => {
     this.setState({ showDatePicker: !this.state.showDatePicker });
   };
-  
+
   handleDateChange = (event, selectedDate) => {
     const currentDate = selectedDate || this.state.dateOfBirth;
-    this.setState({ dateOfBirth: currentDate});
+    this.setState({ dateOfBirth: currentDate });
   };
 
   handleChange = (key, value) => {
     const errors = validateRegistrationFields(key, value, this.state.password, this.state.errors);
     const isSignUpEnabled = isSignUpEnabledCheck(this.state.firstName, this.state.lastName, this.state.email, this.state.phone, this.state.gender, this.state.dateOfBirth, this.state.password, this.state.confirmPassword, errors);
-
+    console.log(this.state.errors)
     this.setState({ [key]: value, showDatePicker: false, errors: errors, showGenderPicker: false, isSignUpEnabled: isSignUpEnabled });
   };
 
@@ -70,19 +72,7 @@ export default class Register extends Component {
 
       const user = userCredential.user;
 
-      await addDoc(collection(db, 'users'), {
-        uid: user.uid,
-        firstName: this.state.firstName,
-        lastName: this.state.lastName,
-        email: this.state.email,
-        phone: this.state.phone,
-        gender: this.state.gender,
-        dateOfBirth: this.state.dateOfBirth,
-        hobbies: this.state.hobbies,
-        movieGenres: this.state.movieGenres,
-        favors: this.state.favors,
-        degrees: this.state.degrees,
-      });
+      await saveUserDetails(user.uid, this.state.firstName, this.state.lastName, this.state.email, this.state.phone, this.state.gender, this.state.dateOfBirth, this.state.hobbies, this.state.movieGenres, this.state.favors, this.state.degrees);
 
       Alert.alert('User Registered Successfully');
     } catch (error) {

@@ -13,19 +13,12 @@ export const computeInitials = (firstName, lastName) => {
 
 export const computeAge = (dateOfBirth) => {
     let age = 'N/A';
-    if (!dateOfBirth || !dateOfBirth.trim()) {
+    if (!dateOfBirth) {
         console.log('Date of birth can not be null');
         return age;
     }
 
-    const today = new Date();
-    const [month, day, year] = dateOfBirth.split('/');
-    const birthDate = new Date();
-    birthDate.setFullYear(year);
-    birthDate.setMonth(month);
-    birthDate.setDate(day);
-
-    const dateDifference = new Date(today - birthDate).getUTCFullYear() - 1970;
+    const dateDifference = new Date(new Date() - dateOfBirth.toDate()).getUTCFullYear() - 1970;
     age = dateDifference.toString();
     
     return age;

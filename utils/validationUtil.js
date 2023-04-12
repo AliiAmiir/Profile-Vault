@@ -1,7 +1,7 @@
 export const isSignUpEnabledCheck = (firstName, lastName, email, phone, gender, dateOfBirth, password, confirmPassword, errors) => {
     const isError = Object.values(errors).some(obj => obj !== null);
 
-    if (!firstName || !lastName || !email || !phone || !gender || !dateOfBirth || !password || !confirmPassword && !isError) {
+    if (!firstName || !lastName || !email || !phone || !gender || !dateOfBirth || !password || !confirmPassword || isError) {
         return false;
     }
 
