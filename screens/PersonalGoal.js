@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, FlatList, Alert } from 'react-native';
+import { View, FlatList, Alert, TouchableWithoutFeedback, Keyboard } from 'react-native';
 
 // Import Configs
 import { auth } from '../config/FirebaseConfig';
@@ -36,9 +36,9 @@ export default class PersonalGoals extends Component {
     let savedGoals = this.state.savedGoals;
     let index = savedGoals.findIndex(x => x.key === key);
     savedGoals[index].name = value;
-    
+
     // Add validation
-    
+
     this.setState({ savedGoals: savedGoals });
   };
 
@@ -56,8 +56,7 @@ export default class PersonalGoals extends Component {
   }
 
   handleUpdateItem = (key, value) => {
-    console.log(key);
-    console.log(value);
+    // Handle Update
   }
 
   // handleDeleteItem
@@ -78,12 +77,12 @@ export default class PersonalGoals extends Component {
     if (goalsData && goalsData.length > 0) {
       this.setState({
         loading: false,
-        savedGoals: goalsData.map((goal) => { 
+        savedGoals: goalsData.map((goal) => {
           let savedGoal = goal.data();
           savedGoal.key = goal.id;
 
           return savedGoal;
-         })
+        })
       });
     }
   }
@@ -95,17 +94,20 @@ export default class PersonalGoals extends Component {
 
   render() {
     return (
-      <View style={containerStyles.defaultContainer}>
-        <View style={containerStyles.textInputContainer}>
-          <FormInputText placeholder="New Goal" value={this.state.newGoalName} onChangeText={(value) => this.handleChange('newGoalName', value)} autoCapitalize="sentences" errorText={this.state.errors.newGoalName || null} />
-          <FormButton title='Add a Goal' color={'#F2F2F7'} textColor={'#000000'} onPress={this.handleSaveGoal} />
-          <FlatList data={this.state.savedGoals} renderItem={({ item }) => (
-            <FormUpdateInputText value={item.name} autoCapitalize="sentences" onChangeText={(value) => this.handleUpdateChange(item.key, value)} onBlurUpdate={(value) => this.handleUpdateItem(item.key, value)} />
+      <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
+        <View style={containerStyles.defaultContainer}>
+          <View style={[containerStyles.textInputContainer, { flex: 0.5 }]}>
+            <FormInputText placeholder="New Goal" value={this.state.newGoalName} onChangeText={(value) => this.handleChange('newGoalName', value)} autoCapitalize="sentences" errorText={this.state.errors.newGoalName || null} />
+            <FormButton title='Add a Goal' color={'#F2F2F7'} textColor={'#000000'} onPress={this.handleSaveGoal} />
+          </View>
+          <View style={[containerStyles.textInputContainer, { flex: 1 }]}>
+            <FlatList data={this.state.savedGoals} renderItem={({ item }) => (
+              <FormUpdateInputText value={item.name} autoCapitalize="sentences" onChangeText={(value) => this.handleUpdateChange(item.key, value)} onBlurUpdate={() => this.handleUpdateItem(item.key, item.name)} />
             )} style={containerStyles.buttonContainer}>
-          </FlatList>
-          <FormButton title='Save Changes' onPress={this.handleSaveGoal} />
+            </FlatList>
+          </View>
         </View>
-      </View>
+      </TouchableWithoutFeedback>
     );
   }
 }
