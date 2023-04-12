@@ -29,7 +29,8 @@ export default class Register extends Component {
       email: '',
       phone: '',
       gender: '',
-      dateOfBirth: '',
+      dateOfBirth: new Date(),
+      showDatePicker: false,
       password: '',
       confirmPassword: '',
       hobbies: '',
@@ -39,11 +40,20 @@ export default class Register extends Component {
     }
   }
 
+  handleShowDatePicker = () => {
+    this.setState({ showDatePicker: !this.state.showDatePicker });
+  };
+
+  handleDateChange = (event, selectedDate) => {
+    const currentDate = selectedDate || this.state.dateOfBirth;
+    this.setState({ dateOfBirth: currentDate});
+  };
+
   handleChange = (key, value) => {
     const errors = validateRegistrationFields(key, value, this.state.password, this.state.errors);
     const isSignUpEnabled = isSignUpEnabledCheck(this.state.firstName, this.state.lastName, this.state.email, this.state.phone, this.state.gender, this.state.dateOfBirth, this.state.password, this.state.confirmPassword, errors);
 
-    this.setState({[key]: value, 'errors': errors, 'isSignUpEnabled': isSignUpEnabled});
+    this.setState({ [key]: value, showDatePicker: false, errors: errors, isSignUpEnabled: isSignUpEnabled });
   };
 
   onRegister = async () => {
@@ -91,12 +101,12 @@ export default class Register extends Component {
         <Logo />
         <RegisterationForm
           firstName={this.state.firstName}
-          handleChange={this.handleChange}
           lastName={this.state.lastName}
           email={this.state.email}
           phone={this.state.phone}
           gender={this.state.gender}
           dateOfBirth={this.state.dateOfBirth}
+          showDatePicker={this.state.showDatePicker}
           password={this.state.password}
           confirmPassword={this.state.confirmPassword}
           hobbies={this.state.hobbies}
@@ -104,6 +114,10 @@ export default class Register extends Component {
           favors={this.state.favors}
           degrees={this.state.degrees}
           errors={this.state.errors}
+          isSignUpEnabled={this.state.isSignUpEnabled}
+          handleShowDatePicker={this.handleShowDatePicker}
+          handleDateChange={this.handleDateChange}
+          handleChange={this.handleChange}
           onFormSubmit={this.onRegister} />
       </View>
     );

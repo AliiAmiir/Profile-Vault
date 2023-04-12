@@ -21,11 +21,18 @@ export const validateRegistrationFields = (fieldName, fieldValue, password, exis
             const emailRegex = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w\w+)+$/;
             errors.email = emailRegex.test(fieldValue) ? null : 'Invalid email';
             break;
+        case 'phone':
+            const phoneRegex = /^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4}$/ ;
+            errors.phone = phoneRegex.test(fieldValue) ? null : 'Invalid phone number';
+            break;
+        case 'gender':
+            errors.gender = fieldValue.length < 1 ? 'Last name is required' : null;
+            break;
         case 'password':
-            errors.password = fieldValue.length >= 6 ? null : 'Password must be at least 6 characters';
+            errors.password = fieldValue.length >= 6 ? null : 'Invalid password';
             break;
         case 'confirmPassword':
-            errors.password = fieldValue == password ? null : 'Passwords do not match';
+            errors.confirmPassword = fieldValue == password ? null : 'Passwords mismatch';
             break;
         default:
             break;

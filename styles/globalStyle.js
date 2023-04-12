@@ -14,9 +14,17 @@ export const containerStyles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-around',
   },
+  columnContainer: {
+    flexDirection: 'column',
+    justifyContent: 'space-around',
+  },
+  spaceAround: {
+    paddingHorizontal: 8,
+    justifyContent: 'space-around',
+  },
   textInputContainer: {
     paddingVertical: 10,
-    paddingHorizontal: 15
+    paddingHorizontal: 15,
   },
   textContainer: {
     paddingVertical: 15,
@@ -86,7 +94,7 @@ export const textStyles = StyleSheet.create({
     paddingBottom: 10,
   },
   errorText: {
-    color: 'darkred'
+    color: 'darkred',
   }
 });
 
