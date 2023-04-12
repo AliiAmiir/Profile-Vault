@@ -1,134 +1,92 @@
-import React, { useState } from 'react';
-import {
-  View,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  StyleSheet,
-  ScrollView,
-  KeyboardAvoidingView,
-  Platform,
-} from 'react-native';
+import React, { Component } from 'react';
+import { View, Text, ScrollView, FlatList, Alert } from 'react-native';
 
-const PersonalGoals = () => {
-  const [items, setItems] = useState([]);
-  const [newItem, setNewItem] = useState('');
+// Import Configs
+import { auth } from '../config/FirebaseConfig';
 
-  const handleAddItem = () => {
-    setItems([...items, newItem]);
-    setNewItem('');
+// Import Repositories
+import { fetchGoalsByUserId, saveGoal } from '../repository/goalsRepository';
+
+// Import StyleSheets
+import { containerStyles } from '../styles/globalStyle';
+
+// Import Components
+import FormButton from '../components/FormButton';
+import FormInputText from '../components/FormInputText';
+
+export default class PersonalGoals extends Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      loading: true,
+      newGoalName: '',
+      errors: {},
+      savedGoals: [],
+    }
+  }
+
+  handleChange = (key, value) => {
+    // Add validation
+    this.setState({ [key]: value });
   };
 
-  const handleEditItem = (index, newValue) => {
-    const updatedItems = items.map((item, i) => {
-      if (i === index) {
-        return newValue;
-      }
-      return item;
-    });
-    setItems(updatedItems);
+  handleSaveGoal = async () => {
+    try {
+      await saveGoal(auth.currentUser.uid, this.state.newGoalName);
+
+      Alert.alert('Added Goal');
+
+      await this.fetchUserGoals();
+    } catch (error) {
+      console.log(error.message);
+      Alert.alert('Error occurred while adding a new goal');
+    }
+  }
+
+  // handleUpdateItem
+  // handleDeleteItem
+
+  componentDidMount() {
+    this.fetchUserGoals();
+  }
+
+  componentWillUnmount() {
+    if (this.fetchUserGoals) {
+      this.fetchUserGoals();
+    }
+  }
+
+  async fetchUserGoals() {
+    const goalsData = await fetchGoalsByUserId(auth.currentUser.uid);
+
+    if (goalsData && goalsData.length > 0) {
+      this.setState({
+        loading: false,
+        savedGoals: goalsData.map((goal) => { return goal.data() })
+      });
+    }
+  }
+
+  handleNavigation = (componentName) => {
+    const { navigation } = this.props;
+    navigation.navigate(componentName);
   };
 
-  const handleDeleteItem = (index) => {
-    const updatedItems = items.filter((_, i) => i !== index);
-    setItems(updatedItems);
-  };
-
-  return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Personal Goals</Text>
-      <ScrollView style={styles.scrollContainer}>
-        {items.map((item, index) => (
-          <View key={index} style={styles.listItem}>
-            <TextInput
-              style={styles.itemText}
-              value={item}
-              onChangeText={(text) => handleEditItem(index, text)}
-            />
-            <TouchableOpacity
-              style={styles.deleteButton}
-              onPress={() => handleDeleteItem(index)}
-            >
-              <Text style={styles.buttonText}>Delete</Text>
-            </TouchableOpacity>
-          </View>
-        ))}
-      </ScrollView>
-      <TextInput
-        style={styles.newItemInput}
-        value={newItem}
-        onChangeText={setNewItem}
-        placeholder="Add new goal"
-      />
-      <TouchableOpacity style={styles.addButton} onPress={handleAddItem}>
-        <Text style={styles.buttonText}>Add Goal</Text>
-      </TouchableOpacity>
-      <TouchableOpacity style={styles.saveButton}>
-        <Text style={styles.buttonText}>Save Changes</Text>
-      </TouchableOpacity>
-    </View>
-  );
-};
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    padding: 20,
-  },
-  title: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    marginBottom: 20,
-    textAlign: 'center',
-    marginTop: 30,
-  },
-  scrollContainer: {
-    maxHeight: '70%',
-    marginBottom: 20,
-  },
-  listItem: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: '#f0f0f0',
-    borderRadius: 5,
-    padding: 10,
-    marginBottom: 10,
-  },
-  itemText: {
-    flex: 1,
-    fontSize: 16,
-  },
-  newItemInput: {
-    backgroundColor: '#f0f0f0',
-    borderRadius: 5,
-    padding: 10,
-    marginBottom: 10,
-  },
-  addButton: {
-    backgroundColor: '#6374D1',
-    paddingVertical: 10,
-    paddingHorizontal: 20,
-    borderRadius: 5,
-    marginBottom: 10,
-  },
-  saveButton: {
-    backgroundColor: '#6374D1',
-    paddingVertical: 10,
-    paddingHorizontal: 20,
-    borderRadius: 5,
-    marginBottom: 60,
-  },
-  buttonText: {
-    color: '#ffffff',
-    fontWeight: '600',
-  },
-  deleteButton: {
-    backgroundColor: 'red',
-    paddingVertical: 5,
-    paddingHorizontal: 10,
-    borderRadius: 5,
-    marginLeft: 10,
-  },
-});
-
-export default PersonalGoals;
+  render() {
+    return (
+      <View style={containerStyles.defaultContainer}>
+        <View style={containerStyles.textInputContainer}>
+          <FormInputText placeholder="New Goal" value={this.state.newGoalName} onChangeText={(value) => this.handleChange('newGoalName', value)} autoCapitalize="sentences" errorText={this.state.errors.newGoalName || null} />
+          <FormButton title='Add a Goal' color={'#F2F2F7'} textColor={'#000000'} onPress={this.handleSaveGoal} />
+          <FlatList data={this.state.savedGoals} keyExtractor={(item) => item.name} renderItem={({ item }) => (
+            <Text>{item.name}</Text>
+            // <FormButton title={item.name} onPress={() => this.handleNavigation(item.componentName)} />
+          )} style={containerStyles.buttonContainer}>
+          </FlatList>
+          <FormButton title='Save Changes' onPress={this.handleSaveGoal} />
+        </View>
+      </View>
+    );
+  }
+}

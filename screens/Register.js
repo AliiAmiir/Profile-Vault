@@ -60,7 +60,6 @@ export default class Register extends Component {
   handleChange = (key, value) => {
     const errors = validateRegistrationFields(key, value, this.state.password, this.state.errors);
     const isSignUpEnabled = isSignUpEnabledCheck(this.state.firstName, this.state.lastName, this.state.email, this.state.phone, this.state.gender, this.state.dateOfBirth, this.state.password, this.state.confirmPassword, errors);
-    console.log(this.state.errors)
     this.setState({ [key]: value, showDatePicker: false, errors: errors, showGenderPicker: false, isSignUpEnabled: isSignUpEnabled });
   };
 
