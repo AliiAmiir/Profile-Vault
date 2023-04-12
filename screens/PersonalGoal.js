@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Text, ScrollView, FlatList, Alert } from 'react-native';
+import { View, FlatList, Alert } from 'react-native';
 
 // Import Configs
 import { auth } from '../config/FirebaseConfig';
@@ -13,6 +13,7 @@ import { containerStyles } from '../styles/globalStyle';
 // Import Components
 import FormButton from '../components/FormButton';
 import FormInputText from '../components/FormInputText';
+import FormUpdateInputText from '../components/FormUpdateInputText';
 
 export default class PersonalGoals extends Component {
   constructor(props) {
@@ -31,6 +32,16 @@ export default class PersonalGoals extends Component {
     this.setState({ [key]: value });
   };
 
+  handleUpdateChange = (key, value) => {
+    let savedGoals = this.state.savedGoals;
+    let index = savedGoals.findIndex(x => x.key === key);
+    savedGoals[index].name = value;
+    
+    // Add validation
+    
+    this.setState({ savedGoals: savedGoals });
+  };
+
   handleSaveGoal = async () => {
     try {
       await saveGoal(auth.currentUser.uid, this.state.newGoalName);
@@ -44,7 +55,11 @@ export default class PersonalGoals extends Component {
     }
   }
 
-  // handleUpdateItem
+  handleUpdateItem = (key, value) => {
+    console.log(key);
+    console.log(value);
+  }
+
   // handleDeleteItem
 
   componentDidMount() {
@@ -63,7 +78,12 @@ export default class PersonalGoals extends Component {
     if (goalsData && goalsData.length > 0) {
       this.setState({
         loading: false,
-        savedGoals: goalsData.map((goal) => { return goal.data() })
+        savedGoals: goalsData.map((goal) => { 
+          let savedGoal = goal.data();
+          savedGoal.key = goal.id;
+
+          return savedGoal;
+         })
       });
     }
   }
@@ -79,10 +99,9 @@ export default class PersonalGoals extends Component {
         <View style={containerStyles.textInputContainer}>
           <FormInputText placeholder="New Goal" value={this.state.newGoalName} onChangeText={(value) => this.handleChange('newGoalName', value)} autoCapitalize="sentences" errorText={this.state.errors.newGoalName || null} />
           <FormButton title='Add a Goal' color={'#F2F2F7'} textColor={'#000000'} onPress={this.handleSaveGoal} />
-          <FlatList data={this.state.savedGoals} keyExtractor={(item) => item.name} renderItem={({ item }) => (
-            <Text>{item.name}</Text>
-            // <FormButton title={item.name} onPress={() => this.handleNavigation(item.componentName)} />
-          )} style={containerStyles.buttonContainer}>
+          <FlatList data={this.state.savedGoals} renderItem={({ item }) => (
+            <FormUpdateInputText value={item.name} autoCapitalize="sentences" onChangeText={(value) => this.handleUpdateChange(item.key, value)} onBlurUpdate={(value) => this.handleUpdateItem(item.key, value)} />
+            )} style={containerStyles.buttonContainer}>
           </FlatList>
           <FormButton title='Save Changes' onPress={this.handleSaveGoal} />
         </View>
