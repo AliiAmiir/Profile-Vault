@@ -5,6 +5,7 @@ import { collection, addDoc } from "firebase/firestore";
 
 // Import Utils
 import { isSignUpEnabledCheck, validateRegistrationFields } from '../utils/validationUtil';
+import { genderPickerOptions } from '../utils/pickerOptions';
 
 // Import Configs
 import { db, auth } from '../config/FirebaseConfig';
@@ -29,6 +30,7 @@ export default class Register extends Component {
       email: '',
       phone: '',
       gender: '',
+      showGenderPicker: false,
       dateOfBirth: new Date(),
       showDatePicker: false,
       password: '',
@@ -40,10 +42,14 @@ export default class Register extends Component {
     }
   }
 
+  handleShowGenderPicker = () => {
+    this.setState({ showGenderPicker: !this.state.showGenderPicker });
+  };
+
   handleShowDatePicker = () => {
     this.setState({ showDatePicker: !this.state.showDatePicker });
   };
-
+  
   handleDateChange = (event, selectedDate) => {
     const currentDate = selectedDate || this.state.dateOfBirth;
     this.setState({ dateOfBirth: currentDate});
@@ -53,7 +59,7 @@ export default class Register extends Component {
     const errors = validateRegistrationFields(key, value, this.state.password, this.state.errors);
     const isSignUpEnabled = isSignUpEnabledCheck(this.state.firstName, this.state.lastName, this.state.email, this.state.phone, this.state.gender, this.state.dateOfBirth, this.state.password, this.state.confirmPassword, errors);
 
-    this.setState({ [key]: value, showDatePicker: false, errors: errors, isSignUpEnabled: isSignUpEnabled });
+    this.setState({ [key]: value, showDatePicker: false, errors: errors, showGenderPicker: false, isSignUpEnabled: isSignUpEnabled });
   };
 
   onRegister = async () => {
@@ -105,6 +111,9 @@ export default class Register extends Component {
           email={this.state.email}
           phone={this.state.phone}
           gender={this.state.gender}
+          genderPickerOptions={genderPickerOptions()}
+          showGenderPicker={this.state.showGenderPicker}
+          handleShowGenderPicker={this.handleShowGenderPicker}
           dateOfBirth={this.state.dateOfBirth}
           showDatePicker={this.state.showDatePicker}
           password={this.state.password}

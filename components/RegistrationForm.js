@@ -9,8 +9,9 @@ import { containerStyles } from '../styles/globalStyle';
 import FormInputText from './FormInputText';
 import FormButton from './FormButton';
 import CustomDatePicker from './CustomDatePicker';
+import CustomPicker from './CustomPicker';
 
-export default function RegisterationForm({ firstName, lastName, email, phone, gender, dateOfBirth, showDatePicker, password, confirmPassword, hobbies, movieGenres, favors, degrees, errors, isSignUpEnabled, handleShowDatePicker, handleChange, handleDateChange, onFormSubmit }) {
+export default function RegisterationForm({ firstName, lastName, email, phone, gender, genderPickerOptions, showGenderPicker, handleShowGenderPicker, dateOfBirth, showDatePicker, password, confirmPassword, hobbies, movieGenres, favors, degrees, errors, isSignUpEnabled, handleShowDatePicker, handleChange, handleDateChange, onFormSubmit }) {
   return (
     <ScrollView>
       <View style={containerStyles.columnContainer}>
@@ -19,10 +20,9 @@ export default function RegisterationForm({ firstName, lastName, email, phone, g
           <FormInputText label="Last Name" placeholder="Smith" value={lastName} onChangeText={(value) => handleChange('lastName', value)} autoCapitalize="sentences" errorText={errors.lastName || null} />
         </View>
 
-
         <View style={containerStyles.rowContainer}>
           <FormInputText label="Phone" placeholder="4692229999" value={phone} onChangeText={(value) => handleChange('phone', value)} keyboardType="phone-pad" errorText={errors.phone || null} />
-          <FormInputText label="Gender" placeholder="Male" value={gender} onChangeText={(value) => handleChange('gender', value)} autoCapitalize="sentences" errorText={errors.gender || null} />
+        <CustomPicker label="Gender" showPicker={showGenderPicker} items={genderPickerOptions} selectedValue={gender} onValueChange={(itemValue, itemIndex) => handleChange('gender', itemValue)} handleShowGenderPicker={handleShowGenderPicker} errorText={errors.gender || null} />
         </View>
 
         <View style={containerStyles.spaceAround}>
@@ -56,6 +56,9 @@ FormInputText.propTypes = {
   email: PropTypes.string,
   phone: PropTypes.string,
   gender: PropTypes.string,
+  genderPickerOptions: PropTypes.arrayOf(PropTypes.object),
+  showGenderPicker: PropTypes.bool,
+  handleShowGenderPicker: PropTypes.func,
   dateOfBirth: PropTypes.instanceOf(Date),
   showDatePicker: PropTypes.bool,
   password: PropTypes.string,

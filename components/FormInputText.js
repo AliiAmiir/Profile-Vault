@@ -1,6 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { View, Text, TextInput } from 'react-native';
+
+// Import Styles
 import { containerStyles, formInputTextStyles, textStyles } from '../styles/globalStyle';
 
 export default function FormInputText({ label, placeholder, value, onChangeText, autoCapitalize, keyboardType, secureTextEntry, errorText }) {

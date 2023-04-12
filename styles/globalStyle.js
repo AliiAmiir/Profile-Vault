@@ -22,7 +22,19 @@ export const containerStyles = StyleSheet.create({
     paddingHorizontal: 8,
     justifyContent: 'space-around',
   },
+  selectionPickerContainer: {
+    height: 50,
+    borderWidth: 1,
+    borderColor: 'gray',
+    borderRadius: 5,
+  },
   textInputContainer: {
+    paddingVertical: 10,
+    paddingHorizontal: 15,
+  },
+  pickerContainer: {
+    flex: 1,
+    justifyContent: 'center',
     paddingVertical: 10,
     paddingHorizontal: 15,
   },
@@ -95,6 +107,12 @@ export const textStyles = StyleSheet.create({
   },
   errorText: {
     color: 'darkred',
+  }
+});
+
+export const pickerStyles = StyleSheet.create({
+  pickerButton: {
+    backgroundColor: '#F2F2F7',
   }
 });
 

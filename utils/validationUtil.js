@@ -26,7 +26,7 @@ export const validateRegistrationFields = (fieldName, fieldValue, password, exis
             errors.phone = phoneRegex.test(fieldValue) ? null : 'Invalid phone number';
             break;
         case 'gender':
-            errors.gender = fieldValue.length < 1 ? 'Last name is required' : null;
+            errors.gender = fieldValue === null || fieldValue === '' ? 'Gender is required' : null;
             break;
         case 'password':
             errors.password = fieldValue.length >= 6 ? null : 'Invalid password';
