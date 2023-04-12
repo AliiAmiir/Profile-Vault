@@ -84,6 +84,9 @@ export const textStyles = StyleSheet.create({
     fontWeight: 500,
     fontSize: 20,
     paddingBottom: 10,
+  },
+  errorText: {
+    color: 'darkred'
   }
 });
 

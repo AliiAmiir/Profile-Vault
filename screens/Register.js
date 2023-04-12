@@ -3,6 +3,9 @@ import { View, Alert } from 'react-native';
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { collection, addDoc } from "firebase/firestore";
 
+// Import Utils
+import { isSignUpEnabledCheck, validateRegistrationFields } from '../utils/validationUtil';
+
 // Import Configs
 import { db, auth } from '../config/FirebaseConfig';
 
@@ -37,7 +40,10 @@ export default class Register extends Component {
   }
 
   handleChange = (key, value) => {
-    this.setState({[key]: value});
+    const errors = validateRegistrationFields(key, value, this.state.password, this.state.errors);
+    const isSignUpEnabled = isSignUpEnabledCheck(this.state.firstName, this.state.lastName, this.state.email, this.state.phone, this.state.gender, this.state.dateOfBirth, this.state.password, this.state.confirmPassword, errors);
+
+    this.setState({[key]: value, 'errors': errors, 'isSignUpEnabled': isSignUpEnabled});
   };
 
   onRegister = async () => {
@@ -97,6 +103,7 @@ export default class Register extends Component {
           movieGenres={this.state.movieGenres}
           favors={this.state.favors}
           degrees={this.state.degrees}
+          errors={this.state.errors}
           onFormSubmit={this.onRegister} />
       </View>
     );
