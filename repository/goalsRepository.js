@@ -24,6 +24,8 @@ export const saveGoal = async (userId, goalName) => {
             uid: userId,
             name: goalName,
             counter: 0,
+            cratedOn:  new Date(),
+            updatedOn: new Date() 
         });
 
         return savedGoal;
@@ -38,6 +40,7 @@ export const updateGoalById = async (goal) => {
         const updatedGoal = await updateDoc(doc(db, 'goals', goal.key), {
             name: goal.name,
             counter: goal.counter,
+            updatedOn: new Date() 
         });
 
         return updatedGoal;

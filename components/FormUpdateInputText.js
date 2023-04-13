@@ -6,14 +6,15 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 // Import Styles
 import { containerStyles, formInputTextStyles, formButtonStyles, textStyles } from '../styles/globalStyle';
 
-export default function FormUpdateInputText({ label, placeholder, value, onChangeText, onBlurUpdate, autoCapitalize, keyboardType, secureTextEntry, errorText, onPressDelete }) {
+export default function FormUpdateInputText({ label, displayUpdateButton, placeholder, value, onChangeText, onBlurUpdate, autoCapitalize, keyboardType, secureTextEntry, errorText, onButtonUpdate, onPressDelete }) {
     return (
         <View style={containerStyles.updateRowContainer}>
+            {displayUpdateButton && (
             <View style={formButtonStyles.rowUpdateButton}>
-                <TouchableOpacity>
+                <TouchableOpacity onPress={onButtonUpdate}>
                     <Icon name="plus" size={15} color="lightblue" />
                 </TouchableOpacity>
-            </View>
+            </View>)}
             <View style={[containerStyles.textInputContainer, { flex: '4' }]}>
                 <Text style={formInputTextStyles.label}>{label}</Text>
                 <TextInput placeholder={placeholder} value={value} onChangeText={onChangeText} onBlur={onBlurUpdate} autoCapitalize={autoCapitalize} keyboardType={keyboardType} secureTextEntry={secureTextEntry} style={formInputTextStyles.input} />
@@ -30,6 +31,7 @@ export default function FormUpdateInputText({ label, placeholder, value, onChang
 
 FormUpdateInputText.propTypes = {
     value: PropTypes.any,
+    displayUpdateButton: PropTypes.bool,
     autoCapitalize: PropTypes.string,
     keyboardType: PropTypes.string,
     secureTextEntry: PropTypes.bool,
@@ -37,6 +39,7 @@ FormUpdateInputText.propTypes = {
     onChangeText: PropTypes.func.isRequired,
     onBlurUpdate: PropTypes.func.isRequired,
     onPressDelete: PropTypes.func.isRequired,
+    onButtonUpdate: PropTypes.func
 };
 
 FormUpdateInputText.defaultProps = {
@@ -44,4 +47,5 @@ FormUpdateInputText.defaultProps = {
     keyboardType: 'default',
     secureTextEntry: false,
     errorText: null,
+    displayUpdateButton: false,
 };

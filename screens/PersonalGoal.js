@@ -24,6 +24,7 @@ export default class PersonalGoals extends Component {
       newGoalName: '',
       errors: {},
       savedGoals: [],
+      displayUpdateButton: true,
     }
   }
 
@@ -55,11 +56,24 @@ export default class PersonalGoals extends Component {
     }
   }
 
-  handleUpdateItem = async (item) => {
+  handleUpdateItem = async (item, increaseCounter) => {
     try {
-      await updateGoalById(item);
+      let goal = item;
+      if(increaseCounter) {
+        let counter = goal.counter;
+        counter = counter + 1;
 
-      Alert.alert('Updated Goal');
+        goal.counter = counter;
+      }
+
+      await updateGoalById(goal);
+
+      let message = 'Updated Goal';
+      if(increaseCounter) { 
+        message = 'Updated Streak';
+      }
+
+      Alert.alert(message);
 
       await this.fetchUserGoals();
     } catch (error) {
@@ -70,7 +84,6 @@ export default class PersonalGoals extends Component {
 
   handleDeleteItem = async (item) => {
     try {
-      console.log(item)
       await deleteGoalById(item);
 
       Alert.alert('Deleted Goal');
@@ -123,7 +136,7 @@ export default class PersonalGoals extends Component {
           </View>
           <View style={[containerStyles.textInputContainer, { flex: 1 }]}>
             <FlatList data={this.state.savedGoals} renderItem={({ item }) => (
-              <FormUpdateInputText value={item.name} autoCapitalize="sentences" onChangeText={(value) => this.handleUpdateChange(item.key, value)} onBlurUpdate={() => this.handleUpdateItem(item)} onPressDelete={() => this.handleDeleteItem(item)} />
+              <FormUpdateInputText value={item.name} autoCapitalize="sentences" onButtonUpdate={() => this.handleUpdateItem(item, true)}  onChangeText={(value) => this.handleUpdateChange(item.key, value)} onBlurUpdate={() => this.handleUpdateItem(item, false)} onPressDelete={() => this.handleDeleteItem(item)} displayUpdateButton={this.state.displayUpdateButton} />
             )} style={containerStyles.buttonContainer}>
             </FlatList>
           </View>
