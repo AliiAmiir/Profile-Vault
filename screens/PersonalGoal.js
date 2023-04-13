@@ -5,7 +5,7 @@ import { View, FlatList, Alert, TouchableWithoutFeedback, Keyboard } from 'react
 import { auth } from '../config/FirebaseConfig';
 
 // Import Repositories
-import { fetchGoalsByUserId, saveGoal, updateGoalById } from '../repository/goalsRepository';
+import { fetchGoalsByUserId, saveGoal, updateGoalById, deleteGoalById } from '../repository/goalsRepository';
 
 // Import StyleSheets
 import { containerStyles } from '../styles/globalStyle';
@@ -68,7 +68,19 @@ export default class PersonalGoals extends Component {
     }
   }
 
-  // handleDeleteItem
+  handleDeleteItem = async (item) => {
+    try {
+      console.log(item)
+      await deleteGoalById(item);
+
+      Alert.alert('Deleted Goal');
+
+      await this.fetchUserGoals();
+    } catch (error) {
+      console.log(error.message);
+      Alert.alert('Error occurred while adding a new goal');
+    }
+  }
 
   componentDidMount() {
     this.fetchUserGoals();
@@ -111,7 +123,7 @@ export default class PersonalGoals extends Component {
           </View>
           <View style={[containerStyles.textInputContainer, { flex: 1 }]}>
             <FlatList data={this.state.savedGoals} renderItem={({ item }) => (
-              <FormUpdateInputText value={item.name} autoCapitalize="sentences" onChangeText={(value) => this.handleUpdateChange(item.key, value)} onBlurUpdate={() => this.handleUpdateItem(item)} />
+              <FormUpdateInputText value={item.name} autoCapitalize="sentences" onChangeText={(value) => this.handleUpdateChange(item.key, value)} onBlurUpdate={() => this.handleUpdateItem(item)} onPressDelete={() => this.handleDeleteItem(item)} />
             )} style={containerStyles.buttonContainer}>
             </FlatList>
           </View>

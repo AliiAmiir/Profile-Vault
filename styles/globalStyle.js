@@ -57,6 +57,13 @@ export const containerStyles = StyleSheet.create({
     backgroundColor: '#FFFFFF',
     justifyContent: 'flex-end',
   },
+  updateRowContainer: {
+    flex: 1,
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    alignItems: 'center',
+    marginBottom: 10,
+  }
 });
 
 export const logoStyles = StyleSheet.create({
@@ -79,6 +86,10 @@ export const formInputTextStyles = StyleSheet.create({
     borderBottomWidth: 1,
     borderBottomColor: '#F2F2F7',
   },
+  inputValue: {
+    fontWeight: 500,
+    paddingBottom: 5
+  }
 });
 
 export const formButtonStyles = StyleSheet.create({
@@ -92,6 +103,17 @@ export const formButtonStyles = StyleSheet.create({
     textAlign: 'center',
     color: '#FFFFFF',
     fontWeight: 500,
+  },
+  rowUpdateButton: {
+    flex: 0.5,
+    paddingVertical: 5,
+    paddingHorizontal: 5,
+  },
+  rowDeleteButton: {
+    flex: 0.5,
+    paddingVertical: 5,
+    paddingHorizontal: 5,
+    justifyContent: 'center',
   },
 });
 
@@ -115,4 +137,3 @@ export const pickerStyles = StyleSheet.create({
     backgroundColor: '#F2F2F7',
   }
 });
-
