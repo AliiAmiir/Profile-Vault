@@ -45,32 +45,47 @@ export default class PersonalGoals extends Component {
 
   handleSaveGoal = async () => {
     try {
-      await saveGoal(auth.currentUser.uid, this.state.newGoalName);
+      const response = await saveGoal(auth.currentUser.uid, this.state.newGoalName);
 
-      Alert.alert('Added Goal');
-      this.setState({ newGoalName: '' })
+      if (response && response.success) {
+        Alert.alert(response.message || 'Saved Goal');
+        this.setState({ newGoalName: '' })
+      } else {
+        Alert.alert(response.message || 'Failed to save Goal');
+        this.setState({ newGoalName: '' })
+      }
+
       await this.fetchUserGoals();
     } catch (error) {
       console.log(error.message);
-      Alert.alert('Error occurred while adding a new goal');
+      Alert.alert('Unexpected Error Occurred');
     }
   }
 
   handleUpdateItem = async (item, increaseCounter) => {
     try {
       let goal = item;
-      if(increaseCounter) {
+      if (increaseCounter) {
         let counter = goal.counter;
         counter = counter + 1;
 
         goal.counter = counter;
       }
 
-      await updateGoalById(goal);
-
+      let response = await updateGoalById(goal, increaseCounter);
       let message = 'Updated Goal';
-      if(increaseCounter) { 
-        message = 'Updated Streak';
+
+      if (response && response.success) {
+        if (increaseCounter) {
+          message = 'Updated Streak';
+        } else {
+          message = response.message || 'Updated Goal';
+        }
+
+        this.setState({ newGoalName: '' })
+      } else {
+        message = response.message || 'Failed to update Goal';
+        this.setState({ newGoalName: '' })
       }
 
       Alert.alert(message);
@@ -136,7 +151,7 @@ export default class PersonalGoals extends Component {
           </View>
           <View style={[containerStyles.textInputContainer, { flex: 1 }]}>
             <FlatList data={this.state.savedGoals} renderItem={({ item }) => (
-              <FormUpdateInputText value={item.name} autoCapitalize="sentences" onButtonUpdate={() => this.handleUpdateItem(item, true)}  onChangeText={(value) => this.handleUpdateChange(item.key, value)} onBlurUpdate={() => this.handleUpdateItem(item, false)} onPressDelete={() => this.handleDeleteItem(item)} displayUpdateButton={this.state.displayUpdateButton} />
+              <FormUpdateInputText value={item.name} autoCapitalize="sentences" onButtonUpdate={() => this.handleUpdateItem(item, true)} onChangeText={(value) => this.handleUpdateChange(item.key, value)} onBlurUpdate={() => this.handleUpdateItem(item, false)} onPressDelete={() => this.handleDeleteItem(item)} displayUpdateButton={this.state.displayUpdateButton} />
             )} style={containerStyles.buttonContainer}>
             </FlatList>
           </View>
