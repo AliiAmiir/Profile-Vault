@@ -32,7 +32,7 @@ export const saveGoal = async (userId, goalName) => {
             uid: userId,
             name: goalName,
             counter: 0,
-            cratedOn: new Date(),
+            createdOn: new Date(),
             updatedOn: new Date()
         });
 
