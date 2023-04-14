@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { View, FlatList, Alert, TouchableWithoutFeedback, Keyboard } from 'react-native';
 
 // Import Configs
-import { auth } from '../config/FirebaseConfig';
+import { auth } from '../config/firebaseConfig';
 
 // Import Repositories
 import { fetchGoalsByUserId, saveGoal, updateGoalById, deleteGoalById } from '../repository/goalsRepository';

@@ -3,7 +3,7 @@ import { View } from 'react-native';
 import { signInWithEmailAndPassword } from "firebase/auth";
 
 // Import Configs
-import { auth } from '../config/FirebaseConfig';
+import { auth } from '../config/firebaseConfig';
 
 // Import StyleSheets
 import { containerStyles } from '../styles/globalStyle';

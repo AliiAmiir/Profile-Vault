@@ -8,7 +8,7 @@ import { computeAge } from '../utils/computeUtil';
 import { fetchUserById } from '../repository/userRepository';
 
 // Import Configs
-import { auth } from '../config/FirebaseConfig';
+import { auth } from '../config/firebaseConfig';
 
 // Import StyleSheets
 import { containerStyles, textStyles } from '../styles/globalStyle';

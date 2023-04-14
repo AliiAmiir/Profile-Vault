@@ -7,7 +7,7 @@ import { isSignUpEnabledCheck, validateRegistrationFields } from '../utils/valid
 import { genderPickerOptions } from '../utils/pickerOptions';
 
 // Import Configs
-import { auth } from '../config/FirebaseConfig';
+import { auth } from '../config/firebaseConfig';
 
 // Import StyleSheets
 import { containerStyles } from '../styles/globalStyle';

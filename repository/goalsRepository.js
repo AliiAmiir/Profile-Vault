@@ -1,5 +1,5 @@
 import { collection, query, where, getDocs, addDoc, updateDoc, deleteDoc, doc } from 'firebase/firestore';
-import { db } from '../config/FirebaseConfig';
+import { db } from '../config/firebaseConfig';
 
 export const fetchGoalsByUserId = async (userId) => {
     try {

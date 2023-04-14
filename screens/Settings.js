@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { View, ScrollView } from 'react-native';
 
 // Import Configs
-import { auth } from '../config/FirebaseConfig';
+import { auth } from '../config/firebaseConfig';
 
 // Import Repositories
 import { fetchUserById } from '../repository/userRepository';

@@ -15,7 +15,7 @@ export default function FormUpdateInputText({ label, displayUpdateButton, placeh
                     <Icon name="plus" size={15} color="lightblue" />
                 </TouchableOpacity>
             </View>)}
-            <View style={[containerStyles.textInputContainer, { flex: '4' }]}>
+            <View style={[containerStyles.textInputContainer, { flex: 4 }]}>
                 <Text style={formInputTextStyles.label}>{label}</Text>
                 <TextInput placeholder={placeholder} value={value} onChangeText={onChangeText} onBlur={onBlurUpdate} autoCapitalize={autoCapitalize} keyboardType={keyboardType} secureTextEntry={secureTextEntry} style={formInputTextStyles.input} />
                 {errorText !== null && (<Text style={textStyles.errorText}>{errorText}</Text>)}

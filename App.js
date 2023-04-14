@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { NavigatorTab } from './routes/NavigationTab';
-import { ActivityIndicator, View } from 'react-native';
-import { auth } from './config/FirebaseConfig';
+import { auth } from './config/firebaseConfig';
 
 export default class App extends Component {
   constructor(props) {
