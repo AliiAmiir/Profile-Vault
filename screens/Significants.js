@@ -8,13 +8,13 @@ import {
   ScrollView,
 } from 'react-native';
 
-const HealthPage = () => {
-  const [healthRecords, setHealthRecords] = useState([]);
+const Significants = () => {
+  const [significants, setSignificants] = useState([]);
 
-  const addRecord = () => {
-    setHealthRecords([
-      ...healthRecords,
-      { lastCheckUp: '', diagnosis: '', medicines: '', duration: '' },
+  const addSignificant = () => {
+    setSignificants([
+      ...significants,
+      { name: '', relationship: '', dob: '', anniversary: '' },
     ]);
   };
 
@@ -24,56 +24,56 @@ const HealthPage = () => {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Health</Text>
+      <Text style={styles.title}>Significants</Text>
       <ScrollView style={styles.scrollContainer}>
-        {healthRecords.map((record, index) => (
+        {significants.map((significant, index) => (
           <View key={index} style={styles.item}>
             <TextInput
               style={styles.input}
-              placeholder="Last Check-up Date"
-              value={record.lastCheckUp}
+              placeholder="Name"
+              value={significant.name}
               onChangeText={(text) => {
-                const newRecords = [...healthRecords];
-                newRecords[index].lastCheckUp = text;
-                setHealthRecords(newRecords);
+                const newSignificants = [...significants];
+                newSignificants[index].name = text;
+                setSignificants(newSignificants);
               }}
             />
             <TextInput
               style={styles.input}
-              placeholder="Diagnosis"
-              value={record.diagnosis}
+              placeholder="Relationship"
+              value={significant.relationship}
               onChangeText={(text) => {
-                const newRecords = [...healthRecords];
-                newRecords[index].diagnosis = text;
-                setHealthRecords(newRecords);
+                const newSignificants = [...significants];
+                newSignificants[index].relationship = text;
+                setSignificants(newSignificants);
               }}
             />
             <TextInput
               style={styles.input}
-              placeholder="Medicines"
-              value={record.medicines}
+              placeholder="Date of Birth"
+              value={significant.dob}
               onChangeText={(text) => {
-                const newRecords = [...healthRecords];
-                newRecords[index].medicines = text;
-                setHealthRecords(newRecords);
+                const newSignificants = [...significants];
+                newSignificants[index].dob = text;
+                setSignificants(newSignificants);
               }}
             />
             <TextInput
               style={styles.input}
-              placeholder="Duration"
-              value={record.duration}
+              placeholder="Anniversary"
+              value={significant.anniversary}
               onChangeText={(text) => {
-                const newRecords = [...healthRecords];
-                newRecords[index].duration = text;
-                setHealthRecords(newRecords);
+                const newSignificants = [...significants];
+                newSignificants[index].anniversary = text;
+                setSignificants(newSignificants);
               }}
             />
           </View>
         ))}
       </ScrollView>
       <View style={styles.buttonsContainer}>
-        <TouchableOpacity style={styles.addButton} onPress={addRecord}>
-          <Text style={styles.addButtonText}>Add Health Record</Text>
+        <TouchableOpacity style={styles.addButton} onPress={addSignificant}>
+          <Text style={styles.addButtonText}>Add Significant</Text>
         </TouchableOpacity>
         <TouchableOpacity style={styles.saveButton} onPress={saveChanges}>
           <Text style={styles.saveButtonText}>Save Changes</Text>
@@ -96,7 +96,7 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   scrollContainer: {
-    flex: 1,
+    maxHeight: '70%',
     marginBottom: 20,
   },
   item: {
@@ -137,4 +137,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default HealthPage;
+export default Significants;

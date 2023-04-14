@@ -9,7 +9,7 @@ import {
 } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
-const PasswordsPage = () => {
+const Passwords = () => {
   const [passwords, setPasswords] = useState([]);
 
   const addPassword = () => {
@@ -130,5 +130,5 @@ const styles = StyleSheet.create({
     fontWeight: '600',
   },
 });
-    
-export default PasswordsPage;
+
+export default Passwords;

@@ -8,14 +8,11 @@ import {
   ScrollView,
 } from 'react-native';
 
-const SignificantsPage = () => {
-  const [significants, setSignificants] = useState([]);
+const Trips = () => {
+  const [trips, setTrips] = useState([]);
 
-  const addSignificant = () => {
-    setSignificants([
-      ...significants,
-      { name: '', relationship: '', dob: '', anniversary: '' },
-    ]);
+  const addTrip = () => {
+    setTrips([...trips, { city: '', dates: '', cost: '', hotel: '' }]);
   };
 
   const saveChanges = () => {
@@ -24,56 +21,56 @@ const SignificantsPage = () => {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Significants</Text>
+      <Text style={styles.title}>Trips</Text>
       <ScrollView style={styles.scrollContainer}>
-        {significants.map((significant, index) => (
+        {trips.map((trip, index) => (
           <View key={index} style={styles.item}>
             <TextInput
               style={styles.input}
-              placeholder="Name"
-              value={significant.name}
+              placeholder="City"
+              value={trip.city}
               onChangeText={(text) => {
-                const newSignificants = [...significants];
-                newSignificants[index].name = text;
-                setSignificants(newSignificants);
+                const newTrips = [...trips];
+                newTrips[index].city = text;
+                setTrips(newTrips);
               }}
             />
             <TextInput
               style={styles.input}
-              placeholder="Relationship"
-              value={significant.relationship}
+              placeholder="Dates"
+              value={trip.dates}
               onChangeText={(text) => {
-                const newSignificants = [...significants];
-                newSignificants[index].relationship = text;
-                setSignificants(newSignificants);
+                const newTrips = [...trips];
+                newTrips[index].dates = text;
+                setTrips(newTrips);
               }}
             />
             <TextInput
               style={styles.input}
-              placeholder="Date of Birth"
-              value={significant.dob}
+              placeholder="Cost"
+              value={trip.cost}
               onChangeText={(text) => {
-                const newSignificants = [...significants];
-                newSignificants[index].dob = text;
-                setSignificants(newSignificants);
+                const newTrips = [...trips];
+                newTrips[index].cost = text;
+                setTrips(newTrips);
               }}
             />
             <TextInput
               style={styles.input}
-              placeholder="Anniversary"
-              value={significant.anniversary}
+              placeholder="Hotel"
+              value={trip.hotel}
               onChangeText={(text) => {
-                const newSignificants = [...significants];
-                newSignificants[index].anniversary = text;
-                setSignificants(newSignificants);
+                const newTrips = [...trips];
+                newTrips[index].hotel = text;
+                setTrips(newTrips);
               }}
             />
           </View>
         ))}
       </ScrollView>
       <View style={styles.buttonsContainer}>
-        <TouchableOpacity style={styles.addButton} onPress={addSignificant}>
-          <Text style={styles.addButtonText}>Add Significant</Text>
+        <TouchableOpacity style={styles.addButton} onPress={addTrip}>
+          <Text style={styles.addButtonText}>Add Trip</Text>
         </TouchableOpacity>
         <TouchableOpacity style={styles.saveButton} onPress={saveChanges}>
           <Text style={styles.saveButtonText}>Save Changes</Text>
@@ -124,7 +121,6 @@ const styles = StyleSheet.create({
     backgroundColor: '#6374D1',
     borderRadius: 5,
     padding: 10,
-    marginBottom: 60,
   },
   saveButtonText: {
     color: '#ffffff',
@@ -132,9 +128,10 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   buttonsContainer: {
-    flex: 1,
-    justifyContent: 'flex-end',
+    flexDirection: 'column',
+    justifyContent: 'center',
+    alignItems: 'stretch',
   },
 });
 
-export default SignificantsPage;
+export default Trips;

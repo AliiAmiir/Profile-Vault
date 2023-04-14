@@ -8,11 +8,14 @@ import {
   ScrollView,
 } from 'react-native';
 
-const JobsPage = () => {
-  const [jobs, setJobs] = useState([]);
+const Education = () => {
+  const [educations, setEducations] = useState([]);
 
-  const addJob = () => {
-    setJobs([...jobs, { title: '', company: '', startDate: '', endDate: '' }]);
+  const addEducation = () => {
+    setEducations([
+      ...educations,
+      { university: '', degree: '', enrollmentDate: '', graduationDate: '' },
+    ]);
   };
 
   const saveChanges = () => {
@@ -21,59 +24,57 @@ const JobsPage = () => {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Jobs</Text>
+      <Text style={styles.title}>Education</Text>
       <ScrollView style={styles.scrollContainer}>
-        {jobs.map((job, index) => (
+        {educations.map((education, index) => (
           <View key={index} style={styles.item}>
             <TextInput
               style={styles.input}
-              placeholder="Job Title"
-              value={job.title}
+              placeholder="University"
+              value={education.university}
               onChangeText={(text) => {
-                const newJobs = [...jobs];
-                newJobs[index].title = text;
-                setJobs(newJobs);
+                const newEducations = [...educations];
+                newEducations[index].university = text;
+                setEducations(newEducations);
               }}
             />
             <TextInput
               style={styles.input}
-              placeholder="Job Company"
-              value={job.company}
+              placeholder="Degree"
+              value={education.degree}
               onChangeText={(text) => {
-                const newJobs = [...jobs];
-                newJobs[index].company = text;
-                setJobs(newJobs);
+                const newEducations = [...educations];
+                newEducations[index].degree = text;
+                setEducations(newEducations);
               }}
             />
             <TextInput
               style={styles.input}
-              placeholder="Start Date"
-              value={job.startDate}
+              placeholder="Enrollment Date"
+              value={education.enrollmentDate}
               onChangeText={(text) => {
-                const newJobs = [...jobs];
-                newJobs[index].startDate = text;
-                setJobs(newJobs);
+                const newEducations = [...educations];
+                newEducations[index].enrollmentDate = text;
+                setEducations(newEducations);
               }}
             />
             <TextInput
               style={styles.input}
-              placeholder="End Date"
-              value={job.endDate}
+              placeholder="Graduation Date"
+              value={education.graduationDate}
               onChangeText={(text) => {
-                const newJobs = [...jobs];
-                newJobs[index].endDate = text;
-                setJobs(newJobs);
+                const newEducations = [...educations];
+                newEducations[index].graduationDate = text;
+                setEducations(newEducations);
               }}
             />
           </View>
         ))}
       </ScrollView>
-      <View style={styles.addJobContainer}>
-        <TouchableOpacity style={styles.addButton} onPress={addJob}>
-          <Text style={styles.addButtonText}>Add Job</Text>
+      <View style={styles.buttonsContainer}>
+        <TouchableOpacity style={styles.addButton} onPress={addEducation}>
+          <Text style={styles.addButtonText}>Add Education</Text>
         </TouchableOpacity>
-      </View>
-      <View style={styles.saveButtonContainer}>
         <TouchableOpacity style={styles.saveButton} onPress={saveChanges}>
           <Text style={styles.saveButtonText}>Save Changes</Text>
         </TouchableOpacity>
@@ -106,34 +107,34 @@ const styles = StyleSheet.create({
     borderColor: '#ccc',
     borderRadius: 5,
     padding: 10,
-    marginBottom: 5,
-  },
-  addJobContainer: {
     marginBottom: 10,
   },
   addButton: {
     backgroundColor: '#6374D1',
     borderRadius: 5,
     padding: 10,
+    marginBottom: 10,
   },
   addButtonText: {
     color: '#ffffff',
     fontWeight: '600',
     textAlign: 'center',
   },
-  saveButtonContainer: {
-    marginBottom: 20,
-  },
   saveButton: {
     backgroundColor: '#6374D1',
     borderRadius: 5,
     padding: 10,
+    marginBottom: 20,
   },
   saveButtonText: {
     color: '#ffffff',
     fontWeight: '600',
     textAlign: 'center',
   },
+  buttonsContainer: {
+    flexDirection: 'column',
+    justifyContent: 'flex-end',
+  },
 });
 
-export default JobsPage;
+export default Education;
