@@ -174,7 +174,7 @@ export default class PersonalGoals extends Component {
 
           {!this.state.showEditGoalsForm && (
             <View style={containerStyles.textInputContainer}>
-              <FormButton title='Edit' color={'#F2F2F7'} textColor={'#000000'} onPress={this.handleShowEditGoalForm} />
+              <FormButton title='Edit Goals' color={'#F2F2F7'} textColor={'#000000'} onPress={this.handleShowEditGoalForm} />
             </View>)}
 
           {this.state.showEditGoalsForm && (
