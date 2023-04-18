@@ -1,134 +1,207 @@
-import React, { useState } from 'react';
-import {
-  View,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  StyleSheet,
-  ScrollView,
-} from 'react-native';
-import Icon from 'react-native-vector-icons/FontAwesome';
+import React, { Component } from 'react';
+import { View, StyleSheet, FlatList, Alert } from 'react-native';
 
-const Passwords = () => {
-  const [passwords, setPasswords] = useState([]);
+// Import Configs
+import { auth } from '../config/firebaseConfig';
 
-  const addPassword = () => {
-    setPasswords([...passwords, { website: '', email: '', password: '', hidden: true }]);
+// Import Repositories
+import { savePassword, fetchUserPasswords, updatePassword, deletePassword} from '../repository/passwordsRepository';
+
+// Import StyleSheets
+import { containerStyles } from '../styles/globalStyle';
+
+// Import Components
+import FormButton from '../components/FormButton';
+import FormInputText from '../components/FormInputText';
+import FormUpdateInputText from '../components/FormUpdateInputText';
+
+export default class Passwords extends Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      loading: true,
+      newWebsite: '',
+      newEmail: '',
+      newPassword: '',
+      errors: {},
+      savedPasswords: [],
+      displayUpdateButton: true,
+    }
+  }
+
+  handleChange = (key, value) => {
+    // Add validation
+    this.setState({ [key]: value });
   };
 
-  const updatePassword = (index, field, value) => {
-    const newPasswords = [...passwords];
-    newPasswords[index][field] = value;
-    setPasswords(newPasswords);
+  handleUpdateChange = (key, value) => {
+    let savedPasswords = this.state.savedPasswords;
+    let index = savedPasswords.findIndex(x => x.key === key);
+    savedPasswords[index].name = value;
+
+    // Add validation
+
+    this.setState({ savedPasswords: savedPasswords });
   };
 
-  const togglePasswordVisibility = (index) => {
-    const newPasswords = [...passwords];
-    newPasswords[index].hidden = !newPasswords[index].hidden;
-    setPasswords(newPasswords);
+  handleSavePassword = async () => {
+    try {
+      const response = await savePassword(auth.currentUser.uid, this.state.newWebsite, this.state.newEmail, this.state.newPassword);
+
+      if (response && response.success) {
+        Alert.alert(response.message || 'Saved Password');
+        this.setState({ newWebsite: '', newEmail: '', newPassword: '' })
+      } else {
+        Alert.alert(response.message || 'Failed to save Password');
+        this.setState({ newWebsite: '', newEmail: '', newPassword: '' })
+      }
+
+      await this.fetchUserPasswords();
+    } catch (error) {
+      console.log(error.message);
+    }
   };
 
-  return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Passwords</Text>
-      <ScrollView style={styles.scrollContainer}>
-        {passwords.map((entry, index) => (
-          <View key={index} style={styles.entry}>
-            <TextInput
-              style={styles.input}
-              placeholder="Website"
-              value={entry.website}
-              onChangeText={(value) => updatePassword(index, 'website', value)}
-            />
-            <TextInput
-              style={styles.input}
-              placeholder="Email"
-              value={entry.email}
-              onChangeText={(value) => updatePassword(index, 'email', value)}
-            />
-            <View style={styles.passwordContainer}>
-              <TextInput
-                style={styles.input}
-                placeholder="Password"
-                value={entry.password}
-                onChangeText={(value) => updatePassword(index, 'password', value)}
-                secureTextEntry={entry.hidden}
-              />
-              <TouchableOpacity
-                style={styles.visibilityToggle}
-                onPress={() => togglePasswordVisibility(index)}>
-                <Icon name={entry.hidden ? 'eye-slash' : 'eye'} size={20} color="#6374D1" />
-              </TouchableOpacity>
-            </View>
+  handleUpdatePassword = async (key) => {
+    try {
+      let savedPasswords = this.state.savedPasswords;
+      let index = savedPasswords.findIndex(x => x.key === key);
+      let password = savedPasswords[index];
+
+      const response = await updatePassword(auth.currentUser.uid, password.key, password.website, password.email, password.password);
+
+      if (response && response.success) {
+        Alert.alert(response.message || 'Updated Password');
+      } else {
+        Alert.alert(response.message || 'Failed to update Password');
+      }
+
+      await this.fetchUserPasswords();
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  handleDeletePassword = async (key) => {
+    try {
+      const response = await deletePassword(key);
+
+      if (response && response.success) {
+        Alert.alert(response.message || 'Deleted Password');
+      } else {
+        Alert.alert(response.message || 'Failed to delete Password');
+      }
+
+      await this.fetchUserPasswords();
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  fetchUserPasswords = async () => {
+    try {
+      const response = await fetchUserPasswords(auth.currentUser.uid);
+      
+      if (response && response.success) {
+        this.setState({ savedPasswords: response.data });
+      } else {
+        Alert.alert(response.message || 'Failed to fetch Passwords');
+      }
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
+
+  componentDidMount() {
+    this.fetchUserPasswords();
+  }
+
+  render() {
+    return (
+      <View style={containerStyles.defaultContainer}>
+        <View style={containerStyles.textInputContainer}>
+          <FormInputText
+            label="Website"
+            value={this.state.newWebsite}
+            onChangeText={(text) => this.handleChange('newWebsite', text)}
+          />
           </View>
-        ))}
-      </ScrollView>
-      <TouchableOpacity style={styles.addButton} onPress={addPassword}>
-        <Text style={styles.addButtonText}>Add Password</Text>
-      </TouchableOpacity>
-      <TouchableOpacity style={styles.saveButton}>
-        <Text style={styles.saveButtonText}>Save Changes</Text>
-      </TouchableOpacity>
-    </View>
-  );
-};
+          <View style={containerStyles.textInputContainer}>
+          <FormInputText
+            label='Email'
+            value={this.state.newEmail}
+            onChangeText={(text) => this.handleChange('newEmail', text)}
+          />
+          </View>
+          <View style={containerStyles.textInputContainer}>
+          <FormInputText
+            label='Password'
+            value={this.state.newPassword}
+            onChangeText={(text) => this.handleChange('newPassword', text)}
+          />
+          </View>
+          <View style={containerStyles.buttonContainer}>
+          <FormButton
+            title="Save Password"
+            onPress={() => this.handleSavePassword()}
+          />
+        </View>
+        <View style={containerStyles.flatListContainer}>
+          <FlatList
+            data={this.state.savedPasswords}
+            renderItem={({ item }) => ( 
+              <View style={containerStyles.textInputContainer}>
+              <View style={styles.passwordContainer}>
+                <FormUpdateInputText
+                  label="Website"
+                  value={item.website}
+                  onChangeText={(text) => this.handleUpdateChange(item.key, { field: 'website', value: text})}
+                />
+                <FormUpdateInputText
+                  label='Email'
+                  value={item.email}
+                  onChangeText={(value) => this.handleUpdateChange(item.key, { field: 'email', value: value})}
+                />
+                <FormUpdateInputText
+                  label='Password'
+                  value={item.password}
+                  onChangeText={(value) => this.handleUpdateChange(item.key, { field: 'password', value: value})}
+                />
+                <View style={styles.buttonContainer}>
+                  <FormButton title='Update' color={'#F2F2F7'} textColor={'#000000'} onPress={() => this.handleUpdatePassword(item.key)} />
+                  <FormButton title='Delete' color={'#F2F2F7'} textColor={'#000000'} onPress={() => this.handleDeletePassword(item.key)} />
+                </View>
+              </View>
+              </View>
+            )}
+            keyExtractor={item => item.key}
+          />
+        </View>
+      </View>
+    );
+  }
+}
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    padding: 20,
-  },
-  title: {
-    paddingTop: 30,
-    fontSize: 24,
-    fontWeight: 'bold',
-    marginBottom: 20,
-    textAlign: 'center',
-  },
-  scrollContainer: {
-    maxHeight: '70%',
-    marginBottom: 20,
-  },
-  entry: {
-    marginBottom: 10,
-  },
   input: {
     height: 40,
-    borderColor: '#ccc',
+    margin: 12,
     borderWidth: 1,
-    marginBottom: 5,
-    paddingHorizontal: 10,
-    borderRadius: 5,
-    flex: 1,
+    padding: 10,
   },
   passwordContainer: {
+    flex: 1,
+    flexDirection: 'column',
+    justifyContent: 'space-between',
+    alignItems: 'stretch',
+    padding: 10,
+  },
+  buttonContainer: {
+    flex: 1,
     flexDirection: 'row',
-    alignItems: 'center',
-  },
-  visibilityToggle: {
-    marginLeft: 10,
-  },
-  addButton: {
-    backgroundColor: '#6374D1',
-    paddingVertical: 10,
-    paddingHorizontal: 20,
-    borderRadius: 5,
-    marginBottom: 10,
-  },
-  saveButton: {
-    backgroundColor: '#6374D1',
-    paddingVertical: 10,
-    paddingHorizontal: 20,
-    borderRadius: 5,
-  },
-  addButtonText: {
-    color: '#ffffff',
-    fontWeight: '600',
-  },
-  saveButtonText: {
-    color: '#ffffff',
-    fontWeight: '600',
+    justifyContent: 'center',
+    alignItems: 'stretch',
+    padding: 5,
   },
 });
-
-export default Passwords;
