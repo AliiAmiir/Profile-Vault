@@ -14,6 +14,7 @@ import { containerStyles } from '../styles/globalStyle';
 import FormButton from '../components/FormButton';
 import FormInputText from '../components/FormInputText';
 import FormUpdateInputText from '../components/FormUpdateInputText';
+import FormText from '../components/FormText';
 
 export default class PersonalGoals extends Component {
   constructor(props) {
@@ -25,8 +26,18 @@ export default class PersonalGoals extends Component {
       errors: {},
       savedGoals: [],
       displayUpdateButton: true,
+      showGoalInputForm: false,
+      showEditGoalsForm: false,
     }
   }
+
+  handleShowGoalInputForm = () => {
+    this.setState({ showGoalInputForm: !this.state.showGoalInputForm });
+  };
+
+  handleShowEditGoalForm = () => {
+    this.setState({ showEditGoalsForm: !this.state.showEditGoalsForm });
+  };
 
   handleChange = (key, value) => {
     // Add validation
@@ -49,7 +60,7 @@ export default class PersonalGoals extends Component {
 
       if (response && response.success) {
         Alert.alert(response.message || 'Saved Goal');
-        this.setState({ newGoalName: '' })
+        this.setState({ newGoalName: '', showGoalInputForm: false })
       } else {
         Alert.alert(response.message || 'Failed to save Goal');
         this.setState({ newGoalName: '' })
@@ -145,16 +156,42 @@ export default class PersonalGoals extends Component {
     return (
       <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
         <View style={containerStyles.defaultContainer}>
-          <View style={[containerStyles.textInputContainer, { flex: 0.5 }]}>
-            <FormInputText placeholder="New Goal" value={this.state.newGoalName} onChangeText={(value) => this.handleChange('newGoalName', value)} autoCapitalize="sentences" errorText={this.state.errors.newGoalName || null} />
-            <FormButton title='Add a Goal' color={'#F2F2F7'} textColor={'#000000'} onPress={this.handleSaveGoal} />
-          </View>
-          <View style={[containerStyles.textInputContainer, { flex: 1 }]}>
-            <FlatList data={this.state.savedGoals} renderItem={({ item }) => (
-              <FormUpdateInputText value={item.name} autoCapitalize="sentences" onButtonUpdate={() => this.handleUpdateItem(item, true)} onChangeText={(value) => this.handleUpdateChange(item.key, value)} onBlurUpdate={() => this.handleUpdateItem(item, false)} onPressDelete={() => this.handleDeleteItem(item)} displayUpdateButton={this.state.displayUpdateButton} />
-            )} style={containerStyles.buttonContainer}>
-            </FlatList>
-          </View>
+          {this.state.showGoalInputForm && (
+            <View style={[containerStyles.textInputContainer, { flex: 0.5 }]}>
+              <FormInputText placeholder="New Goal" value={this.state.newGoalName} onChangeText={(value) => this.handleChange('newGoalName', value)} autoCapitalize="sentences" errorText={this.state.errors.newGoalName || null} />
+              <FormButton title='Add a Goal' onPress={this.handleSaveGoal} />
+            </View>)}
+
+          {!this.state.showGoalInputForm && (
+            <View style={containerStyles.textInputContainer}>
+              <FormButton title='Add a Goal' color={'#F2F2F7'} textColor={'#000000'} onPress={this.handleShowGoalInputForm} />
+            </View>)}
+
+          {this.state.showEditGoalsForm && (
+            <View style={containerStyles.textInputContainer}>
+              <FormButton title='Done' onPress={this.handleShowEditGoalForm} />
+            </View>)}
+
+          {!this.state.showEditGoalsForm && (
+            <View style={containerStyles.textInputContainer}>
+              <FormButton title='Edit' color={'#F2F2F7'} textColor={'#000000'} onPress={this.handleShowEditGoalForm} />
+            </View>)}
+
+          {this.state.showEditGoalsForm && (
+            <View style={[containerStyles.textInputContainer, { flex: 1 }]}>
+              <FlatList data={this.state.savedGoals} renderItem={({ item }) => (
+                <FormUpdateInputText value={item.name} autoCapitalize="sentences" onButtonUpdate={() => this.handleUpdateItem(item, true)} onChangeText={(value) => this.handleUpdateChange(item.key, value)} onBlurUpdate={() => this.handleUpdateItem(item, false)} onPressDelete={() => this.handleDeleteItem(item)} displayUpdateButton={this.state.displayUpdateButton} />
+              )} style={containerStyles.buttonContainer}>
+              </FlatList>
+            </View>)}
+
+          {!this.state.showEditGoalsForm && (
+            <View style={[containerStyles.textInputContainer, { flex: 1 }]}>
+              <FlatList data={this.state.savedGoals} renderItem={({ item }) => (
+                <FormText value={item.name} />
+              )} style={containerStyles.buttonContainer}>
+              </FlatList>
+            </View>)}
         </View>
       </TouchableWithoutFeedback>
     );
