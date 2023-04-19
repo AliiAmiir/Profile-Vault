@@ -1,15 +1,23 @@
 import { collection, query, where, getDocs, addDoc, updateDoc, deleteDoc, doc } from 'firebase/firestore';
 import { db } from '../config/firebaseConfig';
 
-export const saveTrip = async (userId, city, dateFrom, dateTo, cost, hotel) => {
+export const saveTrip = async (userId, tripDetails) => {
     try {
         const response = await addDoc(collection(db, 'trips'), {
             uid: userId,
-            city: city,
-            dateFrom: dateFrom,
-            dateTo: dateTo,
-            cost: cost,
-            hotel: hotel,
+            city: tripDetails.city,
+            state: tripDetails.state,
+            country: tripDetails.country,
+            dateFrom: tripDetails.dateFrom,
+            dateTo: tripDetails.dateTo,
+            tripCost: (parseFloat(tripDetails.tripCost).toFixed(2)).toString() || '0.00',
+            hotelName: tripDetails.hotelName || 'N/A',
+            hotelAddress: tripDetails.hotelAddress || 'N/A',
+            hotelCost: (parseFloat(tripDetails.hotelCost).toFixed(2)).toString() || '0.00',
+            flightName: tripDetails.flightName || 'N/A',
+            flightCost: (parseFloat(tripDetails.flightCost).toFixed(2)).toString() || '0.00',
+            carRentalName: tripDetails.carRentalName || 'N/A',
+            carRentalCost: (parseFloat(tripDetails.carRentalCost).toFixed(2)).toString() || '0.00',
         });
 
         return { success: true, message: 'Saved Trip', response: response };
@@ -18,10 +26,12 @@ export const saveTrip = async (userId, city, dateFrom, dateTo, cost, hotel) => {
     }
 }
 
-export const updateTrip = async (tripId, city, dateFrom, dateTo, cost, hotel) => {
+export const updateTrip = async (tripId, city, state, country, dateFrom, dateTo, cost, hotel) => {
     try {
         const response = await updateDoc(doc(db, 'trips', tripId), {
             city: city,
+            state: state,
+            country: country,
             dateFrom: dateFrom,
             dateTo: dateTo,
             cost: cost,

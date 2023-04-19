@@ -20,21 +20,21 @@ export default class Trips extends Component {
 
     this.state = {
       loading: true,
-      newTripLocation: {
-        city: '',
-        state: '',
-        country: '',
-      },
+      newTripCity: '',
+      newTripState: '',
+      newTripCountry: '',
       newTripDateFrom: new Date(),
       newTripDateTo: new Date(),
       showDateFromPicker: false,
       showDateToPicker: false,
-      newTripCost: 0,
-      newTripHotel: {
-        name: '',
-        cost: '',
-        address: '',
-      },
+      newTripCost: '0',
+      newTripHotelName: '',
+      newTripHotelAddress: '',
+      newTripHotelCost: '0',
+      newTripFlightName: '',
+      newTripFlightCost: '0',
+      newTripCarRentalName: '',
+      newTripCarRentalCost: '0',
       errors: {},
       savedTrips: [],
       displayUpdateButton: true,
@@ -42,6 +42,27 @@ export default class Trips extends Component {
       showEditTripsForm: false,
     }
   }
+
+  getDefaultState = () => {
+    return {
+      newTripCity: '',
+      newTripState: '',
+      newTripCountry: '',
+      newTripDateFrom: new Date(),
+      newTripDateTo: new Date(),
+      showDateFromPicker: false,
+      showDateToPicker: false,
+      newTripCost: '0',
+      newTripHotelName: '',
+      newTripHotelAddress: '',
+      newTripHotelCost: '0',
+      newTripFlightName: '',
+      newTripFlightCost: '0',
+      newTripCarRentalName: '',
+      newTripCarRentalCost: '0',
+      showTripsInputForm: false,
+    }
+  };
 
   handleShowEditTripsForm = () => {
     this.setState({ showEditTripsForm: !this.state.showEditTripsForm });
@@ -138,14 +159,32 @@ export default class Trips extends Component {
 
   handleSaveTrips = async () => {
     try {
-      const response = await saveTrip(auth.currentUser.uid, this.state.newTripLocation, this.state.newTripDateFrom, this.state.newTripDateTo, this.state.newTripCost, this.state.newTripHotel);
+      const tripDetails = {
+        city: this.state.newTripCity,
+        state: this.state.newTripState,
+        country: this.state.newTripCountry,
+        dateFrom: this.state.newTripDateFrom,
+        dateTo: this.state.newTripDateTo,
+        tripCost: this.state.newTripCost,
+        hotelName: this.state.newTripHotelName,
+        hotelAddress: this.state.newTripHotelAddress,
+        hotelCost: this.state.newTripHotelCost,
+        flightName: this.state.newTripFlightName,
+        flightCost: this.state.newTripFlightCost,
+        carRentalName: this.state.newTripCarRentalName,
+        carRentalCost: this.state.newTripCarRentalCost,
+      };
+
+      const response = await saveTrip(auth.currentUser.uid, tripDetails);
 
       if (response && response.success) {
         Alert.alert(response.message || 'Saved Trip');
-        this.setState({ newTripLocation: { city: '', state: '', country: '', }, newTripDateFrom: new Date(), newTripDateTo: new Date(), newTripCost: 0, newTripHotel: { name: '', cost: '', address: '', } })
+        let defaultState = this.getDefaultState();
+        this.setState(defaultState)
       } else {
         Alert.alert(response.message || 'Failed to save Trip');
-        this.setState({ newTripLocation: { city: '', state: '', country: '', }, newTripDateFrom: new Date(), newTripDateTo: new Date(), newTripCost: 0, newTripHotel: { name: '', cost: '', address: '', } })
+        let defaultState = this.getDefaultState();
+        this.setState(defaultState)
       }
 
       await this.fetchUserTrips();
@@ -161,7 +200,7 @@ export default class Trips extends Component {
       let index = savedTrips.findIndex(x => x.key === key);
       let trip = savedTrips[index];
 
-      const response = await updateTrip(key, trip.city, trip.dateFrom, trip.dateTo, trip.cost, trip.hotel);
+      const response = await updateTrip(key, trip.city, trip.state, trip.country, trip.dateFrom, trip.dateTo, trip.cost, trip.hotel);
 
       if (response && response.success) {
         Alert.alert(response.message || 'Updated Trip');
@@ -222,19 +261,76 @@ export default class Trips extends Component {
           )}
 
           {this.state.showTripsInputForm && (
-            <TripsForm handleChange={this.handleChange} onFormClose={this.handleShowTripsInputForm} onFormSubmit={this.handleSaveTrips} name={this.state.newTripName} dateFrom={this.state.newTripDateFrom} dateTo={this.state.newTripDateTo} showDatePicker={this.state.showDateFromPicker} handleShowDatePicker={this.handleShowDateFromPicker} handleDateChange={this.handleDateFromChange} showDateToPicker={this.state.showDateToPicker} handleShowDateToPicker={this.handleShowDateToPicker} handleDateToChange={this.handleDateToChange} />
+            <TripsForm
+              city={this.state.newTripCity}
+              state={this.state.newTripState}
+              country={this.state.newTripCountry}
+              dateFrom={this.state.newTripDateFrom}
+              dateTo={this.state.newTripDateTo}
+              tripCost={this.state.newTripCost}
+              hotelName={this.state.newTripHotelName}
+              hotelAddress={this.state.newTripHotelAddress}
+              hotelCost={this.state.newTripHotelCost}
+              flightName={this.state.newTripFlightName}
+              flightCost={this.state.newTripFlightCost}
+              carRentalName={this.state.newTripCarRentalName}
+              carRentalCost={this.state.newTripCarRentalCost}
+              showDatePicker={this.state.showDateFromPicker}
+              handleShowDatePicker={this.handleShowDateFromPicker}
+              handleDateChange={this.handleDateFromChange}
+              showDateToPicker={this.state.showDateToPicker}
+              handleShowDateToPicker={this.handleShowDateToPicker}
+              handleDateToChange={this.handleDateToChange}
+              handleChange={this.handleChange}
+              onFormClose={this.handleShowTripsInputForm}
+              onFormSubmit={this.handleSaveTrips}
+            />
           )}
-          {/* 
-          {this.state.showEditTripsForm && (<FormButton title='Done' onPress={this.handleShowEditTripsForm} />)}
 
-          {!this.state.showEditTripsForm && (<FormButton title='Edit Trips' color={'#F2F2F7'} textColor={'#000000'} onPress={this.handleShowEditTripsForm} />)}
-      
-          {!this.state.showEditTripsForm && (
-            <FlatList data={this.state.savedTrips} renderItem={({ item }) => (<TripsDisplayForm name={item.name} relation={item.relation} dateOfBirth={item.dateOfBirth} anniversary={item.anniversary} />)} keyExtractor={item => item.key} />)}
+          {this.state.showEditTripsForm && !this.state.showTripsInputForm && (<FormButton title='Done' onPress={this.handleShowEditTripsForm} />)}
 
-          {this.state.showEditTripsForm && (
-            <FlatList data={this.state.savedTrips} renderItem={({ item }) => (<TripsUpdateForm name={item.name} relation={item.relation} dateOfBirth={item.dateOfBirth} anniversary={item.anniversary} itemKey={item.key} handleChange={this.handleUpdateChange} onFormSubmit={this.handleUpdateTrips} onPressDelete={this.handleDeleteTrips} showDatePicker={item.showDatePicker} handleShowDatePicker={this.handleShowDatePickerByKey} handleDateChange={this.handleDateChangeByKey} handleDateChangeAnniversary={this.handleDateChangeAnniversaryByKey} showDatePickerAnniversary={item.showDatePickerAnniversary} handleShowDatePickerAnniversary={this.handleShowDatePickerAnniversaryByKey} />)} keyExtractor={item => item.key} />)}
-        */}
+          {!this.state.showEditTripsForm && !this.state.showTripsInputForm && (<FormButton title='Edit Trips' color={'#F2F2F7'} textColor={'#000000'} onPress={this.handleShowEditTripsForm} />)}
+
+          {!this.state.showEditTripsForm && !this.state.showTripsInputForm && (
+            <FlatList data={this.state.savedTrips} renderItem={({ item }) => (
+              <TripsDisplayForm
+                city={item.city}
+                state={item.state}
+                country={item.country}
+                dateFrom={item.dateFrom}
+                dateTo={item.dateTo}
+                tripCost={item.tripCost}
+                hotelName={item.hotelName}
+                hotelAddress={item.hotelAddress}
+                hotelCost={item.hotelCost}
+                flightName={item.flightName}
+                flightCost={item.flightCost}
+                carRentalName={item.carRentalName}
+                carRentalCost={item.carRentalCost}
+              />
+            )} keyExtractor={item => item.key}
+            />)}
+
+          {this.state.showEditTripsForm && !this.state.showTripsInputForm && (
+            <FlatList data={this.state.savedTrips} renderItem={({ item }) => (
+              <TripsUpdateForm
+                name={item.name}
+                relation={item.relation}
+                dateOfBirth={item.dateOfBirth}
+                anniversary={item.anniversary}
+                itemKey={item.key}
+                handleChange={this.handleUpdateChange}
+                onFormSubmit={this.handleUpdateTrips}
+                onPressDelete={this.handleDeleteTrips}
+                showDatePicker={item.showDatePicker}
+                handleShowDatePicker={this.handleShowDatePickerByKey}
+                handleDateChange={this.handleDateChangeByKey}
+                handleDateChangeAnniversary={this.handleDateChangeAnniversaryByKey}
+                showDatePickerAnniversary={item.showDatePickerAnniversary}
+                handleShowDatePickerAnniversary={this.handleShowDatePickerAnniversaryByKey}
+              />)}
+              keyExtractor={item => item.key}
+            />)}
         </View>
       </View>
     );
