@@ -104,7 +104,7 @@ export default class PersonalGoals extends Component {
       await this.fetchUserGoals();
     } catch (error) {
       console.log(error.message);
-      Alert.alert('Error occurred while adding a new goal');
+      Alert.alert('Unexpected Error Occurred');
     }
   }
 
@@ -117,7 +117,7 @@ export default class PersonalGoals extends Component {
       await this.fetchUserGoals();
     } catch (error) {
       console.log(error.message);
-      Alert.alert('Error occurred while adding a new goal');
+      Alert.alert('Unexpected Error Occurred');
     }
   }
 

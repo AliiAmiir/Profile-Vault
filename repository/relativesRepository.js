@@ -47,8 +47,8 @@ export const fetchUserRelatives = async (userId) => {
         let relatives = [];
     
         querySnapshot.forEach((doc) => {
-            let dateOfBirth = doc.data().dateOfBirth.toDate().toLocaleDateString();
-            relatives.push({ key: doc.id, ...doc.data(), dateOfBirth });
+            let dateOfBirth = doc.data().dateOfBirth.toDate();
+            relatives.push({ key: doc.id, ...doc.data(), dateOfBirth, showDatePicker: false });
         });
     
         return { success: true, message: 'Fetched Relatives', data: relatives };

@@ -26,12 +26,19 @@ export default class Relatives extends Component {
       showDatePicker: false,
       errors: {},
       savedRelatives: [],
-      showUpdateDatePicker : [],
       displayUpdateButton: true,
       showRelativesInputForm: false,
       showEditRelativesForm: false,
     }
   }
+
+  handleShowDatePickerByKey = (key) => {
+    let index = this.state.savedRelatives.findIndex(x => x.key === key);
+    let savedRelatives = this.state.savedRelatives;
+
+    savedRelatives[index].showDatePicker = !savedRelatives[index].showDatePicker;
+    this.setState({ savedRelatives: savedRelatives});
+  };
 
   handleShowDatePicker = () => {
     this.setState({ showDatePicker: !this.state.showDatePicker });
@@ -41,6 +48,15 @@ export default class Relatives extends Component {
     const currentDate = selectedDate || this.state.newRelativeDateOfBirth;
     this.setState({ newRelativeDateOfBirth: currentDate });
   };
+
+  handleDateChangeByKey = (key, selectedDate, event) => {
+    let index = this.state.savedRelatives.findIndex(x => x.key === key);
+    let savedRelatives = this.state.savedRelatives;
+
+    savedRelatives[index].dateOfBirth = selectedDate || savedRelatives[index].dateOfBirth;
+
+    this.setState({ savedRelatives: savedRelatives});
+  }
 
   handleShowRelativesInputForm = () => {
     this.setState({ showRelativesInputForm: !this.state.showRelativesInputForm });
@@ -52,7 +68,7 @@ export default class Relatives extends Component {
 
   handleChange = (key, value) => {
     // Add validation
-    this.setState({ [key]: value, showDatePicker: false,});
+    this.setState({ [key]: value, showDatePicker: false});
   };
 
   handleUpdateChange = (key, value) => {
@@ -82,7 +98,8 @@ export default class Relatives extends Component {
 
       await this.fetchUserRelatives();
     } catch (error) {
-      console.log(error);
+      console.log(error.message);
+      Alert.alert('Unexpected Error Occurred');
     }
   };
 
@@ -102,7 +119,8 @@ export default class Relatives extends Component {
 
       await this.fetchUserRelatives();
     } catch (error) {
-      console.log(error);
+      console.log(error.message);
+      Alert.alert('Unexpected Error Occurred');
     }
   };
 
@@ -119,6 +137,7 @@ export default class Relatives extends Component {
       await this.fetchUserRelatives();
     } catch (error) {
       console.log(error.message);
+      Alert.alert('Unexpected Error Occurred');
     }
   };
 
@@ -132,6 +151,7 @@ export default class Relatives extends Component {
       }
     } catch (error) {
       console.log(error.message);
+      Alert.alert('Unexpected Error Occurred');
     }
   };
 
@@ -159,7 +179,7 @@ export default class Relatives extends Component {
             <FlatList data={this.state.savedRelatives} renderItem={({ item }) => (<RelativesDisplayForm name={item.name} relation={item.relation} dateOfBirth={item.dateOfBirth} />)} keyExtractor={item => item.key} />)}
 
           {this.state.showEditRelativesForm && (
-            <FlatList data={this.state.savedRelatives} renderItem={({ item }) => (<RelativesUpdateForm name={item.name} relation={item.relation} dateOfBirth={item.dateOfBirth} itemKey={item.key} handleChange={this.handleUpdateChange} onFormSubmit={this.handleUpdateRelative} onPressDelete={this.handleDeleteRelative} />)} keyExtractor={item => item.key} />)}
+            <FlatList data={this.state.savedRelatives} renderItem={({ item }) => (<RelativesUpdateForm name={item.name} relation={item.relation} dateOfBirth={item.dateOfBirth} itemKey={item.key} handleChange={this.handleUpdateChange} onFormSubmit={this.handleUpdateRelative} onPressDelete={this.handleDeleteRelative} showDatePicker={item.showDatePicker} handleShowDatePicker={this.handleShowDatePickerByKey} handleDateChange={this.handleDateChangeByKey} />)} keyExtractor={item => item.key} />)}
         </View>
       </View>
     );

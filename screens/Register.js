@@ -76,7 +76,7 @@ export default class Register extends Component {
       Alert.alert('User Registered Successfully');
     } catch (error) {
       console.log(error.message);
-      Alert.alert('Error occurred while registering a new user');
+      Alert.alert('Unexpected Error Occurred');
     }
   }
 

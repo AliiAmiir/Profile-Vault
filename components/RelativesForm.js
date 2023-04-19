@@ -54,7 +54,7 @@ export const RelativesDisplayForm = function ({ name, relation, dateOfBirth }) {
         <View style={containerStyles.textInputContainer}>
             <FormText label="Name" value={name} />
             <FormText label='Relation' value={relation} />
-            <FormText label='Date of Birth' value={dateOfBirth} />
+            <FormText label='Date of Birth' value={dateOfBirth.toLocaleDateString()} />
         </View>
     );
 }
@@ -62,22 +62,21 @@ export const RelativesDisplayForm = function ({ name, relation, dateOfBirth }) {
 RelativesDisplayForm.propTypes = {
     name: PropTypes.string,
     relation: PropTypes.string,
-    dateOfBirth: PropTypes.string,
+    dateOfBirth: PropTypes.instanceOf(Date),
 };
 
 RelativesDisplayForm.defaultProps = {
     name: '',
     relation: '',
-    dateOfBirth: '',
 };
 
-export const RelativesUpdateForm = function ({ itemKey, name, relation, dateOfBirth, errors, handleChange, onFormSubmit, onPressDelete }) {
+export const RelativesUpdateForm = function ({ itemKey, name, relation, dateOfBirth, errors, handleChange, onFormSubmit, onPressDelete, showDatePicker, handleShowDatePicker, handleDateChange }) {
     return (
         <View>
             <View style={containerStyles.textInputContainer}>
                 <FormInputText label='Name' value={name} onChangeText={(value) => handleChange(itemKey, { field: 'name', value: value })} />
                 <FormInputText label='Relation' value={relation} onChangeText={(value) => handleChange(itemKey, { field: 'relation', value: value })} />
-                {/* <FormInputText label='Date of Birth' value={dateOfBirth} onChangeText={(value) => handleChange(itemKey, { field: 'dateOfBirth', value: value })} /> */}
+                <CustomDatePicker label={'Date of Birth'} dateOfBirth={dateOfBirth} showDatePicker={showDatePicker} handleDateChange={(event, value) => handleDateChange(itemKey, value)} handleShowDatePicker={(value) => handleShowDatePicker(itemKey, value)} />
             </View>
             <View style={containerStyles.buttonContainer}>
                 <FormButton title='Delete' color={'#CD5151'} textColor={'#FFFFFF'} onPress={() => onPressDelete(itemKey)} />
@@ -91,16 +90,18 @@ RelativesUpdateForm.propTypes = {
     itemKey: PropTypes.string,
     name: PropTypes.string,
     relation: PropTypes.string,
-    // dateOfBirth: PropTypes.instanceOf(Date),
+    dateOfBirth: PropTypes.instanceOf(Date),
     errors: PropTypes.object,
     handleChange: PropTypes.func,
     onFormSubmit: PropTypes.func,
     onPressDelete: PropTypes.func,
+    showDatePicker: PropTypes.bool,
+    handleShowDatePicker: PropTypes.func,
+    handleDateChange: PropTypes.func,
 };
 
 RelativesUpdateForm.defaultProps = {
     name: '',
     relation: '',
-    // dateOfBirth: new Date(),
     errors: null,
 };

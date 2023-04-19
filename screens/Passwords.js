@@ -71,6 +71,7 @@ export default class Passwords extends Component {
       await this.fetchUserPasswords();
     } catch (error) {
       console.log(error.message);
+      Alert.alert('Unexpected Error Occurred');
     }
   };
 
@@ -90,7 +91,8 @@ export default class Passwords extends Component {
 
       await this.fetchUserPasswords();
     } catch (error) {
-      console.log(error);
+      console.log(error.message);
+      Alert.alert('Unexpected Error Occurred');
     }
   };
 
@@ -106,7 +108,8 @@ export default class Passwords extends Component {
 
       await this.fetchUserPasswords();
     } catch (error) {
-      console.log(error);
+      console.log(error.message);
+      Alert.alert('Unexpected Error Occurred');
     }
   };
 
@@ -121,6 +124,7 @@ export default class Passwords extends Component {
       }
     } catch (error) {
       console.log(error.message);
+      Alert.alert('Unexpected Error Occurred');
     }
   };
 
