@@ -134,6 +134,16 @@ export const textStyles = StyleSheet.create({
   },
   errorText: {
     color: 'darkred',
+  },
+  boldText: {
+    fontWeight: 500,
+    fontSize: 15,
+    paddingBottom: 10,
+  },
+  subText: {
+    fontWeight: 300,
+    fontSize: 13,
+    paddingBottom: 10,
   }
 });
 

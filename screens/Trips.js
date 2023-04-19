@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, FlatList, StyleSheet, Alert } from 'react-native';
+import { View, FlatList, Alert } from 'react-native';
 
 // Import Configs
 import { auth } from '../config/firebaseConfig';
@@ -12,8 +12,7 @@ import { containerStyles } from '../styles/globalStyle';
 
 // Import Components
 import FormButton from '../components/FormButton';
-import FormInputText from '../components/FormInputText';
-import FormUpdateInputText from '../components/FormUpdateInputText';
+import { TripsForm, TripsDisplayForm, TripsUpdateForm } from '../components/TripsForm';
 
 export default class Trips extends Component {
   constructor(props) {
@@ -22,14 +21,108 @@ export default class Trips extends Component {
     this.state = {
       loading: true,
       newTripCity: '',
-      newTripDate: '',
+      newTripState: '',
+      newTripCountry: '',
+      newTripDateFrom: new Date(),
+      newTripDateTo: new Date(),
+      showDateFromPicker: false,
+      showDateToPicker: false,
       newTripCost: '',
-      newTripHotel: '',
+      newTripHotelName: '',
+      newTripHotelAddress: '',
+      newTripHotelCost: '',
+      newTripFlightName: '',
+      newTripFlightCost: '',
+      newTripCarRentalName: '',
+      newTripCarRentalCost: '',
       errors: {},
       savedTrips: [],
       displayUpdateButton: true,
+      showTripsInputForm: false,
+      showEditTripsForm: false,
     }
   }
+
+  getDefaultState = () => {
+    return {
+      newTripCity: '',
+      newTripState: '',
+      newTripCountry: '',
+      newTripDateFrom: new Date(),
+      newTripDateTo: new Date(),
+      showDateFromPicker: false,
+      showDateToPicker: false,
+      newTripCost: '',
+      newTripHotelName: '',
+      newTripHotelAddress: '',
+      newTripHotelCost: '',
+      newTripFlightName: '',
+      newTripFlightCost: '',
+      newTripCarRentalName: '',
+      newTripCarRentalCost: '',
+      showTripsInputForm: false,
+    }
+  };
+
+  handleShowEditTripsForm = () => {
+    this.setState({ showEditTripsForm: !this.state.showEditTripsForm });
+  };
+
+  handleShowDateFromPicker = () => {
+    this.setState({ showDateFromPicker: !this.state.showDateFromPicker });
+  };
+
+  handleShowDateToPicker = () => {
+    this.setState({ showDateToPicker: !this.state.showDateToPicker });
+  };
+
+  handleShowDateFromPickerByKey = (key) => {
+    let index = this.state.savedTrips.findIndex(x => x.key === key);
+    let savedTrips = this.state.savedTrips;
+
+    savedTrips[index].showDateFromPicker = !savedTrips[index].showDateFromPicker;
+    this.setState({ savedTrips: savedTrips });
+  };
+
+  handleDateFromChangeByKey = (key, selectedDate, event) => {
+    let index = this.state.savedTrips.findIndex(x => x.key === key);
+    let savedTrips = this.state.savedTrips;
+
+    savedTrips[index].dateFrom = selectedDate || savedTrips[index].dateFrom;
+
+    this.setState({ savedTrips: savedTrips });
+  }
+
+  handleShowDateToPickerByKey = (key) => {
+    let index = this.state.savedTrips.findIndex(x => x.key === key);
+    let savedTrips = this.state.savedTrips;
+
+    savedTrips[index].showDateToPicker = !savedTrips[index].showDateToPicker;
+    this.setState({ savedTrips: savedTrips });
+  };
+
+  handleDateToChangeByKey = (key, selectedDate, event) => {
+    let index = this.state.savedTrips.findIndex(x => x.key === key);
+    let savedTrips = this.state.savedTrips;
+
+    savedTrips[index].dateTo = selectedDate || savedTrips[index].dateTo;
+
+    this.setState({ savedTrips: savedTrips });
+  }
+
+  handleShowTripsInputForm = () => {
+    this.setState({ showTripsInputForm: !this.state.showTripsInputForm });
+  };
+
+  handleDateFromChange = (event, selectedDate) => {
+    const currentDate = selectedDate || this.state.newTripDateFrom;
+    this.setState({ newTripDateFrom: currentDate });
+  };
+
+  handleDateToChange = (event, selectedDate) => {
+    const currentDate = selectedDate || this.state.newTripDateTo;
+    this.setState({ newTripDateTo: currentDate });
+  };
 
   handleChange = (key, value) => {
     // Add validation
@@ -39,46 +132,50 @@ export default class Trips extends Component {
   handleUpdateChange = (key, value) => {
     let savedTrips = this.state.savedTrips;
     let index = savedTrips.findIndex(x => x.key === key);
-    let trip = savedTrips[index];
-  
-    switch (value.field) {
-      case 'city':
-        trip.city = value.text; // update the correct property
-        break;
-      case 'dates':
-        trip.dates = value.text; // update the correct property
-        break;
-      case 'cost':
-        trip.cost = value.text; // update the correct property
-        break;
-      case 'hotel':
-        trip.hotel = value.text; // update the correct property
-        break;
-      default:
-        break;
-    }
-  
+    let valueAtIndex = savedTrips[index];
+    valueAtIndex[value.field] = value.value;
+
+    savedTrips[index] = valueAtIndex;
+
     // Add validation
-      
     this.setState({ savedTrips: savedTrips });
   };
-  
+
 
   handleSaveTrips = async () => {
     try {
-      const response = await saveTrip(auth.currentUser.uid, this.state.newTripCity, this.state.newTripDate, this.state.newTripCost, this.state.newTripHotel);
+      const tripDetails = {
+        city: this.state.newTripCity,
+        state: this.state.newTripState,
+        country: this.state.newTripCountry,
+        dateFrom: this.state.newTripDateFrom,
+        dateTo: this.state.newTripDateTo,
+        tripCost: this.state.newTripCost,
+        hotelName: this.state.newTripHotelName,
+        hotelAddress: this.state.newTripHotelAddress,
+        hotelCost: this.state.newTripHotelCost,
+        flightName: this.state.newTripFlightName,
+        flightCost: this.state.newTripFlightCost,
+        carRentalName: this.state.newTripCarRentalName,
+        carRentalCost: this.state.newTripCarRentalCost,
+      };
+
+      const response = await saveTrip(auth.currentUser.uid, tripDetails);
 
       if (response && response.success) {
         Alert.alert(response.message || 'Saved Trip');
-        this.setState({ newTripCity: '', newTripDate: '', newTripCost: '', newTripHotel: '' })
+        let defaultState = this.getDefaultState();
+        this.setState(defaultState)
       } else {
         Alert.alert(response.message || 'Failed to save Trip');
-        this.setState({ newTripCity: '', newTripDate: '', newTripCost: '', newTripHotel: '' })
+        let defaultState = this.getDefaultState();
+        this.setState(defaultState)
       }
 
       await this.fetchUserTrips();
     } catch (error) {
-      console.log(error);
+      console.log(error.message);
+      Alert.alert('Unexpected Error Occurred');
     }
   };
 
@@ -87,21 +184,22 @@ export default class Trips extends Component {
       let savedTrips = this.state.savedTrips;
       let index = savedTrips.findIndex(x => x.key === key);
       let trip = savedTrips[index];
-  
-      const response = await updateTrip(auth.currentUser.uid, key, trip.city, trip.dates, trip.cost, trip.hotel);
-  
+
+      const response = await updateTrip(key, trip);
+
       if (response && response.success) {
         Alert.alert(response.message || 'Updated Trip');
       } else {
-        Alert.alert(response.message || 'Failed to update Trip');
+        Alert.alert(response.message || 'Failed to Update Trip');
       }
-  
-      await this.fetchUserTrip();
+
+      await this.fetchUserTrips();
     } catch (error) {
-      console.log(error);
+      console.log(error.message);
+      Alert.alert('Unexpected Error Occurred');
     }
   };
-  
+
 
   handleDeleteTrips = async (key) => {
     try {
@@ -110,12 +208,13 @@ export default class Trips extends Component {
       if (response && response.success) {
         Alert.alert(response.message || 'Deleted Trip');
       } else {
-        Alert.alert(response.message || 'Failed to delete Trip');
+        Alert.alert(response.message || 'Failed to Delete Trip');
       }
 
       await this.fetchUserTrips();
     } catch (error) {
-      console.log(error);
+      console.log(error.message);
+      Alert.alert('Unexpected Error Occurred');
     }
   };
 
@@ -126,10 +225,11 @@ export default class Trips extends Component {
       if (response && response.success) {
         this.setState({ savedTrips: response.data });
       } else {
-        Alert.alert(response.message || 'Failed to fetch Trips');
+        Alert.alert(response.message || 'Failed to Fetch Trips');
       }
     } catch (error) {
-      console.log(error);
+      console.log(error.message);
+      Alert.alert('Unexpected Error Occurred');
     }
   };
 
@@ -139,121 +239,94 @@ export default class Trips extends Component {
 
   render() {
     return (
-      <View style={containerStyles.defaultContainer}>
-        <View style={containerStyles.textInputContainer}>
-          <FormInputText
-            label="City"
-            value={this.state.newTripCity}
-            onChangeText={(value) => this.handleChange('newTripCity', value)}
-            
-          />
-        </View>
-        <View style={containerStyles.textInputContainer}>
-          <FormInputText
-            label="Dates"
-            value={this.state.newTripDate}
-            onChangeText={(value) => this.handleChange('newTripDate', value)}
-          />
-        </View>
-        <View style={containerStyles.textInputContainer}>
-          <FormInputText
-            label="Cost"
-            value={this.state.newTripCost}
-            onChangeText={(value) => this.handleChange('newTripCost', value)}
-          />
-        </View>
-        <View style={containerStyles.textInputContainer}>
-          <FormInputText
-            label="Hotel"
-            value={this.state.newTripHotel}
-            onChangeText={(value) => this.handleChange('newTripHotel', value)}
-          />
-        </View>
-        <View style={containerStyles.buttonContainer}>
-          <FormButton
-            title="Save Trip"
-            onPress={() => this.handleSaveTrips()}
-          />
-        </View>
-        <View style={containerStyles.flatListContainer}>
-          <FlatList
+      <View style={[containerStyles.defaultContainer, { justifyContent: 'flex-start' }]}>
+        <View style={containerStyles.formContainer}>
+          {!this.state.showTripsInputForm && (
+            <FormButton title='Add a Trip' color={'#F2F2F7'} textColor={'#000000'} onPress={this.handleShowTripsInputForm} />
+          )}
 
-            data={this.state.savedTrips}
-            renderItem={({ item }) => (
-              <View style={containerStyles.textInputContainer}>
-                <View style={styles.relativeContainer}>
-                  <View style={styles.inputsWrapper}>
-                  <FormUpdateInputText
-                    label="City"
-                    value={item.city}
-                    onChangeText={(text) => this.handleUpdateChange(item.key, {field: 'city', text})}
-                  />
-                  <FormUpdateInputText
-                    label="Dates"
-                    value={item.dates}
-                    onChangeText={(text) => this.handleUpdateChange(item.key, {field: 'dates', text})}
-                  />
-                  <FormUpdateInputText
-                    label="Cost"
-                    value={item.cost}
-                    onChangeText={(text) => this.handleUpdateChange(item.key, {field: 'cost', text})}
-                  />
-                  <FormUpdateInputText
-                    label="Hotel"
-                    value={item.hotel}
-                    onChangeText={(text) => this.handleUpdateChange(item.key, {field: 'hotel', text})}
-                  />
+          {this.state.showTripsInputForm && (
+            <TripsForm
+              city={this.state.newTripCity}
+              state={this.state.newTripState}
+              country={this.state.newTripCountry}
+              dateFrom={this.state.newTripDateFrom}
+              dateTo={this.state.newTripDateTo}
+              tripCost={this.state.newTripCost}
+              hotelName={this.state.newTripHotelName}
+              hotelAddress={this.state.newTripHotelAddress}
+              hotelCost={this.state.newTripHotelCost}
+              flightName={this.state.newTripFlightName}
+              flightCost={this.state.newTripFlightCost}
+              carRentalName={this.state.newTripCarRentalName}
+              carRentalCost={this.state.newTripCarRentalCost}
+              showDatePicker={this.state.showDateFromPicker}
+              handleShowDatePicker={this.handleShowDateFromPicker}
+              handleDateChange={this.handleDateFromChange}
+              showDateToPicker={this.state.showDateToPicker}
+              handleShowDateToPicker={this.handleShowDateToPicker}
+              handleDateToChange={this.handleDateToChange}
+              handleChange={this.handleChange}
+              onFormClose={this.handleShowTripsInputForm}
+              onFormSubmit={this.handleSaveTrips}
+            />
+          )}
 
-                  </View>
-                  <View style={styles.buttonsWrapper}>
-                    <FormButton
-                      title="Update"
-                      onPress={() => this.handleUpdateTrips(item.key)}
-                    />
-                    <FormButton
-                      title="Delete"
-                      onPress={() => this.handleDeleteTrips(item.key)}
-                    />
-                  </View>
-                </View>
-              </View>
-            )}
-            keyExtractor={item => item.key}
-          />
+          {this.state.showEditTripsForm && !this.state.showTripsInputForm && (<FormButton title='Done' onPress={this.handleShowEditTripsForm} />)}
+
+          {!this.state.showEditTripsForm && !this.state.showTripsInputForm && (<FormButton title='Edit Trips' color={'#F2F2F7'} textColor={'#000000'} onPress={this.handleShowEditTripsForm} />)}
+
+          {!this.state.showEditTripsForm && !this.state.showTripsInputForm && (
+            <FlatList data={this.state.savedTrips} renderItem={({ item }) => (
+              <TripsDisplayForm
+                city={item.city}
+                state={item.state}
+                country={item.country}
+                dateFrom={item.dateFrom}
+                dateTo={item.dateTo}
+                tripCost={item.tripCost}
+                hotelName={item.hotelName}
+                hotelAddress={item.hotelAddress}
+                hotelCost={item.hotelCost}
+                flightName={item.flightName}
+                flightCost={item.flightCost}
+                carRentalName={item.carRentalName}
+                carRentalCost={item.carRentalCost}
+              />
+            )} keyExtractor={item => item.key}
+            />)}
+
+          {this.state.showEditTripsForm && !this.state.showTripsInputForm && (
+            <FlatList data={this.state.savedTrips} renderItem={({ item }) => (
+              <TripsUpdateForm
+                city={item.city}
+                state={item.state}
+                country={item.country}
+                dateFrom={item.dateFrom}
+                dateTo={item.dateTo}
+                tripCost={item.tripCost}
+                hotelName={item.hotelName}
+                hotelAddress={item.hotelAddress}
+                hotelCost={item.hotelCost}
+                flightName={item.flightName}
+                flightCost={item.flightCost}
+                carRentalName={item.carRentalName}
+                carRentalCost={item.carRentalCost}
+                itemKey={item.key}
+                handleChange={this.handleUpdateChange}
+                onFormSubmit={this.handleUpdateTrips}
+                onPressDelete={this.handleDeleteTrips}
+                showDatePicker={item.showDateFromPicker}
+                handleShowDatePicker={this.handleShowDateFromPickerByKey}
+                handleDateChange={this.handleDateFromChangeByKey}
+                showDateToPicker={item.showDateToPicker}
+                handleShowDateToPicker={this.handleShowDateToPickerByKey}
+                handleDateToChange={this.handleDateToChangeByKey}
+              />)}
+              keyExtractor={item => item.key}
+            />)}
         </View>
       </View>
     );
   }
 }
-
-const styles = StyleSheet.create({
-  relativeContainer: {
-    flex: 1,
-    flexDirection: 'column',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    padding: 10,
-    backgroundColor: '#fff',
-    borderRadius: 10,
-  },
-  inputsWrapper: {
-    flex: 1,
-    flexDirection: 'column',
-    justifyContent: 'space-between',
-    alignItems: 'flex-start',
-  },
-  buttonsWrapper: {
-    flex: 1,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'flex-end',
-  },
-  input: {
-    width: '100%',
-    height: 40,
-    padding: 10,
-    borderWidth: 1,
-    borderColor: '#ccc',
-    borderRadius: 5,
-  },
-});
