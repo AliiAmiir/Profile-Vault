@@ -22,7 +22,7 @@ export default function RegisterationForm({ firstName, lastName, email, phone, g
 
         <View style={containerStyles.rowContainer}>
           <FormInputText label="Phone" placeholder="4692229999" value={phone} onChangeText={(value) => handleChange('phone', value)} keyboardType="phone-pad" errorText={errors.phone || null} />
-        <CustomPicker label="Gender" showPicker={showGenderPicker} items={genderPickerOptions} selectedValue={gender} onValueChange={(itemValue, itemIndex) => handleChange('gender', itemValue)} handleShowGenderPicker={handleShowGenderPicker} errorText={errors.gender || null} />
+          <CustomPicker label="Gender" showPicker={showGenderPicker} items={genderPickerOptions} selectedValue={gender} onValueChange={(itemValue, itemIndex) => handleChange('gender', itemValue)} handleShowGenderPicker={handleShowGenderPicker} errorText={errors.gender || null} />
         </View>
 
         <View style={containerStyles.spaceAround}>

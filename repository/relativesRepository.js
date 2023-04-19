@@ -18,7 +18,6 @@ export const saveRelative = async (userId, name, relation, dateOfBirth) => {
 
 export const updateRelative = async (userId, relativeId, name, relation, dateOfBirth) => {
     try {
-        console.log('relativeId', relativeId);
         const response = await updateDoc(doc(db, 'relatives', relativeId), {
         name: name,
         relation: relation,
@@ -48,7 +47,8 @@ export const fetchUserRelatives = async (userId) => {
         let relatives = [];
     
         querySnapshot.forEach((doc) => {
-        relatives.push({ key: doc.id, ...doc.data() });
+            let dateOfBirth = doc.data().dateOfBirth.toDate().toLocaleDateString();
+            relatives.push({ key: doc.id, ...doc.data(), dateOfBirth });
         });
     
         return { success: true, message: 'Fetched Relatives', data: relatives };

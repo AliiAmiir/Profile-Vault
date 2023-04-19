@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, StyleSheet, FlatList, Alert } from 'react-native';
+import { View, FlatList, Alert } from 'react-native';
 
 // Import Configs
 import { auth } from '../config/firebaseConfig';
@@ -13,7 +13,6 @@ import { containerStyles } from '../styles/globalStyle';
 // Import Components
 import FormButton from '../components/FormButton';
 import { PasswordForm, PasswordDisplayForm, PasswordUpdateForm } from '../components/PasswordForm';
-import FormUpdateInputText from '../components/FormUpdateInputText';
 
 export default class Passwords extends Component {
   constructor(props) {
