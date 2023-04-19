@@ -51,7 +51,7 @@ export const fetchUserSignificants = async (userId) => {
         querySnapshot.forEach((doc) => {
             let dateOfBirth = doc.data().dateOfBirth.toDate();
             let anniversary = doc.data().anniversary.toDate();
-            significants.push({ key: doc.id, ...doc.data(), dateOfBirth, anniversary, showDatePicker: false, showDatePickerAnniversaryL: false, showDatePickerAnniversaryR: false });
+            significants.push({ key: doc.id, ...doc.data(), dateOfBirth, anniversary, showDatePicker: false, showDatePickerAnniversary: false });
         });
 
         return { success: true, message: 'Fetched Significants', data: significants };

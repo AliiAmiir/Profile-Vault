@@ -12,8 +12,6 @@ import { containerStyles } from '../styles/globalStyle';
 
 // Import Components
 import FormButton from '../components/FormButton';
-import FormInputText from '../components/FormInputText';
-import FormUpdateInputText from '../components/FormUpdateInputText';
 import { SignificantsForm, SignificantsDisplayForm, SignificantsUpdateForm } from '../components/SignificantsForm';
 
 export default class Significants extends Component {
