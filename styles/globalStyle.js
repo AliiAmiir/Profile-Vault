@@ -63,6 +63,11 @@ export const containerStyles = StyleSheet.create({
     flexWrap: 'wrap',
     alignItems: 'center',
     marginBottom: 10,
+  },
+  formContainer: {
+    flex: 1,
+    flexDirection: 'column',
+    padding: 10,
   }
 });
 

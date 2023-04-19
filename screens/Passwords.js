@@ -5,14 +5,14 @@ import { View, StyleSheet, FlatList, Alert } from 'react-native';
 import { auth } from '../config/firebaseConfig';
 
 // Import Repositories
-import { savePassword, fetchUserPasswords, updatePassword, deletePassword} from '../repository/passwordsRepository';
+import { savePassword, fetchUserPasswords, updatePassword, deletePassword } from '../repository/passwordsRepository';
 
 // Import StyleSheets
 import { containerStyles } from '../styles/globalStyle';
 
 // Import Components
 import FormButton from '../components/FormButton';
-import FormInputText from '../components/FormInputText';
+import { PasswordForm, PasswordDisplayForm, PasswordUpdateForm } from '../components/PasswordForm';
 import FormUpdateInputText from '../components/FormUpdateInputText';
 
 export default class Passwords extends Component {
@@ -27,8 +27,18 @@ export default class Passwords extends Component {
       errors: {},
       savedPasswords: [],
       displayUpdateButton: true,
+      showPasswordInputForm: false,
+      showEditPasswordForm: false,
     }
   }
+
+  handleShowPasswordInputForm = () => {
+    this.setState({ showPasswordInputForm: !this.state.showPasswordInputForm });
+  };
+
+  handleShowEditPasswordForm = () => {
+    this.setState({ showEditPasswordForm: !this.state.showEditPasswordForm });
+  };
 
   handleChange = (key, value) => {
     // Add validation
@@ -38,10 +48,12 @@ export default class Passwords extends Component {
   handleUpdateChange = (key, value) => {
     let savedPasswords = this.state.savedPasswords;
     let index = savedPasswords.findIndex(x => x.key === key);
-    savedPasswords[index].name = value;
+    let valueAtIndex = savedPasswords[index];
+    valueAtIndex[value.field] = value.value;
+
+    savedPasswords[index] = valueAtIndex;
 
     // Add validation
-
     this.setState({ savedPasswords: savedPasswords });
   };
 
@@ -51,7 +63,7 @@ export default class Passwords extends Component {
 
       if (response && response.success) {
         Alert.alert(response.message || 'Saved Password');
-        this.setState({ newWebsite: '', newEmail: '', newPassword: '' })
+        this.setState({ newWebsite: '', newEmail: '', newPassword: '', showPasswordInputForm: false })
       } else {
         Alert.alert(response.message || 'Failed to save Password');
         this.setState({ newWebsite: '', newEmail: '', newPassword: '' })
@@ -102,7 +114,7 @@ export default class Passwords extends Component {
   fetchUserPasswords = async () => {
     try {
       const response = await fetchUserPasswords(auth.currentUser.uid);
-      
+
       if (response && response.success) {
         this.setState({ savedPasswords: response.data });
       } else {
@@ -119,89 +131,27 @@ export default class Passwords extends Component {
 
   render() {
     return (
-      <View style={containerStyles.defaultContainer}>
-        <View style={containerStyles.textInputContainer}>
-          <FormInputText
-            label="Website"
-            value={this.state.newWebsite}
-            onChangeText={(text) => this.handleChange('newWebsite', text)}
-          />
-          </View>
-          <View style={containerStyles.textInputContainer}>
-          <FormInputText
-            label='Email'
-            value={this.state.newEmail}
-            onChangeText={(text) => this.handleChange('newEmail', text)}
-          />
-          </View>
-          <View style={containerStyles.textInputContainer}>
-          <FormInputText
-            label='Password'
-            value={this.state.newPassword}
-            onChangeText={(text) => this.handleChange('newPassword', text)}
-          />
-          </View>
-          <View style={containerStyles.buttonContainer}>
-          <FormButton
-            title="Save Password"
-            onPress={() => this.handleSavePassword()}
-          />
-        </View>
-        <View style={containerStyles.flatListContainer}>
-          <FlatList
-            data={this.state.savedPasswords}
-            renderItem={({ item }) => ( 
-              <View style={containerStyles.textInputContainer}>
-              <View style={styles.passwordContainer}>
-                <FormUpdateInputText
-                  label="Website"
-                  value={item.website}
-                  onChangeText={(text) => this.handleUpdateChange(item.key, { field: 'website', value: text})}
-                />
-                <FormUpdateInputText
-                  label='Email'
-                  value={item.email}
-                  onChangeText={(value) => this.handleUpdateChange(item.key, { field: 'email', value: value})}
-                />
-                <FormUpdateInputText
-                  label='Password'
-                  value={item.password}
-                  onChangeText={(value) => this.handleUpdateChange(item.key, { field: 'password', value: value})}
-                />
-                <View style={styles.buttonContainer}>
-                  <FormButton title='Update' color={'#F2F2F7'} textColor={'#000000'} onPress={() => this.handleUpdatePassword(item.key)} />
-                  <FormButton title='Delete' color={'#F2F2F7'} textColor={'#000000'} onPress={() => this.handleDeletePassword(item.key)} />
-                </View>
-              </View>
-              </View>
-            )}
-            keyExtractor={item => item.key}
-          />
+      <View style={[containerStyles.defaultContainer, {justifyContent: 'flex-start'}]}>
+        <View style={containerStyles.formContainer}>
+          {!this.state.showPasswordInputForm && (
+            <FormButton title='Add a Password' color={'#F2F2F7'} textColor={'#000000'} onPress={this.handleShowPasswordInputForm} />
+          )}
+
+          {this.state.showPasswordInputForm && (
+            <PasswordForm handleChange={this.handleChange} onFormClose={this.handleShowPasswordInputForm} onFormSubmit={this.handleSavePassword} website={this.state.newWebsite} email={this.state.newEmail} password={this.state.newPassword} />
+          )}
+
+          {this.state.showEditPasswordForm && (<FormButton title='Done' onPress={this.handleShowEditPasswordForm} />)}
+
+          {!this.state.showEditPasswordForm && (<FormButton title='Edit Passwords' color={'#F2F2F7'} textColor={'#000000'} onPress={this.handleShowEditPasswordForm} />)}
+      
+          {!this.state.showEditPasswordForm && (
+            <FlatList data={this.state.savedPasswords} renderItem={({ item }) => (<PasswordDisplayForm website={item.website} email={item.email} password={item.password} />)} keyExtractor={item => item.key} />)}
+
+          {this.state.showEditPasswordForm && (
+            <FlatList data={this.state.savedPasswords} renderItem={({ item }) => (<PasswordUpdateForm website={item.website} email={item.email} password={item.password} itemKey={item.key} handleChange={this.handleUpdateChange} onFormSubmit={this.handleUpdatePassword} onPressDelete={this.handleDeletePassword} />)} keyExtractor={item => item.key} />)}
         </View>
       </View>
     );
   }
 }
-
-const styles = StyleSheet.create({
-  input: {
-    height: 40,
-    margin: 12,
-    borderWidth: 1,
-    padding: 10,
-  },
-  passwordContainer: {
-    flex: 1,
-    flexDirection: 'column',
-    justifyContent: 'space-between',
-    alignItems: 'stretch',
-    padding: 10,
-  },
-  buttonContainer: {
-    flex: 1,
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'stretch',
-    padding: 5,
-  },
-});

@@ -36,9 +36,9 @@ FormUpdateInputText.propTypes = {
     keyboardType: PropTypes.string,
     secureTextEntry: PropTypes.bool,
     errorText: PropTypes.string,
-    onChangeText: PropTypes.func.isRequired,
-    onBlurUpdate: PropTypes.func.isRequired,
-    onPressDelete: PropTypes.func.isRequired,
+    onChangeText: PropTypes.func,
+    onBlurUpdate: PropTypes.func,
+    onPressDelete: PropTypes.func,
     onButtonUpdate: PropTypes.func
 };
 

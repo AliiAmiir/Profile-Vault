@@ -50,7 +50,7 @@ export default function RegisterationForm({ firstName, lastName, email, phone, g
   );
 }
 
-FormInputText.propTypes = {
+RegisterationForm.propTypes = {
   firstName: PropTypes.string,
   lastName: PropTypes.string,
   email: PropTypes.string,
@@ -75,7 +75,7 @@ FormInputText.propTypes = {
   onFormSubmit: PropTypes.func
 };
 
-FormInputText.defaultProps = {
+RegisterationForm.defaultProps = {
   firstName: '',
   lastName: '',
   email: '',
