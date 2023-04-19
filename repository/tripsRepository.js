@@ -26,19 +26,25 @@ export const saveTrip = async (userId, tripDetails) => {
     }
 }
 
-export const updateTrip = async (tripId, city, state, country, dateFrom, dateTo, cost, hotel) => {
+export const updateTrip = async (tripId, tripDetails) => {
     try {
-        const response = await updateDoc(doc(db, 'trips', tripId), {
-            city: city,
-            state: state,
-            country: country,
-            dateFrom: dateFrom,
-            dateTo: dateTo,
-            cost: cost,
-            hotel: hotel,
+        await updateDoc(doc(db, 'trips', tripId), {
+            city: tripDetails.city,
+            state: tripDetails.state,
+            country: tripDetails.country,
+            dateFrom: tripDetails.dateFrom,
+            dateTo: tripDetails.dateTo,
+            tripCost: (parseFloat(tripDetails.tripCost).toFixed(2)).toString() || '0.00',
+            hotelName: tripDetails.hotelName || 'N/A',
+            hotelAddress: tripDetails.hotelAddress || 'N/A',
+            hotelCost: (parseFloat(tripDetails.hotelCost).toFixed(2)).toString() || '0.00',
+            flightName: tripDetails.flightName || 'N/A',
+            flightCost: (parseFloat(tripDetails.flightCost).toFixed(2)).toString() || '0.00',
+            carRentalName: tripDetails.carRentalName || 'N/A',
+            carRentalCost: (parseFloat(tripDetails.carRentalCost).toFixed(2)).toString() || '0.00',
         });
 
-        return { success: true, message: 'Updated Trip', response: response };
+        return { success: true, message: 'Updated Trip'};
     } catch (error) {
         return { success: false, message: error.message, response: error };
     }

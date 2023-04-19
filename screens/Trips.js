@@ -27,14 +27,14 @@ export default class Trips extends Component {
       newTripDateTo: new Date(),
       showDateFromPicker: false,
       showDateToPicker: false,
-      newTripCost: '0',
+      newTripCost: '',
       newTripHotelName: '',
       newTripHotelAddress: '',
-      newTripHotelCost: '0',
+      newTripHotelCost: '',
       newTripFlightName: '',
-      newTripFlightCost: '0',
+      newTripFlightCost: '',
       newTripCarRentalName: '',
-      newTripCarRentalCost: '0',
+      newTripCarRentalCost: '',
       errors: {},
       savedTrips: [],
       displayUpdateButton: true,
@@ -52,14 +52,14 @@ export default class Trips extends Component {
       newTripDateTo: new Date(),
       showDateFromPicker: false,
       showDateToPicker: false,
-      newTripCost: '0',
+      newTripCost: '',
       newTripHotelName: '',
       newTripHotelAddress: '',
-      newTripHotelCost: '0',
+      newTripHotelCost: '',
       newTripFlightName: '',
-      newTripFlightCost: '0',
+      newTripFlightCost: '',
       newTripCarRentalName: '',
-      newTripCarRentalCost: '0',
+      newTripCarRentalCost: '',
       showTripsInputForm: false,
     }
   };
@@ -132,27 +132,12 @@ export default class Trips extends Component {
   handleUpdateChange = (key, value) => {
     let savedTrips = this.state.savedTrips;
     let index = savedTrips.findIndex(x => x.key === key);
-    let trip = savedTrips[index];
+    let valueAtIndex = savedTrips[index];
+    valueAtIndex[value.field] = value.value;
 
-    switch (value.field) {
-      case 'city':
-        trip.city = value.text; // update the correct property
-        break;
-      case 'dates':
-        trip.dates = value.text; // update the correct property
-        break;
-      case 'cost':
-        trip.cost = value.text; // update the correct property
-        break;
-      case 'hotel':
-        trip.hotel = value.text; // update the correct property
-        break;
-      default:
-        break;
-    }
+    savedTrips[index] = valueAtIndex;
 
     // Add validation
-
     this.setState({ savedTrips: savedTrips });
   };
 
@@ -200,7 +185,7 @@ export default class Trips extends Component {
       let index = savedTrips.findIndex(x => x.key === key);
       let trip = savedTrips[index];
 
-      const response = await updateTrip(key, trip.city, trip.state, trip.country, trip.dateFrom, trip.dateTo, trip.cost, trip.hotel);
+      const response = await updateTrip(key, trip);
 
       if (response && response.success) {
         Alert.alert(response.message || 'Updated Trip');
@@ -208,7 +193,7 @@ export default class Trips extends Component {
         Alert.alert(response.message || 'Failed to Update Trip');
       }
 
-      await this.fetchUserTrip();
+      await this.fetchUserTrips();
     } catch (error) {
       console.log(error.message);
       Alert.alert('Unexpected Error Occurred');
@@ -314,20 +299,29 @@ export default class Trips extends Component {
           {this.state.showEditTripsForm && !this.state.showTripsInputForm && (
             <FlatList data={this.state.savedTrips} renderItem={({ item }) => (
               <TripsUpdateForm
-                name={item.name}
-                relation={item.relation}
-                dateOfBirth={item.dateOfBirth}
-                anniversary={item.anniversary}
+                city={item.city}
+                state={item.state}
+                country={item.country}
+                dateFrom={item.dateFrom}
+                dateTo={item.dateTo}
+                tripCost={item.tripCost}
+                hotelName={item.hotelName}
+                hotelAddress={item.hotelAddress}
+                hotelCost={item.hotelCost}
+                flightName={item.flightName}
+                flightCost={item.flightCost}
+                carRentalName={item.carRentalName}
+                carRentalCost={item.carRentalCost}
                 itemKey={item.key}
                 handleChange={this.handleUpdateChange}
                 onFormSubmit={this.handleUpdateTrips}
                 onPressDelete={this.handleDeleteTrips}
-                showDatePicker={item.showDatePicker}
-                handleShowDatePicker={this.handleShowDatePickerByKey}
-                handleDateChange={this.handleDateChangeByKey}
-                handleDateChangeAnniversary={this.handleDateChangeAnniversaryByKey}
-                showDatePickerAnniversary={item.showDatePickerAnniversary}
-                handleShowDatePickerAnniversary={this.handleShowDatePickerAnniversaryByKey}
+                showDatePicker={item.showDateFromPicker}
+                handleShowDatePicker={this.handleShowDateFromPickerByKey}
+                handleDateChange={this.handleDateFromChangeByKey}
+                showDateToPicker={item.showDateToPicker}
+                handleShowDateToPicker={this.handleShowDateToPickerByKey}
+                handleDateToChange={this.handleDateToChangeByKey}
               />)}
               keyExtractor={item => item.key}
             />)}
