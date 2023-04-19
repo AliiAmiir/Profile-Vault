@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, FlatList, StyleSheet, Alert } from 'react-native';
+import { View, FlatList, Alert } from 'react-native';
 
 // Import Configs
 import { auth } from '../config/firebaseConfig';
@@ -14,6 +14,7 @@ import { containerStyles } from '../styles/globalStyle';
 import FormButton from '../components/FormButton';
 import FormInputText from '../components/FormInputText';
 import FormUpdateInputText from '../components/FormUpdateInputText';
+import { SignificantsForm, SignificantsDisplayForm, SignificantsUpdateForm } from '../components/SignificantsForm';
 
 export default class Significants extends Component {
   constructor(props) {
@@ -23,13 +24,77 @@ export default class Significants extends Component {
       loading: true,
       newSignificantName: '',
       newSignificantRelation: '',
-      newSignificantDateOfBirth: '',
-      newSignificantAnniversary: '',
+      newSignificantDateOfBirth: new Date(),
+      showDatePicker: false,
+      newSignificantAnniversary: new Date(),
+      showDatePickerAnniversary: false,
       errors: {},
       savedSignificants: [],
       displayUpdateButton: true,
+      showSignificantsInputForm: false,
+      showEditSignificantsForm: false,
     }
   }
+
+  handleShowDatePickerByKey = (key) => {
+    let index = this.state.savedSignificants.findIndex(x => x.key === key);
+    let savedSignificants = this.state.savedSignificants;
+
+    savedSignificants[index].showDatePicker = !savedSignificants[index].showDatePicker;
+    this.setState({ savedSignificants: savedSignificants});
+  };
+
+  handleDateChangeByKey = (key, selectedDate, event) => {
+    let index = this.state.savedSignificants.findIndex(x => x.key === key);
+    let savedSignificants = this.state.savedSignificants;
+
+    savedSignificants[index].dateOfBirth = selectedDate || savedSignificants[index].dateOfBirth;
+
+    this.setState({ savedSignificants: savedSignificants});
+  }
+
+  handleShowDatePickerAnniversaryByKey = (key) => {
+    let index = this.state.savedSignificants.findIndex(x => x.key === key);
+    let savedSignificants = this.state.savedSignificants;
+
+    savedSignificants[index].showDatePickerAnniversary = !savedSignificants[index].showDatePickerAnniversary;
+    this.setState({ savedSignificants: savedSignificants});
+  };
+
+  handleDateChangeAnniversaryByKey = (key, selectedDate, event) => {
+    let index = this.state.savedSignificants.findIndex(x => x.key === key);
+    let savedSignificants = this.state.savedSignificants;
+
+    savedSignificants[index].anniversary = selectedDate || savedSignificants[index].anniversary;
+
+    this.setState({ savedSignificants: savedSignificants});
+  }
+
+  handleShowSignificantsInputForm = () => {
+    this.setState({ showSignificantsInputForm: !this.state.showSignificantsInputForm });
+  };
+
+  handleShowEditSignificantsForm = () => {
+    this.setState({ showEditSignificantsForm: !this.state.showEditSignificantsForm });
+  };
+  
+  handleShowDatePickerAnniversary = () => {
+    this.setState({ showDatePickerAnniversary: !this.state.showDatePickerAnniversary });
+  };
+
+  handleDateChangeAnniversary = (event, selectedDate) => {
+    const currentDate = selectedDate || this.state.newSignificantAnniversary;
+    this.setState({ newSignificantAnniversary: currentDate });
+  };
+
+  handleShowDatePicker = () => {
+    this.setState({ showDatePicker: !this.state.showDatePicker });
+  };
+
+  handleDateChange = (event, selectedDate) => {
+    const currentDate = selectedDate || this.state.newSignificantDateOfBirth;
+    this.setState({ newSignificantDateOfBirth: currentDate });
+  };
 
   handleChange = (key, value) => {
     // Add validation
@@ -42,7 +107,6 @@ export default class Significants extends Component {
     let significant = savedSignificants[index];
 
     // Add validation
-    
     switch (value.field) {
       case 'name':
         significant.significantName = value.text;
@@ -69,15 +133,16 @@ export default class Significants extends Component {
 
       if (response && response.success) {
         Alert.alert(response.message || 'Saved Significant');
-        this.setState({ newSignificantName: '', newSignificantRelation: '', newSignificantDateOfBirth: '', newSignificantAnniversary: '' })
+        this.setState({ newSignificantName: '', newSignificantRelation: '', newSignificantDateOfBirth: new Date(), newSignificantAnniversary: new Date() })
       } else {
         Alert.alert(response.message || 'Failed to save Significant');
-        this.setState({ newSignificantName: '', newSignificantRelation: '', newSignificantDateOfBirth: '', newSignificantAnniversary: '' })
+        this.setState({ newSignificantName: '', newSignificantRelation: '', newSignificantDateOfBirth: new Date(), newSignificantAnniversary: new Date() })
       }
 
       await this.fetchUserSignificants();
     } catch (error) {
-      console.log(error);
+      console.log(error.message);
+      Alert.alert('Unexpected Error Occurred');
     }
   };
 
@@ -87,7 +152,7 @@ export default class Significants extends Component {
       let index = savedSignificants.findIndex(x => x.key === key);
       let significants = savedSignificants[index];
 
-      const response = await updateSignificant(auth.currentUser.uid, key, significants.significantName, significants.significantRelation, significants.significantDateOfBirth, significants.significantAnniversary);
+      const response = await updateSignificant(key, significants.name, significants.relation, significants.dateOfBirth, significants.anniversary);
 
       if (response && response.success) {
         Alert.alert(response.message || 'Updated Significant');
@@ -97,7 +162,8 @@ export default class Significants extends Component {
 
       await this.fetchUserSignificants();
     } catch (error) {
-      console.log(error);
+      console.log(error.message);
+      Alert.alert('Unexpected Error Occurred');
     }
   };
 
@@ -114,13 +180,13 @@ export default class Significants extends Component {
       await this.fetchUserSignificants();
     } catch (error) {
       console.log(error);
+      Alert.alert('Unexpected Error Occurred');
     }
   };
 
   fetchUserSignificants = async () => {
     try {
       const response = await fetchUserSignificants(auth.currentUser.uid);
-
       if (response && response.success) {
         this.setState({ savedSignificants: response.data });
       } else {
@@ -128,6 +194,7 @@ export default class Significants extends Component {
       }
     } catch (error) {
       console.log(error);
+      Alert.alert('Unexpected Error Occurred');
     }
   };
 
@@ -137,120 +204,27 @@ export default class Significants extends Component {
 
   render() {
     return (
-      <View style={containerStyles.defaultContainer}>
-        <View style={containerStyles.textInputContainer}>
-          <FormInputText
-            label="Name"
-            value={this.state.newSignificantName}
-            onChangeText={(value) => this.handleChange('newSignificantName', value)}
-          />
-        </View>
-        <View style={containerStyles.textInputContainer}>
-          <FormInputText
-            label="Relation"
-            value={this.state.newSignificantRelation}
-            onChangeText={(text) => this.handleChange('newSignificantRelation', text)}
-          />
-        </View>
-        <View style={containerStyles.textInputContainer}>
-          <FormInputText
-            label="Date of Birth"
-            value={this.state.newSignificantDateOfBirth}
-            onChangeText={(text) => this.handleChange('newSignificantDateOfBirth', text)}
-          />
-        </View>
-        <View style={containerStyles.textInputContainer}>
-          <FormInputText
-            label="Anniversary"
-            value={this.state.newSignificantAnniversary}
-            onChangeText={(text) => this.handleChange('newSignificantAnniversary', text)}
-          />
-        </View>
-        <View style={containerStyles.buttonContainer}>
-          <FormButton
-            title="Save Significant"
-            onPress={() => this.handleSaveSignificants()}
-          />
-        </View>
-        <View style={containerStyles.flatListContainer}>
-          <FlatList
+      <View style={[containerStyles.defaultContainer, {justifyContent: 'flex-start'}]}>
+        <View style={containerStyles.formContainer}>
+          {!this.state.showSignificantsInputForm && (
+            <FormButton title='Add a Significant' color={'#F2F2F7'} textColor={'#000000'} onPress={this.handleShowSignificantsInputForm} />
+          )}
 
-            data={this.state.savedSignificants}
-            renderItem={({ item }) => (
-              <View style={containerStyles.textInputContainer}>
-                <View style={styles.relativeContainer}>
-                  <View style={styles.inputsWrapper}>
-                    <FormUpdateInputText
-                      label="Name"
-                      value={item.significantName}
-                      onChangeText={(text) => this.handleUpdateChange(item.key, { field: 'name', text })}
-                    />
-                    <FormUpdateInputText
-                      label="Relation"
-                      value={item.significantRelation}
-                      onChangeText={(text) => this.handleUpdateChange(item.key, { field: 'relation', text})}
-                    />
-                    <FormUpdateInputText
-                      label="Date of Birth"
-                      value={item.significantDateOfBirth}
-                      onChangeText={(text) => this.handleUpdateChange(item.key, { field: 'dateOfBirth', text })}
-                    />
-                    <FormUpdateInputText
-                      label="Anniversary"
-                      value={item.significantAnniversary}
-                      onChangeText={(text) => this.handleUpdateChange(item.key, { field: 'anniversary', text })}
-                    />
-                  </View>
-                  <View style={styles.buttonsWrapper}>
-                    <FormButton
-                      title="Update"
-                      onPress={() => this.handleUpdateSignificants(item.key)}
-                    />
-                    <FormButton
-                      title="Delete"
-                      onPress={() => this.handleDeleteSignificants(item.key)}
-                    />
-                  </View>
-                </View>
-              </View>
-            )}
-            keyExtractor={item => item.key}
-          />
+          {this.state.showSignificantsInputForm && (
+            <SignificantsForm handleChange={this.handleChange} onFormClose={this.handleShowSignificantsInputForm} onFormSubmit={this.handleSaveSignificants} name={this.state.newSignificantName} relation={this.state.newSignificantRelation} dateOfBirth={this.state.newSignificantDateOfBirth} anniversary={this.state.newSignificantAnniversary} showDatePicker={this.state.showDatePicker} handleShowDatePicker={this.handleShowDatePicker} handleDateChange={this.handleDateChange} showDatePickerAnniversary={this.state.showDatePickerAnniversary} handleShowDatePickerAnniversary={this.handleShowDatePickerAnniversary} handleDateChangeAnniversary={this.handleDateChangeAnniversary} />
+          )}
+
+          {this.state.showEditSignificantsForm && (<FormButton title='Done' onPress={this.handleShowEditSignificantsForm} />)}
+
+          {!this.state.showEditSignificantsForm && (<FormButton title='Edit Significants' color={'#F2F2F7'} textColor={'#000000'} onPress={this.handleShowEditSignificantsForm} />)}
+      
+          {!this.state.showEditSignificantsForm && (
+            <FlatList data={this.state.savedSignificants} renderItem={({ item }) => (<SignificantsDisplayForm name={item.name} relation={item.relation} dateOfBirth={item.dateOfBirth} anniversary={item.anniversary} />)} keyExtractor={item => item.key} />)}
+
+          {this.state.showEditSignificantsForm && (
+            <FlatList data={this.state.savedSignificants} renderItem={({ item }) => (<SignificantsUpdateForm name={item.name} relation={item.relation} dateOfBirth={item.dateOfBirth} anniversary={item.anniversary} itemKey={item.key} handleChange={this.handleUpdateChange} onFormSubmit={this.handleUpdateSignificants} onPressDelete={this.handleDeleteSignificants} showDatePicker={item.showDatePicker} handleShowDatePicker={this.handleShowDatePickerByKey} handleDateChange={this.handleDateChangeByKey} handleDateChangeAnniversary={this.handleDateChangeAnniversaryByKey} showDatePickerAnniversary={item.showDatePickerAnniversary} handleShowDatePickerAnniversary={this.handleShowDatePickerAnniversaryByKey} />)} keyExtractor={item => item.key} />)}
         </View>
       </View>
     );
   }
 }
-
-const styles = StyleSheet.create({
-  relativeContainer: {
-    flex: 1,
-    flexDirection: 'column',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    padding: 10,
-    backgroundColor: '#fff',
-    borderRadius: 10,
-    marginVertical: 5,
-  },
-  inputsWrapper: {
-    flex: 1,
-    flexDirection: 'column',
-    justifyContent: 'space-between',
-    alignItems: 'flex-start',
-  },
-  buttonsWrapper: {
-    flex: 1,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'flex-end',
-  },
-  input: {
-    width: '100%',
-    height: 40,
-    padding: 10,
-    borderWidth: 1,
-    borderColor: '#ccc',
-    borderRadius: 5,
-  },
-});

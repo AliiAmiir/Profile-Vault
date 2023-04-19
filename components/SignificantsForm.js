@@ -12,27 +12,29 @@ import FormInputText from './FormInputText';
 import CustomDatePicker from './CustomDatePicker';
 import CustomPicker from './CustomPicker';
 
-export const RelativesForm = function ({ name, relation, dateOfBirth, errors, handleChange, onFormSubmit, onFormClose, showDatePicker, handleShowDatePicker, handleDateChange }) {
+export const SignificantsForm = function ({ name, relation, dateOfBirth, anniversary, errors, handleChange, onFormSubmit, onFormClose, showDatePicker, handleShowDatePicker, handleDateChange, showDatePickerAnniversary, handleShowDatePickerAnniversary, handleDateChangeAnniversary }) {
     return (
         <View style={containerStyles.textInputContainer}>
             <View>
-                <FormInputText label="Name" value={name} onChangeText={(value) => handleChange('newRelativeName', value)} />
-                <FormInputText label='Relation' value={relation} onChangeText={(value) => handleChange('newRelativeRelation', value)} />
+                <FormInputText label="Name" value={name} onChangeText={(value) => handleChange('newSignificantName', value)} />
+                <FormInputText label='Relation' value={relation} onChangeText={(value) => handleChange('newSignificantRelation', value)} />
                 <CustomDatePicker label={'Date of Birth'} dateOfBirth={dateOfBirth} showDatePicker={showDatePicker} handleDateChange={handleDateChange} handleShowDatePicker={handleShowDatePicker} />
+                <CustomDatePicker label={'Anniversary'} dateOfBirth={anniversary} showDatePicker={showDatePickerAnniversary} handleDateChange={handleDateChangeAnniversary} handleShowDatePicker={handleShowDatePickerAnniversary} />
             </View>
 
             <View style={containerStyles.buttonContainer}>
                 <FormButton title='Cancel' color={'#F2F2F7'} textColor={'#000000'} onPress={onFormClose} />
-                <FormButton title='Save Relative' onPress={onFormSubmit} />
+                <FormButton title='Save Significant' onPress={onFormSubmit} />
             </View>
         </View>
     );
 }
 
-RelativesForm.propTypes = {
+SignificantsForm.propTypes = {
     name: PropTypes.string,
     relation: PropTypes.string,
     dateOfBirth: PropTypes.instanceOf(Date),
+    anniversary: PropTypes.instanceOf(Date),
     errors: PropTypes.object,
     handleChange: PropTypes.func,
     onFormSubmit: PropTypes.func,
@@ -40,57 +42,65 @@ RelativesForm.propTypes = {
     showDatePicker: PropTypes.bool,
     handleShowDatePicker: PropTypes.func,
     handleDateChange: PropTypes.func,
+    showDatePickerAnniversary: PropTypes.bool,
+    handleShowDatePickerAnniversary: PropTypes.func,
+    handleDateChangeAnniversary: PropTypes.func,
 };
 
-RelativesForm.defaultProps = {
+SignificantsForm.defaultProps = {
     name: '',
     relation: '',
     dateOfBirth: new Date(),
+    anniversary: new Date(),
     errors: null,
 };
 
-export const RelativesDisplayForm = function ({ name, relation, dateOfBirth }) {
+export const SignificantsDisplayForm = function ({ name, relation, dateOfBirth, anniversary }) {
     return (
         <View style={containerStyles.textInputContainer}>
             <FormText label="Name" value={name} />
             <FormText label='Relation' value={relation} />
             <FormText label='Date of Birth' value={dateOfBirth.toLocaleDateString()} />
+            <FormText label='Anniversary' value={anniversary.toLocaleDateString()} />
         </View>
     );
 }
 
-RelativesDisplayForm.propTypes = {
+SignificantsDisplayForm.propTypes = {
     name: PropTypes.string,
     relation: PropTypes.string,
     dateOfBirth: PropTypes.instanceOf(Date),
+    anniversary: PropTypes.instanceOf(Date),
 };
 
-RelativesDisplayForm.defaultProps = {
+SignificantsDisplayForm.defaultProps = {
     name: '',
     relation: '',
 };
 
-export const RelativesUpdateForm = function ({ itemKey, name, relation, dateOfBirth, errors, handleChange, onFormSubmit, onPressDelete, showDatePicker, handleShowDatePicker, handleDateChange }) {
+export const SignificantsUpdateForm = function ({ itemKey, name, relation, dateOfBirth, anniversary, errors, handleChange, onFormSubmit, onPressDelete, showDatePicker, handleShowDatePicker, handleDateChange, showDatePickerAnniversary, handleShowDatePickerAnniversary, handleDateChangeAnniversary }) {
     return (
         <View>
             <View style={containerStyles.textInputContainer}>
                 <FormInputText label='Name' value={name} onChangeText={(value) => handleChange(itemKey, { field: 'name', value: value })} />
                 <FormInputText label='Relation' value={relation} onChangeText={(value) => handleChange(itemKey, { field: 'relation', value: value })} />
                 <CustomDatePicker label={'Date of Birth'} dateOfBirth={dateOfBirth} showDatePicker={showDatePicker} handleDateChange={(event, value) => handleDateChange(itemKey, value)} handleShowDatePicker={(value) => handleShowDatePicker(itemKey, value)} />
+                <CustomDatePicker label={'Anniversary'} dateOfBirth={anniversary} showDatePicker={showDatePickerAnniversary} handleDateChange={(event, value) => handleDateChangeAnniversary(itemKey, value)} handleShowDatePicker={(value) => handleShowDatePickerAnniversary(itemKey, value)} />
             </View>
             <View style={containerStyles.buttonContainer}>
                 <FormButton title='Delete' color={'#CD5151'} textColor={'#FFFFFF'} onPress={() => onPressDelete(itemKey)} />
-                <FormButton title='Save Relative' onPress={() => onFormSubmit(itemKey)} />
+                <FormButton title='Save Significant' onPress={() => onFormSubmit(itemKey)} />
             </View>
         </View>
     );
 }
 
-RelativesUpdateForm.propTypes = {
+SignificantsUpdateForm.propTypes = {
     itemKey: PropTypes.string,
     name: PropTypes.string,
     relation: PropTypes.string,
     dateOfBirth: PropTypes.instanceOf(Date),
+    anniversary: PropTypes.instanceOf(Date),
     errors: PropTypes.object,
     handleChange: PropTypes.func,
     onFormSubmit: PropTypes.func,
@@ -98,9 +108,12 @@ RelativesUpdateForm.propTypes = {
     showDatePicker: PropTypes.bool,
     handleShowDatePicker: PropTypes.func,
     handleDateChange: PropTypes.func,
+    showDatePickerAnniversary: PropTypes.bool,
+    handleShowDatePickerAnniversary: PropTypes.func,
+    handleDateChangeAnniversary: PropTypes.func,
 };
 
-RelativesUpdateForm.defaultProps = {
+SignificantsUpdateForm.defaultProps = {
     name: '',
     relation: '',
     errors: null,
