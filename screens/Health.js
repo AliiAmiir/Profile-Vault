@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, FlatList, StyleSheet, Alert } from 'react-native';
+import { View, FlatList, Alert } from 'react-native';
 
 // Import Configs
 import { auth } from '../config/firebaseConfig';
@@ -12,8 +12,7 @@ import { containerStyles } from '../styles/globalStyle';
 
 // Import Components
 import FormButton from '../components/FormButton';
-import FormInputText from '../components/FormInputText';
-import FormUpdateInputText from '../components/FormUpdateInputText';
+import { HealthForm, HealthDisplayForm, HealthUpdateForm } from '../components/HealthForm';
 
 export default class Health extends Component {
   constructor(props) {
@@ -21,89 +20,127 @@ export default class Health extends Component {
 
     this.state = {
       loading: true,
-      newHealthCheckUpDate: '',
+      newHealthCheckUpType: '',
+      newHealthCheckUpDate: new Date(),
+      showDatePicker: false,
       newHealthDiagonsis: '',
-      newHealthMedicines: '',
-      newHealthDuration: '',
+      newHealthMedicines: [{ name: '', dosage: '', frequency: '' }],
       errors: {},
-      saveHealth: [],
+      savedHealthDetails: [],
       displayUpdateButton: true,
+      showHealthInputForm: false,
+      showEditHealthForm: false,
     }
   }
+
+  handleShowDatePickerByKey = (key) => {
+    let index = this.state.savedHealthDetails.findIndex(x => x.key === key);
+    let savedHealthDetails = this.state.savedHealthDetails;
+
+    savedHealthDetails[index].showDatePicker = !savedHealthDetails[index].showDatePicker;
+    this.setState({ savedHealthDetails: savedHealthDetails });
+  };
+
+  handleShowDatePicker = () => {
+    this.setState({ showDatePicker: !this.state.showDatePicker });
+  };
+
+  handleDateChange = (event, selectedDate) => {
+    const currentDate = selectedDate || this.state.newHealthCheckUpDate;
+    this.setState({ newHealthCheckUpDate: currentDate });
+  };
+
+  handleDateChangeByKey = (key, selectedDate, event) => {
+    let index = this.state.savedHealthDetails.findIndex(x => x.key === key);
+    let savedHealthDetails = this.state.savedHealthDetails;
+
+    savedHealthDetails[index].checkUpDate = selectedDate || savedHealthDetails[index].checkUpDate;
+
+    this.setState({ savedHealthDetails: savedHealthDetails });
+  }
+
+  handleShowHealthInputForm = () => {
+    this.setState({ showHealthInputForm: !this.state.showHealthInputForm });
+  };
+
+  handleShowEditHealthForm = () => {
+    this.setState({ showEditHealthForm: !this.state.showEditHealthForm });
+  };
 
   handleChange = (key, value) => {
     // Add validation
     this.setState({ [key]: value });
   };
 
-handleUpdateChange = (key, value) => {
-  let saveHealth = this.state.saveHealth;
-  let index = saveHealth.findIndex(x => x.key === key);
-  let health = saveHealth[index];
+  handleChangeMedicine = (index, key, value) => {
+    let newHealthMedicines = this.state.newHealthMedicines;
+    let newHealthMedicine = this.state.newHealthMedicines[index];
+    newHealthMedicine[key] = value;
 
-  switch (value.field) {
-    case 'checkUpDate':
-      health.healthCheckUpDate = value.text; // update the correct property
-      break;
-    case 'diagnosis':
-      health.healthDiagonsis = value.text; // update the correct property
-      break;
-    case 'medicines':
-      health.healthMedicines = value.text; // update the correct property
-      break;
-    case 'duration':
-      health.healthDuration = value.text; // update the correct property
-      break;
-    default:
-      break;
-  }
+    newHealthMedicines[index] = newHealthMedicine;
+    // Add validation
+    this.setState({ newHealthMedicines });
+  };
 
-  // Add validation
+  handleUpdateChange = (key, value) => {
+    let savedHealthDetails = this.state.savedHealthDetails;
+    let index = savedHealthDetails.findIndex(x => x.key === key);
 
-  this.setState({ saveHealth: saveHealth });
-};
+    let valueAtIndex = savedHealthDetails[index];
+    valueAtIndex[value.field] = value.value;
 
-  
+    savedHealthDetails[index] = valueAtIndex;
+
+    // Add validation
+    this.setState({ savedHealthDetails: savedHealthDetails });
+  };
 
   handleSaveHealth = async () => {
     try {
-      const response = await saveHealth(auth.currentUser.uid, this.state.newHealthCheckUpDate, this.state.newHealthDiagonsis, this.state.newHealthMedicines, this.state.newHealthDuration);
+      const healthDetails = {
+        checkUpType: this.state.newHealthCheckUpType,
+        checkUpDate: this.state.newHealthCheckUpDate,
+        diagonsis: this.state.newHealthDiagonsis,
+        medicines: this.state.newHealthMedicines,
+      };
+
+      const response = await saveHealth(auth.currentUser.uid, healthDetails);
 
       if (response && response.success) {
         Alert.alert(response.message || 'Saved Health');
-        this.setState({ newHealthCheckUpDate: '', newHealthDiagonsis: '', newHealthMedicines: '', newHealthDuration: '' })
+        this.setState({ newHealthCheckUpType: '', newHealthCheckUpDate: new Date(), newHealthDiagonsis: '', newHealthMedicines: [{ name: '', dosage: '', frequency: '' }], showHealthInputForm: false })
       } else {
         Alert.alert(response.message || 'Failed to save Health');
-        this.setState({ newHealthCheckUpDate: '', newHealthDiagonsis: '', newHealthMedicines: '', newHealthDuration: '' })
+        this.setState({ newHealthCheckUpType: '', newHealthCheckUpDate: new Date(), newHealthDiagonsis: '', newHealthMedicines: [{ name: '', dosage: '', frequency: '' }], showHealthInputForm: false })
       }
 
       await this.fetchUserHealth();
     } catch (error) {
-      console.log(error);
+      console.log(error.message);
+      Alert.alert('Unexpected Error Occurred');
     }
   };
 
   handleUpdateHealth = async (key) => {
     try {
-      let saveHealth = this.state.saveHealth;
-      let index = saveHealth.findIndex(x => x.key === key);
-      let health = saveHealth[index];
-  
+      let savedHealthDetails = this.state.savedHealthDetails;
+      let index = savedHealthDetails.findIndex(x => x.key === key);
+      let health = savedHealthDetails[index];
+
       const response = await updateHealth(auth.currentUser.uid, key, health.healthCheckUpDate, health.healthDiagonsis, health.healthMedicines, health.healthDuration);
-  
+
       if (response && response.success) {
         Alert.alert(response.message || 'Updated Health');
       } else {
         Alert.alert(response.message || 'Failed to update Health');
       }
-  
+
       await this.fetchUserHealth();
     } catch (error) {
-      console.log(error);
+      console.log(error.message);
+      Alert.alert('Unexpected Error Occurred');
     }
   };
-  
-  
 
   handleDeleteHealth = async (key) => {
     try {
@@ -117,21 +154,22 @@ handleUpdateChange = (key, value) => {
 
       await this.fetchUserHealth();
     } catch (error) {
-      console.log(error);
+      console.log(error.message);
+      Alert.alert('Unexpected Error Occurred');
     }
   };
 
   fetchUserHealth = async () => {
     try {
       const response = await fetchUserHealth(auth.currentUser.uid);
-
       if (response && response.success) {
-        this.setState({ saveHealth: response.data });
+        this.setState({ savedHealthDetails: response.data });
       } else {
         Alert.alert(response.message || 'Failed to fetch Health');
       }
     } catch (error) {
-      console.log(error);
+      console.log(error.message);
+      Alert.alert('Unexpected Error Occurred');
     }
   };
 
@@ -141,119 +179,65 @@ handleUpdateChange = (key, value) => {
 
   render() {
     return (
-      <View style={containerStyles.defaultContainer}>
-        <View style={containerStyles.textInputContainer}>
-          <FormInputText
-            label="Check-up Date"
-            value={this.state.newHealthCheckUpDate}
-            onChangeText={(value) => this.handleChange('newHealthCheckUpDate', value)}
-          />
-        </View>
-        <View style={containerStyles.textInputContainer}>
-          <FormInputText
-            label="Diagnosis"
-            value={this.state.newHealthDiagonsis}
-            onChangeText={(value) => this.handleChange('newHealthDiagonsis', value)}
-          />
-        </View>
-        <View style={containerStyles.textInputContainer}>
-          <FormInputText
-            label="Medicines"
-            value={this.state.newHealthMedicines}
-            onChangeText={(value) => this.handleChange('newHealthMedicines', value)}
-          />
-        </View>
-        <View style={containerStyles.textInputContainer}>
-          <FormInputText
-            label="Duration"
-            value={this.state.newHealthDuration}
-            onChangeText={(value) => this.handleChange('newHealthDuration', value)}
-          />
-        </View>
-        <View style={containerStyles.buttonContainer}>
-          <FormButton
-            title="Save Health"
-            onPress={() => this.handleSaveHealth()}
-          />
-        </View>
-        <View style={containerStyles.flatListContainer}>
-        <FlatList
-          data={this.state.saveHealth}
-          renderItem={({ item }) => (
-            <View style={containerStyles.textInputContainer}>
-              <View style={styles.relativeContainer}>
-                <View style={styles.inputsWrapper}>
-                  <FormUpdateInputText
-                    label="checkUpDate"
-                    value={item.healthCheckUpDate}
-                    onChangeText={(text) => this.handleUpdateChange(item.key, { field: 'checkUpDate', text })}
-                  />
-                  <FormUpdateInputText
-                    label="Diagnosis"
-                    value={item.healthDiagonsis}
-                    onChangeText={(text) => this.handleUpdateChange(item.key, { field: 'diagnosis', text })}
-                  />
-                  <FormUpdateInputText
-                    label="Medicines"
-                    value={item.healthMedicines}
-                    onChangeText={(text) => this.handleUpdateChange(item.key, { field: 'medicines', text })}
-                  />
-                  <FormUpdateInputText
-                    label="Duration"
-                    value={item.healthDuration}
-                    onChangeText={(text) => this.handleUpdateChange(item.key, { field: 'duration', text })}
-                  />
-                </View>
-                <View style={styles.buttonsWrapper}>
-                  <FormButton
-                    title="Update"
-                    onPress={() => this.handleUpdateHealth(item.key)}
-                  />
-                  <FormButton
-                    title="Delete"
-                    onPress={() => this.handleDeleteHealth(item.key)}
-                  />
-                </View>
-              </View>
-            </View>
+      <View style={[containerStyles.defaultContainer, { justifyContent: 'flex-start' }]}>
+        <View style={containerStyles.formContainer}>
+          {!this.state.showHealthInputForm && (
+            <FormButton title='Add a Health' color={'#F2F2F7'} textColor={'#000000'} onPress={this.handleShowHealthInputForm} />
           )}
-          keyExtractor={item => item.key}
-        />
+
+          {this.state.showHealthInputForm && (
+            <HealthForm
+              checkUpType={this.state.newHealthCheckUpType}
+              checkUpDate={this.state.newHealthCheckUpDate}
+              medicines={this.state.newHealthMedicines}
+              handleChange={this.handleChange}
+              handleChangeMedicine={this.handleChangeMedicine}
+              onFormClose={this.handleShowHealthInputForm}
+              onFormSubmit={this.handleSaveHealth}
+              showDatePicker={this.state.showDatePicker}
+              handleShowDatePicker={this.handleShowDatePicker}
+              handleDateChange={this.handleDateChange}
+            />
+          )}
+
+          {this.state.showEditHealthForm && !this.state.showHealthInputForm && (<FormButton title='Done' onPress={this.handleShowEditHealthForm} />)}
+
+          {!this.state.showEditHealthForm && !this.state.showHealthInputForm && (<FormButton title='Edit Health' color={'#F2F2F7'} textColor={'#000000'} onPress={this.handleShowEditHealthForm} />)}
+
+          {!this.state.showEditHealthForm && !this.state.showHealthInputForm && (
+            <FlatList data={this.state.savedHealthDetails} renderItem={({ item }) => (
+              <HealthDisplayForm
+                checkUpType={item.checkUpType}
+                checkUpDate={item.checkUpDate}
+                diagonsis={item.diagonsis}
+                medicines={item.medicines}
+              />
+            )}
+              keyExtractor={item => item.key}
+            />
+          )}
+
+          {this.state.showEditHealthForm && !this.state.showHealthInputForm && (
+            <FlatList data={this.state.savedHealthDetails} renderItem={({ item }) => (
+              <HealthUpdateForm
+                itemKey={item.key}
+                checkUpType={item.checkUpType}
+                checkUpDate={item.checkUpDate}
+                diagonsis={item.diagonsis}
+                medicines={item.medicines}
+                handleChange={this.handleUpdateChange}
+                onFormSubmit={this.handleUpdateHealth}
+                onPressDelete={this.handleDeleteHealth}
+                showDatePicker={item.showDatePicker}
+                handleShowDatePicker={this.handleShowDatePickerByKey}
+                handleDateChange={this.handleDateChangeByKey}
+              />
+            )}
+              keyExtractor={item => item.key}
+            />
+          )}
         </View>
       </View>
     );
   }
 }
-
-const styles = StyleSheet.create({
-  relativeContainer: {
-    flex: 1,
-    flexDirection: 'column',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    padding: 10,
-    backgroundColor: '#fff',
-    borderRadius: 10,
-    marginVertical: 5,
-  },
-  inputsWrapper: {
-    flex: 1,
-    flexDirection: 'column',
-    justifyContent: 'space-between',
-    alignItems: 'flex-start',
-  },
-  buttonsWrapper: {
-    flex: 1,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'flex-end',
-  },
-  input: {
-    width: '100%',
-    height: 40,
-    padding: 10,
-    borderWidth: 1,
-    borderColor: '#ccc',
-    borderRadius: 5,
-  },
-});
