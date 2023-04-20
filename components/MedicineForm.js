@@ -71,3 +71,42 @@ MedicineDisplayForm.defaultProps = {
         frequency: '',
     }
 };
+
+export const MedicineUpdateForm = ({ itemKey, index, medicine, handleChange, addMedicineRow, removeMedicineRow }) => {
+    return (
+        <View>
+            <FormInputText label="Name" value={medicine.name} onChangeText={(value) => handleChange(itemKey, index, 'name', value)} />
+            <FormInputText label="Dosage" value={medicine.dosage} onChangeText={(value) => handleChange(itemKey, index, 'dosage', value)} />
+            <FormInputText label="Frequency" value={medicine.frequency} onChangeText={(value) => handleChange(itemKey, index, 'frequency', value)} />
+            <View style={containerStyles.row}>
+                <TouchableOpacity onPress={() => addMedicineRow(itemKey)}>
+                    <Icon name="plus" size={20} color="lightblue" />
+                </TouchableOpacity>
+                <TouchableOpacity onPress={() => removeMedicineRow(itemKey)}>
+                    <Icon name="trash" size={20} color="red" />
+                </TouchableOpacity>
+            </View>
+        </View>
+    );
+}
+
+MedicineUpdateForm.propTypes = {
+    itemKey: PropTypes.string.isRequired,
+    index: PropTypes.number.isRequired,
+    medicine: PropTypes.shape({
+        name: PropTypes.string,
+        dosage: PropTypes.string,
+        frequency: PropTypes.string,
+    }),
+    handleChange: PropTypes.func.isRequired,
+    addMedicineRow: PropTypes.func,
+    removeMedicineRow: PropTypes.func,
+};
+
+MedicineUpdateForm.defaultProps = {
+    medicine: {
+        name: '',
+        dosage: '',
+        frequency: '',
+    }
+};

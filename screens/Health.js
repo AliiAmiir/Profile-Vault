@@ -93,6 +93,30 @@ export default class Health extends Component {
     this.setState({ newHealthMedicines });
   };
 
+  handleAddMedicineByKey = (key) => {
+    let index = this.state.savedHealthDetails.findIndex(x => x.key === key);
+    let savedHealthDetails = this.state.savedHealthDetails;
+    let health = savedHealthDetails[index];
+    let medicines = health.medicines;
+    medicines.push({ name: '', dosage: '', frequency: '' });
+    health.medicines = medicines;
+    savedHealthDetails[index] = health;
+
+    this.setState({ savedHealthDetails: savedHealthDetails });
+  };
+
+  handleRemoveMedicineByKey = (key) => {
+    let index = this.state.savedHealthDetails.findIndex(x => x.key === key);
+    let savedHealthDetails = this.state.savedHealthDetails;
+    let health = savedHealthDetails[index];
+    let medicines = health.medicines;
+    medicines.splice(index, 1);
+
+    health.medicines = medicines;
+    savedHealthDetails[index] = health;
+    this.setState({ savedHealthDetails: savedHealthDetails });
+  };
+
   handleUpdateChange = (key, value) => {
     let savedHealthDetails = this.state.savedHealthDetails;
     let index = savedHealthDetails.findIndex(x => x.key === key);
@@ -247,6 +271,8 @@ export default class Health extends Component {
                 showDatePicker={item.showDatePicker}
                 handleShowDatePicker={this.handleShowDatePickerByKey}
                 handleDateChange={this.handleDateChangeByKey}
+                handleAddMedicine={this.handleAddMedicineByKey}
+                handleRemoveMedicine={this.handleRemoveMedicineByKey}
               />
             )}
               keyExtractor={item => item.key}

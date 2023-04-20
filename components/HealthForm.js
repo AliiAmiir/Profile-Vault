@@ -11,7 +11,7 @@ import FormButton from './FormButton';
 import FormInputText from './FormInputText';
 import CustomDatePicker from './CustomDatePicker';
 import CustomPicker from './CustomPicker';
-import { MedicineForm, MedicineDisplayForm } from './MedicineForm';
+import { MedicineForm, MedicineDisplayForm, MedicineUpdateForm } from './MedicineForm';
 
 export const HealthForm = function ({ checkUpType, checkUpDate, medicines, errors, handleChange, handleChangeMedicine, onFormSubmit, onFormClose, showDatePicker, handleShowDatePicker, handleDateChange, handleAddMedicine, handleRemoveMedicine }) {
     return (
@@ -106,12 +106,26 @@ HealthDisplayForm.defaultProps = {
     medicines: [{ name: '', dosage: '', frequency: '' }],
 };
 
-export const HealthUpdateForm = function ({ itemKey, checkUpType, checkUpDate, medicines, showDatePicker, handleChange, handleDateChange, handleShowDatePicker, onPressDelete, onFormSubmit}) {
+export const HealthUpdateForm = function ({ itemKey, checkUpType, checkUpDate, medicines, showDatePicker, handleChange, handleDateChange, handleShowDatePicker, onPressDelete, onFormSubmit, handleAddMedicine, handleRemoveMedicine, handleChangeMedicine }) {
     return (
         <View>
             <View style={containerStyles.textInputContainer}>
-            <FormInputText label='Check Up Type' value={checkUpType} onChangeText={(value) => handleChange(itemKey, { field: 'checkUpType', value: value })} />
+                <FormInputText label='Check Up Type' value={checkUpType} onChangeText={(value) => handleChange(itemKey, { field: 'checkUpType', value: value })} />
                 <CustomDatePicker label={'Check Up Date'} dateOfBirth={checkUpDate} showDatePicker={showDatePicker} handleDateChange={(event, value) => handleDateChange(itemKey, value)} handleShowDatePicker={(value) => handleShowDatePicker(itemKey, value)} />
+                <View style={containerStyles.textInputContainer}>
+                    <Text style={[formInputTextStyles.label, textStyles.textSubHeading]}>Medicines</Text>
+                    {medicines.map((medicine, index) => (
+                        <MedicineUpdateForm
+                            key={index}
+                            itemKey={itemKey}
+                            index={index}
+                            medicine={medicine}
+                            handleChange={handleChangeMedicine}
+                            addMedicineRow={handleAddMedicine}
+                            removeMedicineRow={handleRemoveMedicine}
+                        />
+                    ))}
+                </View>
             </View>
             <View style={containerStyles.buttonContainer}>
                 <FormButton title='Delete' color={'#CD5151'} textColor={'#FFFFFF'} onPress={() => onPressDelete(itemKey)} />
@@ -136,6 +150,8 @@ HealthUpdateForm.propTypes = {
     onPressDelete: PropTypes.func,
     showDatePicker: PropTypes.bool,
     handleShowDatePicker: PropTypes.func,
+    handleAddMedicine: PropTypes.func,
+    handleRemoveMedicine: PropTypes.func,
     handleDateChange: PropTypes.func,
 };
 
