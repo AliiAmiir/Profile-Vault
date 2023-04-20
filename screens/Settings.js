@@ -156,9 +156,9 @@ export default class Settings extends Component {
           phone: this.state.phone,
           dateOfBirth: this.state.dateOfBirth
         };
-  
+
         const response = await updateUser(this.state.userDocKey, userDetails);
-      
+
         if (response.success) {
           Alert.alert('User Updated');
           this.handleShowEditUserForm();
@@ -175,6 +175,20 @@ export default class Settings extends Component {
   render() {
     return (
       <View style={containerStyles.defaultContainer}>
+        {!this.state.showEditUserForm && (
+          <ScrollView>
+            <View style={containerStyles.textInputContainer}>
+              <FormText label="First Name" value={this.state.firstName} />
+              <FormText label="Last Name" value={this.state.lastName} />
+              <FormText label={'Date of Birth'} dateOfBirth={this.state.dateOfBirth.toLocaleDateString()} />
+              <FormText label="Email" value={this.state.email} />
+              <FormText label="Phone" keyboardType={'phone-pad'} value={this.state.phone} />
+            </View>
+            <View style={containerStyles.buttonContainer}>
+              <FormButton title='Logout' color={'#CD5151'} textColor={'#FFFFFF'} onPress={this.handleSignOut} />
+            </View>
+          </ScrollView>
+        )}
 
         {this.state.showEditUserForm && (<FormButton title='Cancel' color={'#F2F2F7'} textColor={'#000000'} onPress={this.handleShowEditUserForm} />)}
 
@@ -186,7 +200,7 @@ export default class Settings extends Component {
               <FormInputText label="First Name" value={this.state.firstName} onChangeText={(value) => this.handleChange('firstName', value)} autoCapitalize="sentences" />
               <FormInputText label="Last Name" value={this.state.lastName} onChangeText={(value) => this.handleChange('lastName', value)} autoCapitalize="sentences" />
               <CustomDatePicker label={'Date of Birth'} dateOfBirth={this.state.dateOfBirth} showDatePicker={this.state.showDatePicker} handleDateChange={this.handleDateChange} handleShowDatePicker={this.handleShowDatePicker} />
-              <FormText label="Email (Not Editable)" value={this.state.email} onChangeText={(value) => this.handleChange('email', value)} autoCapitalize="sentences" />
+              <FormText label="Email (Not Editable)" value={this.state.email} />
               <FormInputText label="Phone" keyboardType={'phone-pad'} value={this.state.phone} onChangeText={(value) => this.handleChange('phone', value)} autoCapitalize="sentences" />
               <FormInputText label="Current Password" value={this.state.currentPassword} onChangeText={(value) => this.handleChange('currentPassword', value)} secureTextEntry />
               <FormInputText label="Confirm Password" value={this.state.confirmPassword} onChangeText={(value) => this.handleChange('confirmPassword', value)} secureTextEntry />
