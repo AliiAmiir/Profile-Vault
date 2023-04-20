@@ -10,6 +10,7 @@ export const fetchUserById = async (userId) => {
         if (querySnapshot.docs.length > 0 && querySnapshot.docs[0].data()) {
             let user = querySnapshot.docs[0].data();
             user.dateOfBirth = user.dateOfBirth.toDate();
+            user.userDocKey = querySnapshot.docs[0].id;
             return user;
         }
 
@@ -43,12 +44,11 @@ export const saveUserDetails = async (userId, firstName, lastName, email, phone,
     }
 };
 
-export const updateUser = async (userId, userDetails) => {
+export const updateUser = async (key, userDetails) => {
     try {
-        await updateDoc(doc(db, 'health', userId), {
+        await updateDoc(doc(db, 'users', key), {
             firstName: userDetails.firstName,
             lastName: userDetails.lastName,
-            email: userDetails.email,
             phone: userDetails.phone,
             dateOfBirth: userDetails.dateOfBirth,
             updatedOn: new Date(),

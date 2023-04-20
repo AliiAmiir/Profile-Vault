@@ -13,6 +13,7 @@ import { containerStyles } from '../styles/globalStyle';
 
 // Import Components
 import FormButton from '../components/FormButton';
+import FormText from '../components/FormText';
 import FormInputText from '../components/FormInputText';
 import CustomDatePicker from '../components/CustomDatePicker';
 
@@ -31,10 +32,21 @@ export default class Settings extends Component {
       newPassword: '',
       dateOfBirth: new Date(),
       phone: '',
+      userDocKey: '',
+      showDatePicker: false,
       enablePasswordChange: false,
       showEditUserForm: false,
     }
   }
+
+  handleShowDatePicker = () => {
+    this.setState({ showDatePicker: !this.state.showDatePicker });
+  };
+
+  handleDateChange = (event, selectedDate) => {
+    const currentDate = selectedDate || this.state.dateOfBirth;
+    this.setState({ dateOfBirth: currentDate });
+  };
 
   handleShowEditUserForm = () => {
     this.setState({ showEditUserForm: !this.state.showEditUserForm });
@@ -75,7 +87,8 @@ export default class Settings extends Component {
         lastName: userData.lastName,
         email: userData.email,
         dateOfBirth: userData.dateOfBirth,
-        phone: userData.phone
+        phone: userData.phone,
+        userDocKey: userData.userDocKey,
       });
     } catch (error) {
       console.log(error);
@@ -129,28 +142,30 @@ export default class Settings extends Component {
 
   handleUpdateUser = async () => {
     try {
-      let passwordValidation = await this.handlePasswordValidation();
+      const passwordValidation = await this.handlePasswordValidation();
 
-      console.log(passwordValidation);
       // if (this.state.enablePasswordChange && !this.state.newPassword) {
       //   Alert.alert('New password can not be empty');
       //   return;
       // }
 
-      // if (!this.state.currentPassword || (this.state.currentPassword !== this.state.confirmPassword)) {
-      //   Alert.alert('Current and Confirm Password do not match');
-      //   return;
-      // }
-
-      // const userDetails = {
-      //   firstName: this.state.firstName,
-      //   lastName: this.state.lastName,
-      //   email: this.state.email,
-      //   phone: this.state.phone,
-      //   dateOfBirth: this.state.dateOfBirth
-      // };
-
-      // await updateUser(auth.currentUser.uid, userDetails);
+      if (passwordValidation) {
+        const userDetails = {
+          firstName: this.state.firstName,
+          lastName: this.state.lastName,
+          phone: this.state.phone,
+          dateOfBirth: this.state.dateOfBirth
+        };
+  
+        const response = await updateUser(this.state.userDocKey, userDetails);
+      
+        if (response.success) {
+          Alert.alert('User Updated');
+          this.handleShowEditUserForm();
+        } else {
+          Alert.alert('Unexpected Error Occurred');
+        }
+      }
     } catch (error) {
       console.log(error);
       Alert.alert('Unexpected Error Occurred');
@@ -161,7 +176,7 @@ export default class Settings extends Component {
     return (
       <View style={containerStyles.defaultContainer}>
 
-        {this.state.showEditUserForm && (<FormButton title='Cancel' onPress={this.handleShowEditUserForm} />)}
+        {this.state.showEditUserForm && (<FormButton title='Cancel' color={'#F2F2F7'} textColor={'#000000'} onPress={this.handleShowEditUserForm} />)}
 
         {!this.state.showEditUserForm && (<FormButton title='Edit User Details' color={'#F2F2F7'} textColor={'#000000'} onPress={this.handleShowEditUserForm} />)}
 
@@ -170,15 +185,13 @@ export default class Settings extends Component {
             <View style={containerStyles.textInputContainer}>
               <FormInputText label="First Name" value={this.state.firstName} onChangeText={(value) => this.handleChange('firstName', value)} autoCapitalize="sentences" />
               <FormInputText label="Last Name" value={this.state.lastName} onChangeText={(value) => this.handleChange('lastName', value)} autoCapitalize="sentences" />
-              <CustomDatePicker label={'Date of Birth'} dateOfBirth={this.state.dateOfBirth} showDatePicker={this.state.showDatePicker} handleDateChange={this.state.handleDateChange} handleShowDatePicker={this.handleShowDatePicker} />
-              <FormInputText label="Email" value={this.state.email} onChangeText={(value) => this.handleChange('email', value)} autoCapitalize="sentences" />
-              <FormInputText label="Phone" value={this.state.phone} onChangeText={(value) => this.handleChange('phone', value)} autoCapitalize="sentences" />
-
+              <CustomDatePicker label={'Date of Birth'} dateOfBirth={this.state.dateOfBirth} showDatePicker={this.state.showDatePicker} handleDateChange={this.handleDateChange} handleShowDatePicker={this.handleShowDatePicker} />
+              <FormText label="Email (Not Editable)" value={this.state.email} onChangeText={(value) => this.handleChange('email', value)} autoCapitalize="sentences" />
+              <FormInputText label="Phone" keyboardType={'phone-pad'} value={this.state.phone} onChangeText={(value) => this.handleChange('phone', value)} autoCapitalize="sentences" />
               <FormInputText label="Current Password" value={this.state.currentPassword} onChangeText={(value) => this.handleChange('currentPassword', value)} secureTextEntry />
               <FormInputText label="Confirm Password" value={this.state.confirmPassword} onChangeText={(value) => this.handleChange('confirmPassword', value)} secureTextEntry />
 
-              {this.state.enablePasswordChange && (<FormButton title='Done' onPress={this.handleEnablePasswordChange} />)}
-
+              {this.state.enablePasswordChange && (<FormButton title='Cancel' color={'#F2F2F7'} textColor={'#000000'} onPress={this.handleEnablePasswordChange} />)}
               {!this.state.enablePasswordChange && (<FormButton title='Edit Password' color={'#F2F2F7'} textColor={'#000000'} onPress={this.handleEnablePasswordChange} />)}
 
               {this.state.enablePasswordChange && (
