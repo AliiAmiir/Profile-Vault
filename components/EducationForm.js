@@ -14,7 +14,7 @@ export const EducationForm = function ({ institute, degree, dateFrom, dateTo, er
     return (
         <ScrollView style={containerStyles.textInputContainer}>
             <View>
-                <FormInputText label="Institute" value={institute} onChangeText={(value) => handleChange('newEducationInstitute', value)} />
+                <FormInputText label="Institute" value={institute} onChangeText={(value) => handleChange('newInstitute', value)} />
                 <FormInputText label="Degree" value={degree} onChangeText={(value) => handleChange('newDegree', value)} />
                 <CustomDatePicker label={'Enrollment date'} dateOfBirth={dateFrom} showDatePicker={showDatePicker} handleDateChange={handleDateChange} handleShowDatePicker={handleShowDatePicker} />
                 <CustomDatePicker label={'Graduation date'} dateOfBirth={dateTo} showDatePicker={showDateToPicker} handleDateChange={handleDateToChange} handleShowDatePicker={handleShowDateToPicker} />
@@ -57,8 +57,8 @@ export const EducationDisplayForm = function ({ institute, degree, dateFrom, dat
         <View style={containerStyles.textInputContainer}>
             <Text style={textStyles.textSubHeading}>{institute}</Text>
             <Text style={textStyles.boldText}>Degree: <Text style={textStyles.subText}>{degree}</Text></Text>
-            <Text style={textStyles.boldText}>Enrollment date: <Text style={textStyles.subText}>{dateFrom}</Text></Text>
-            <Text style={textStyles.boldText}>Graduation date: <Text style={textStyles.subText}>{dateTo}</Text></Text>
+            <Text style={textStyles.boldText}>Enrollment date: <Text style={textStyles.subText}>{dateFrom.toLocaleDateString()}</Text></Text>
+            <Text style={textStyles.boldText}>Graduation date: <Text style={textStyles.subText}>{dateTo.toLocaleDateString()}</Text></Text>
         </View>
     );
 }
@@ -88,7 +88,7 @@ export const EducationUpdateForm = function ({ itemKey, institute, degree, dateF
             </View>
             <View style={containerStyles.buttonContainer}>
                 <FormButton title='Delete' color={'#CD5151'} textColor={'#FFFFFF'} onPress={() => onPressDelete(itemKey)} />
-                <FormButton title='Save Trip' onPress={() => onFormSubmit(itemKey)} />
+                <FormButton title='Save Education' onPress={() => onFormSubmit(itemKey)} />
             </View>
         </View>
     );
