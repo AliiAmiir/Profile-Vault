@@ -102,26 +102,13 @@ export default class Significants extends Component {
   handleUpdateChange = (key, value) => {
     let savedSignificants = this.state.savedSignificants;
     let index = savedSignificants.findIndex(x => x.key === key);
-    let significant = savedSignificants[index];
+
+    let valueAtIndex = savedSignificants[index];
+    valueAtIndex[value.field] = value.value;
+
+    savedSignificants[index] = valueAtIndex;
 
     // Add validation
-    switch (value.field) {
-      case 'name':
-        significant.significantName = value.text;
-        break;
-      case 'relation':
-        significant.significantRelation = value.text;
-        break;
-      case 'dateOfBirth':
-        significant.significantDateOfBirth = value.text;
-        break;
-      case 'anniversary':
-        significant.significantAnniversary = value.text;
-        break;
-      default:
-        break;
-    }
-
     this.setState({ savedSignificants: savedSignificants });
   };
 
@@ -131,7 +118,7 @@ export default class Significants extends Component {
 
       if (response && response.success) {
         Alert.alert(response.message || 'Saved Significant');
-        this.setState({ newSignificantName: '', newSignificantRelation: '', newSignificantDateOfBirth: new Date(), newSignificantAnniversary: new Date() })
+        this.setState({ newSignificantName: '', newSignificantRelation: '', newSignificantDateOfBirth: new Date(), newSignificantAnniversary: new Date(), showSignificantsInputForm: false })
       } else {
         Alert.alert(response.message || 'Failed to save Significant');
         this.setState({ newSignificantName: '', newSignificantRelation: '', newSignificantDateOfBirth: new Date(), newSignificantAnniversary: new Date() })
@@ -209,7 +196,21 @@ export default class Significants extends Component {
           )}
 
           {this.state.showSignificantsInputForm && (
-            <SignificantsForm handleChange={this.handleChange} onFormClose={this.handleShowSignificantsInputForm} onFormSubmit={this.handleSaveSignificants} name={this.state.newSignificantName} relation={this.state.newSignificantRelation} dateOfBirth={this.state.newSignificantDateOfBirth} anniversary={this.state.newSignificantAnniversary} showDatePicker={this.state.showDatePicker} handleShowDatePicker={this.handleShowDatePicker} handleDateChange={this.handleDateChange} showDatePickerAnniversary={this.state.showDatePickerAnniversary} handleShowDatePickerAnniversary={this.handleShowDatePickerAnniversary} handleDateChangeAnniversary={this.handleDateChangeAnniversary} />
+            <SignificantsForm 
+            handleChange={this.handleChange} 
+            onFormClose={this.handleShowSignificantsInputForm} 
+            onFormSubmit={this.handleSaveSignificants} 
+            name={this.state.newSignificantName} 
+            relation={this.state.newSignificantRelation} 
+            dateOfBirth={this.state.newSignificantDateOfBirth} 
+            anniversary={this.state.newSignificantAnniversary} 
+            showDatePicker={this.state.showDatePicker} 
+            handleShowDatePicker={this.handleShowDatePicker} 
+            handleDateChange={this.handleDateChange} 
+            showDatePickerAnniversary={this.state.showDatePickerAnniversary} 
+            handleShowDatePickerAnniversary={this.handleShowDatePickerAnniversary} 
+            handleDateChangeAnniversary={this.handleDateChangeAnniversary} 
+            />
           )}
 
           {this.state.showEditSignificantsForm && (<FormButton title='Done' onPress={this.handleShowEditSignificantsForm} />)}

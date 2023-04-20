@@ -3,42 +3,45 @@ import { db } from '../config/firebaseConfig';
 
 export const saveSignificant = async (userId, significantName, significantRelation, significantDateOfBirth, significantAnniversary) => {
     try {
-        const response = await addDoc(collection(db, 'significants'), {
+        await addDoc(collection(db, 'significants'), {
             uid: userId,
             name: significantName,
             relation: significantRelation,
             dateOfBirth: significantDateOfBirth,
             anniversary: significantAnniversary,
+            createdOn: new Date(),
+            updatedOn: new Date(),
         });
 
-        return { success: true, message: 'Saved Significant', response: response };
+        return { success: true, message: 'Saved Significant' };
     } catch (error) {
-        return { success: false, message: error.message, response: error };
+        throw error;
     }
 }
 
 export const updateSignificant = async (significantId, significantName, significantRelation, significantDateOfBirth, significantAnniversary) => {
     try {
-        const response = await updateDoc(doc(db, 'significants', significantId), {
+        await updateDoc(doc(db, 'significants', significantId), {
             name: significantName,
             relation: significantRelation,
             dateOfBirth: significantDateOfBirth,
             anniversary: significantAnniversary,
+            updatedOn: new Date(),
         });
 
-        return { success: true, message: 'Updated Significant', response: response };
+        return { success: true, message: 'Updated Significant' };
     } catch (error) {
-        return { success: false, message: error.message, response: error };
+        throw error;
     }
 }
 
 export const deleteSignificant = async (significantId) => {
     try {
-        const response = await deleteDoc(doc(db, 'significants', significantId));
+        await deleteDoc(doc(db, 'significants', significantId));
 
-        return { success: true, message: 'Deleted Significant', response: response };
+        return { success: true, message: 'Deleted Significant' };
     } catch (error) {
-        return { success: false, message: error.message, response: error };
+        throw error;
     }
 }
 
@@ -56,6 +59,6 @@ export const fetchUserSignificants = async (userId) => {
 
         return { success: true, message: 'Fetched Significants', data: significants };
     } catch (error) {
-        return { success: false, message: error.message, error: error };
+        throw error;
     }
 }

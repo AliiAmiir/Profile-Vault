@@ -16,7 +16,7 @@ export default function FormInputText({ label, placeholder, value, onChangeText,
 }
 
 FormInputText.propTypes = {
-    label: PropTypes.string.isRequired,
+    label: PropTypes.string,
     placeholder: PropTypes.string,
     value: PropTypes.any,
     autoCapitalize: PropTypes.string,

@@ -81,7 +81,7 @@ export default class Passwords extends Component {
       let index = savedPasswords.findIndex(x => x.key === key);
       let password = savedPasswords[index];
 
-      const response = await updatePassword(auth.currentUser.uid, password.key, password.website, password.email, password.password);
+      const response = await updatePassword(password.key, password.website, password.email, password.password);
 
       if (response && response.success) {
         Alert.alert(response.message || 'Updated Password');

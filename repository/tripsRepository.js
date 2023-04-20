@@ -3,7 +3,7 @@ import { db } from '../config/firebaseConfig';
 
 export const saveTrip = async (userId, tripDetails) => {
     try {
-        const response = await addDoc(collection(db, 'trips'), {
+        await addDoc(collection(db, 'trips'), {
             uid: userId,
             city: tripDetails.city,
             state: tripDetails.state,
@@ -18,11 +18,13 @@ export const saveTrip = async (userId, tripDetails) => {
             flightCost: (parseFloat(tripDetails.flightCost).toFixed(2)).toString() || '0.00',
             carRentalName: tripDetails.carRentalName || 'N/A',
             carRentalCost: (parseFloat(tripDetails.carRentalCost).toFixed(2)).toString() || '0.00',
+            createdOn: new Date(),
+            updatedOn: new Date(),
         });
 
-        return { success: true, message: 'Saved Trip', response: response };
+        return { success: true, message: 'Saved Trip' };
     } catch (error) {
-        return { success: false, message: error.message, response: error };
+        throw error;
     }
 }
 
@@ -42,21 +44,22 @@ export const updateTrip = async (tripId, tripDetails) => {
             flightCost: (parseFloat(tripDetails.flightCost).toFixed(2)).toString() || '0.00',
             carRentalName: tripDetails.carRentalName || 'N/A',
             carRentalCost: (parseFloat(tripDetails.carRentalCost).toFixed(2)).toString() || '0.00',
+            updatedOn: new Date(),
         });
 
-        return { success: true, message: 'Updated Trip'};
+        return { success: true, message: 'Updated Trip' };
     } catch (error) {
-        return { success: false, message: error.message, response: error };
+        throw error;
     }
 }
 
 export const deleteTrip = async (tripId) => {
     try {
-        const response = await deleteDoc(doc(db, 'trips', tripId));
+        await deleteDoc(doc(db, 'trips', tripId));
 
-        return { success: true, message: 'Deleted Trip', response: response };
+        return { success: true, message: 'Deleted Trip' };
     } catch (error) {
-        return { success: false, message: error.message, response: error };
+        throw error;
     }
 }
 
@@ -74,6 +77,6 @@ export const fetchUserTrips = async (userId) => {
 
         return { success: true, message: 'Fetched Trips', data: trips };
     } catch (error) {
-        return { success: false, message: error.message, error: error };
+        throw error;
     }
 }

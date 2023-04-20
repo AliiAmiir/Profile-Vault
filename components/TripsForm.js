@@ -6,7 +6,6 @@ import { View, Text, ScrollView } from 'react-native';
 import { containerStyles, textStyles } from '../styles/globalStyle';
 
 // Import Components
-import FormText from './FormText';
 import FormButton from './FormButton';
 import FormInputText from './FormInputText';
 import CustomDatePicker from './CustomDatePicker';

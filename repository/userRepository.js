@@ -13,7 +13,6 @@ export const fetchUserById = async (userId) => {
 
         return null;
     } catch (error) {
-        console.log(error);
         return error;
     }
 };
@@ -32,11 +31,12 @@ export const saveUserDetails = async (userId, firstName, lastName, email, phone,
             movieGenres: movieGenres,
             favors: favors,
             degrees: degrees,
+            createdOn: new Date(),
+            updatedOn: new Date(),
         });
 
         return savedUser;
     } catch (error) {
-        console.log(error);
         return error;
     }
 };
