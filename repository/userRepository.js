@@ -1,4 +1,4 @@
-import { collection, query, where, getDocs, addDoc } from 'firebase/firestore';
+import { collection, query, where, getDocs, addDoc, updateDoc, doc } from 'firebase/firestore';
 import { db } from '../config/firebaseConfig';
 
 export const fetchUserById = async (userId) => {
@@ -38,5 +38,22 @@ export const saveUserDetails = async (userId, firstName, lastName, email, phone,
         return savedUser;
     } catch (error) {
         return error;
+    }
+};
+
+export const updateUser = async (userId, userDetails) => {
+    try {
+        await updateDoc(doc(db, 'health', userId), {
+            firstName: userDetails.firstName,
+            lastName: userDetails.lastName,
+            email: userDetails.email,
+            phone: userDetails.phone,
+            dateOfBirth: userDetails.dateOfBirth,
+            updatedOn: new Date(),
+        });
+
+        return { success: true, message: 'Updated User' };
+    } catch (error) {
+        throw error;
     }
 };

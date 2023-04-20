@@ -5,7 +5,7 @@ import { View, ScrollView } from 'react-native';
 import { auth } from '../config/firebaseConfig';
 
 // Import Repositories
-import { fetchUserById } from '../repository/userRepository';
+import { fetchUserById, updateUser } from '../repository/userRepository';
 
 // Import StyleSheets
 import { containerStyles } from '../styles/globalStyle';
@@ -27,10 +27,20 @@ export default class Settings extends Component {
       currentPassword: '',
       newPassword: '',
       dateOfBirth: '',
-      phone: ''
+      phone: '',
+      enablePasswordChange: false,
+      showEditUserForm: false,
     }
   }
 
+  handleShowEditUserForm = () => {
+    this.setState({ showEditUserForm: !this.state.showEditUserForm });
+  }
+
+  handleEnablePasswordChange = () => {
+    this.setState({ enablePasswordChange: !this.state.enablePasswordChange });
+  }
+  
   handleSignOut = async () => {
     try {
       await auth.signOut();
@@ -53,64 +63,83 @@ export default class Settings extends Component {
   }
 
   async fetchUserData() {
-    const userData = await fetchUserById(auth.currentUser.uid);
+    try {
+      const userData = await fetchUserById(auth.currentUser.uid);
 
-    this.setState({
-      loading: false,
-      firstName: userData.firstName,
-      lastName: userData.lastName,
-      email: userData.email,
-      dateOfBirth: userData.dateOfBirth,
-      phone: userData.phone
-    });
+      this.setState({
+        loading: false,
+        firstName: userData.firstName,
+        lastName: userData.lastName,
+        email: userData.email,
+        dateOfBirth: userData.dateOfBirth,
+        phone: userData.phone
+      });
+    } catch (error) {
+      console.log(error);
+      Alert.alert('Unexpected Error Occurred');
+    }
   }
 
-  handleFirstNameChange = (firstName) => {
-    this.setState({ firstName: firstName }); ``
+  handleChange = (key, value) => {
+    this.setState({ [key]: value });
   };
 
-  handleLastNameChange = (lastName) => {
-    this.setState({ lastName: lastName }); ``
-  };
+  handleSaveUser = async () => {
+    try {
+      if (!this.state.currentPassword || !this.state.newPassword) {
+        Alert.alert('Please enter current and new password');
+        return;
+      }
 
-  handleEmailChange = (email) => {
-    this.setState({ email: email }); ``
-  };
+      const userDetails = {
+        firstName: this.state.firstName,
+        lastName: this.state.lastName,
+        email: this.state.email,
+        phone: this.state.phone,
+        dateOfBirth: this.state.dateOfBirth
+      };
 
-  handlePhoneChange = (phone) => {
-    this.setState({ phone: phone }); ``
-  };
-
-  handleDateOfBirthChange = (dateOfBirth) => {
-    this.setState({ dateOfBirth: dateOfBirth }); ``
-  };
-
-  handleCurrentPasswordChange = (currentPassword) => {
-    this.setState({ currentPassword: currentPassword });
-  };
-
-  handleNewPasswordChange = (newPassword) => {
-    this.setState({ newPassword: newPassword });
+      await updateUser(auth.currentUser.uid, userDetails);
+    } catch (error) {
+      console.log(error);
+      Alert.alert('Unexpected Error Occurred');
+    }
   };
 
   render() {
     return (
       <View style={containerStyles.defaultContainer}>
-        <ScrollView>
-          <View style={containerStyles.textInputContainer}>
-            <FormInputText label="First Name" value={this.state.firstName} onChangeText={this.handleFirstNameChange} autoCapitalize="sentences" />
-            <FormInputText label="Last Name" value={this.state.lastName} onChangeText={this.handleLastNameChange} autoCapitalize="sentences" />
-            <FormInputText label="Date of Birth" value={this.state.dateOfBirth} onChangeText={this.handleDateOfBirthChange} autoCapitalize="sentences" />
-            <FormInputText label="Email" value={this.state.email} onChangeText={this.handleEmailChange} autoCapitalize="sentences" />
-            <FormInputText label="Phone" value={this.state.phone} onChangeText={this.handlePhoneChange} autoCapitalize="sentences" />
-            <FormInputText label="Current Password" value={this.state.gender} onChangeText={this.handleCurrentPasswordChange} secureTextEntry />
-            <FormInputText label="New Password" value={this.state.gender} onChangeText={this.handleNewPasswordChange} secureTextEntry />
-          </View>
-          <View style={containerStyles.buttonContainer}>
-            <FormButton title='Save Changes' />
-            <FormButton title='Logout' color={'#CD5151'} textColor={'#FFFFFF'} onPress={this.handleSignOut} />
-          </View>
-        </ScrollView>
+
+        {this.state.showEditUserForm && (<FormButton title='Done' onPress={this.handleShowEditUserForm} />)}
+
+        {!this.state.showEditUserForm && (<FormButton title='Edit User Details' color={'#F2F2F7'} textColor={'#000000'} onPress={this.handleShowEditUserForm} />)}
+
+        {this.state.showEditUserForm && (
+          <ScrollView>
+            <View style={containerStyles.textInputContainer}>
+              <FormInputText label="First Name" value={this.state.firstName} onChangeText={(value) => this.handleChange('firstName', value)} autoCapitalize="sentences" />
+              <FormInputText label="Last Name" value={this.state.lastName} onChangeText={(value) => this.handleChange('lastName', value)} autoCapitalize="sentences" />
+              <FormInputText label="Date of Birth" value={this.state.dateOfBirth} onChangeText={(value) => this.handleChange('dateOfBirth', value)} autoCapitalize="sentences" />
+              <FormInputText label="Email" value={this.state.email} onChangeText={(value) => this.handleChange('email', value)} autoCapitalize="sentences" />
+              <FormInputText label="Phone" value={this.state.phone} onChangeText={(value) => this.handleChange('phone', value)} autoCapitalize="sentences" />
+
+              {this.state.enablePasswordChange && (<FormButton title='Done' onPress={this.handleEnablePasswordChange} />)}
+
+              {!this.state.enablePasswordChange && (<FormButton title='Edit Password' color={'#F2F2F7'} textColor={'#000000'} onPress={this.handleEnablePasswordChange} />)}
+
+              {this.state.enablePasswordChange && (
+                <View>
+                  <FormInputText label="Current Password" value={this.state.currentPassword} onChangeText={(value) => this.handleChange('currentPassword', value)} secureTextEntry />
+                  <FormInputText label="New Password" value={this.state.newPassword} onChangeText={(value) => this.handleChange('newPassword', value)} secureTextEntry />
+                </View>
+              )}
+            </View>
+            <View style={containerStyles.buttonContainer}>
+              <FormButton title='Save Changes' onPress={this.handleSaveUser} />
+              <FormButton title='Logout' color={'#CD5151'} textColor={'#FFFFFF'} onPress={this.handleSignOut} />
+            </View>
+          </ScrollView>
+        )}
       </View>
     );
   }
