@@ -7,7 +7,6 @@ export const saveHealth = async (userId, healthDetails) => {
             uid: userId,
             checkUpType: healthDetails.checkUpType,
             checkUpDate: healthDetails.checkUpDate,
-            diagonsis: healthDetails.diagonsis,
             medicines: healthDetails.medicines,
             createdOn: new Date(),
             updatedOn: new Date(),
@@ -24,7 +23,6 @@ export const updateHealth = async (healthId, healthDetails) => {
         await updateDoc(doc(db, 'health', healthId), {
             checkUpType: healthDetails.checkUpType,
             checkUpDate: healthDetails.checkUpDate,
-            diagonsis: healthDetails.diagonsis,
             medicines: healthDetails.medicines,
             updatedOn: new Date(),
         });

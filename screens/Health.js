@@ -23,7 +23,6 @@ export default class Health extends Component {
       newHealthCheckUpType: '',
       newHealthCheckUpDate: new Date(),
       showDatePicker: false,
-      newHealthDiagonsis: '',
       newHealthMedicines: [{ name: '', dosage: '', frequency: '' }],
       errors: {},
       savedHealthDetails: [],
@@ -82,6 +81,18 @@ export default class Health extends Component {
     this.setState({ newHealthMedicines });
   };
 
+  handleAddMedicine = () => {
+    let newHealthMedicines = this.state.newHealthMedicines;
+    newHealthMedicines.push({ name: '', dosage: '', frequency: '' });
+    this.setState({ newHealthMedicines });
+  };
+
+  handleRemoveMedicine = (index) => {
+    let newHealthMedicines = this.state.newHealthMedicines;
+    newHealthMedicines.splice(index, 1);
+    this.setState({ newHealthMedicines });
+  };
+
   handleUpdateChange = (key, value) => {
     let savedHealthDetails = this.state.savedHealthDetails;
     let index = savedHealthDetails.findIndex(x => x.key === key);
@@ -100,7 +111,6 @@ export default class Health extends Component {
       const healthDetails = {
         checkUpType: this.state.newHealthCheckUpType,
         checkUpDate: this.state.newHealthCheckUpDate,
-        diagonsis: this.state.newHealthDiagonsis,
         medicines: this.state.newHealthMedicines,
       };
 
@@ -108,10 +118,10 @@ export default class Health extends Component {
 
       if (response && response.success) {
         Alert.alert(response.message || 'Saved Health');
-        this.setState({ newHealthCheckUpType: '', newHealthCheckUpDate: new Date(), newHealthDiagonsis: '', newHealthMedicines: [{ name: '', dosage: '', frequency: '' }], showHealthInputForm: false })
+        this.setState({ newHealthCheckUpType: '', newHealthCheckUpDate: new Date(), newHealthMedicines: [{ name: '', dosage: '', frequency: '' }], showHealthInputForm: false })
       } else {
         Alert.alert(response.message || 'Failed to save Health');
-        this.setState({ newHealthCheckUpType: '', newHealthCheckUpDate: new Date(), newHealthDiagonsis: '', newHealthMedicines: [{ name: '', dosage: '', frequency: '' }], showHealthInputForm: false })
+        this.setState({ newHealthCheckUpType: '', newHealthCheckUpDate: new Date(), newHealthMedicines: [{ name: '', dosage: '', frequency: '' }], showHealthInputForm: false })
       }
 
       await this.fetchUserHealth();
@@ -127,7 +137,13 @@ export default class Health extends Component {
       let index = savedHealthDetails.findIndex(x => x.key === key);
       let health = savedHealthDetails[index];
 
-      const response = await updateHealth(auth.currentUser.uid, key, health.healthCheckUpDate, health.healthDiagonsis, health.healthMedicines, health.healthDuration);
+      const healthDetails = {
+        checkUpType: health.checkUpType,
+        checkUpDate: health.checkUpDate,
+        medicines: health.medicines,
+      };
+
+      const response = await updateHealth(key, healthDetails);
 
       if (response && response.success) {
         Alert.alert(response.message || 'Updated Health');
@@ -197,6 +213,8 @@ export default class Health extends Component {
               showDatePicker={this.state.showDatePicker}
               handleShowDatePicker={this.handleShowDatePicker}
               handleDateChange={this.handleDateChange}
+              handleAddMedicine={this.handleAddMedicine}
+              handleRemoveMedicine={this.handleRemoveMedicine}
             />
           )}
 
@@ -209,7 +227,6 @@ export default class Health extends Component {
               <HealthDisplayForm
                 checkUpType={item.checkUpType}
                 checkUpDate={item.checkUpDate}
-                diagonsis={item.diagonsis}
                 medicines={item.medicines}
               />
             )}
@@ -223,7 +240,6 @@ export default class Health extends Component {
                 itemKey={item.key}
                 checkUpType={item.checkUpType}
                 checkUpDate={item.checkUpDate}
-                diagonsis={item.diagonsis}
                 medicines={item.medicines}
                 handleChange={this.handleUpdateChange}
                 onFormSubmit={this.handleUpdateHealth}

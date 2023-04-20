@@ -1,19 +1,26 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { View, Text } from 'react-native';
+import { View, Text, TouchableOpacity } from 'react-native';
+import Icon from 'react-native-vector-icons/FontAwesome';
 
 // Import Styles
-import { containerStyles, formInputTextStyles, textStyles } from '../styles/globalStyle';
+import { containerStyles, formInputTextStyles, formButtonStyles, textStyles } from '../styles/globalStyle';
 import FormInputText from './FormInputText';
-import FormText from './FormText';
 
-export const MedicineForm = ({ index, medicine, handleChange, errorText }) => {
+export const MedicineForm = ({ index, medicine, handleChange, addMedicineRow, removeMedicineRow, errorText }) => {
     return (
         <View>
             <FormInputText label="Name" value={medicine.name} onChangeText={(value) => handleChange(index, 'name', value)} />
             <FormInputText label="Dosage" value={medicine.dosage} onChangeText={(value) => handleChange(index, 'dosage', value)} />
             <FormInputText label="Frequency" value={medicine.frequency} onChangeText={(value) => handleChange(index, 'frequency', value)} />
-            {errorText !== null && (<Text style={textStyles.errorText}>{errorText}</Text>)}
+            <View style={containerStyles.row}>
+                <TouchableOpacity onPress={addMedicineRow}>
+                    <Icon name="plus" size={20} color="lightblue" />
+                </TouchableOpacity>
+                <TouchableOpacity onPress={() => removeMedicineRow(index)}>
+                    <Icon name="trash" size={20} color="red" />
+                </TouchableOpacity>
+            </View>
         </View>
     );
 }
@@ -26,6 +33,8 @@ MedicineForm.propTypes = {
         frequency: PropTypes.string,
     }),
     handleChange: PropTypes.func.isRequired,
+    addMedicineRow: PropTypes.func,
+    removeMedicineRow: PropTypes.func,
     errorText: PropTypes.string,
 };
 
