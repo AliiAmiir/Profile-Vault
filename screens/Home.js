@@ -27,7 +27,7 @@ export default class Home extends Component {
       lastName: '',
       age: '',
       email: '',
-      dateOfBirth: '',
+      dateOfBirth: new Date(),
       phone: ''
     }
   }

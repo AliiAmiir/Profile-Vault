@@ -18,7 +18,7 @@ export const computeAge = (dateOfBirth) => {
         return age;
     }
 
-    const dateDifference = new Date(new Date() - dateOfBirth.toDate()).getUTCFullYear() - 1970;
+    const dateDifference = new Date(new Date() - dateOfBirth).getUTCFullYear() - 1970;
     age = dateDifference.toString();
     
     return age;

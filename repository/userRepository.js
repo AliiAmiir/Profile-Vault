@@ -8,7 +8,9 @@ export const fetchUserById = async (userId) => {
         const querySnapshot = await getDocs(q);
 
         if (querySnapshot.docs.length > 0 && querySnapshot.docs[0].data()) {
-            return querySnapshot.docs[0].data();
+            let user = querySnapshot.docs[0].data();
+            user.dateOfBirth = user.dateOfBirth.toDate();
+            return user;
         }
 
         return null;
