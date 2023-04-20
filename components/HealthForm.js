@@ -68,15 +68,21 @@ HealthForm.defaultProps = {
 export const HealthDisplayForm = function ({ checkUpType, checkUpDate, diagnosis, medicines }) {
     return (
         <View style={containerStyles.textInputContainer}>
-            <FormText label='Check Up Type' value={checkUpType} />
-            <FormText label='Check Up Date' value={checkUpDate.toLocaleDateString()} />
-            {medicines.map((medicine, index) => (
-                <MedicineDisplayForm
-                    key={index}
-                    index={index}
-                    medicine={medicine}
-                />
-            ))}
+            <View style={containerStyles.textInputContainer}>
+                <Text style={textStyles.textSubHeading}>{checkUpType}</Text>
+                <Text style={textStyles.boldText}>{checkUpDate.toLocaleDateString()}</Text>
+                <Text style={textStyles.boldText}>Diagnosis: <Text style={textStyles.subText}>{diagnosis}</Text></Text>
+                <View>
+                    <Text style={[formInputTextStyles.label, textStyles.textMiniHeading]}>Medicines</Text>
+                    {medicines.map((medicine, index) => (
+                        <MedicineDisplayForm
+                            key={index}
+                            index={index}
+                            medicine={medicine}
+                        />
+                    ))}
+                </View>
+            </View>
         </View>
     );
 }

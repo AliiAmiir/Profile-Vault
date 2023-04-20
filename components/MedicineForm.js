@@ -39,11 +39,10 @@ MedicineForm.defaultProps = {
 };
 
 export const MedicineDisplayForm = ({ medicine }) => {
+    const medicineDetails = `${medicine.name}, ${medicine.dosage}, ${medicine.frequency}`
     return (
         <View>
-            <FormText label="Name" value={medicine.name} />
-            <FormText label="Dosage" value={medicine.dosage} />
-            <FormText label="Frequency" value={medicine.frequency} />
+            <Text style={textStyles.subText}>{medicineDetails}</Text>
         </View>
     );
 }
