@@ -150,6 +150,7 @@ HealthUpdateForm.propTypes = {
     onPressDelete: PropTypes.func,
     showDatePicker: PropTypes.bool,
     handleShowDatePicker: PropTypes.func,
+    handleChangeMedicine: PropTypes.func,
     handleAddMedicine: PropTypes.func,
     handleRemoveMedicine: PropTypes.func,
     handleDateChange: PropTypes.func,
