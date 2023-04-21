@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, FlatList, Alert, TouchableWithoutFeedback, Keyboard } from 'react-native';
+import { View, FlatList, Alert } from 'react-native';
 
 // Import Configs
 import { auth } from '../config/firebaseConfig';
@@ -111,7 +111,6 @@ export default class PersonalGoals extends Component {
   handleDeleteItem = async (item) => {
     try {
       await deleteGoalById(item);
-
       Alert.alert('Deleted Goal');
 
       await this.fetchUserGoals();
@@ -132,18 +131,23 @@ export default class PersonalGoals extends Component {
   }
 
   async fetchUserGoals() {
-    const goalsData = await fetchGoalsByUserId(auth.currentUser.uid);
+    try {
+      const goalsData = await fetchGoalsByUserId(auth.currentUser.uid);
 
-    if (goalsData && goalsData.length > 0) {
-      this.setState({
-        loading: false,
-        savedGoals: goalsData.map((goal) => {
-          let savedGoal = goal.data();
-          savedGoal.key = goal.id;
+      if (goalsData && goalsData.length > 0) {
+        this.setState({
+          loading: false,
+          savedGoals: goalsData.map((goal) => {
+            let savedGoal = goal.data();
+            savedGoal.key = goal.id;
 
-          return savedGoal;
-        })
-      });
+            return savedGoal;
+          })
+        });
+      }
+    } catch (error) {
+      console.log(error.message);
+      Alert.alert('Unexpected Error Occurred');
     }
   }
 
@@ -154,46 +158,44 @@ export default class PersonalGoals extends Component {
 
   render() {
     return (
-      <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
-        <View style={containerStyles.defaultContainer}>
-          {this.state.showGoalInputForm && (
-            <View style={[containerStyles.textInputContainer, { flex: 0.5 }]}>
-              <FormInputText placeholder="New Goal" value={this.state.newGoalName} onChangeText={(value) => this.handleChange('newGoalName', value)} autoCapitalize="sentences" errorText={this.state.errors.newGoalName || null} />
-              <FormButton title='Add a Goal' onPress={this.handleSaveGoal} />
-            </View>)}
+      <View style={containerStyles.defaultContainer}>
+        {this.state.showGoalInputForm && (
+          <View style={[containerStyles.textInputContainer, { flex: 0.5 }]}>
+            <FormInputText placeholder="New Goal" value={this.state.newGoalName} onChangeText={(value) => this.handleChange('newGoalName', value)} autoCapitalize="sentences" errorText={this.state.errors.newGoalName || null} />
+            <FormButton title='Add a Goal' onPress={this.handleSaveGoal} />
+          </View>)}
 
-          {!this.state.showGoalInputForm && (
-            <View style={containerStyles.textInputContainer}>
-              <FormButton title='Add a Goal' color={'#F2F2F7'} textColor={'#000000'} onPress={this.handleShowGoalInputForm} />
-            </View>)}
+        {!this.state.showGoalInputForm && (
+          <View style={containerStyles.textInputContainer}>
+            <FormButton title='Add a Goal' color={'#F2F2F7'} textColor={'#000000'} onPress={this.handleShowGoalInputForm} />
+          </View>)}
 
-          {this.state.showEditGoalsForm && (
-            <View style={containerStyles.textInputContainer}>
-              <FormButton title='Done' onPress={this.handleShowEditGoalForm} />
-            </View>)}
+        {this.state.showEditGoalsForm && (
+          <View style={containerStyles.textInputContainer}>
+            <FormButton title='Done' onPress={this.handleShowEditGoalForm} />
+          </View>)}
 
-          {!this.state.showEditGoalsForm && (
-            <View style={containerStyles.textInputContainer}>
-              <FormButton title='Edit Goals' color={'#F2F2F7'} textColor={'#000000'} onPress={this.handleShowEditGoalForm} />
-            </View>)}
+        {!this.state.showEditGoalsForm && (
+          <View style={containerStyles.textInputContainer}>
+            <FormButton title='Edit Goals' color={'#F2F2F7'} textColor={'#000000'} onPress={this.handleShowEditGoalForm} />
+          </View>)}
 
-          {this.state.showEditGoalsForm && (
-            <View style={[containerStyles.textInputContainer, { flex: 1 }]}>
-              <FlatList data={this.state.savedGoals} renderItem={({ item }) => (
-                <FormUpdateInputText value={item.name} autoCapitalize="sentences" onButtonUpdate={() => this.handleUpdateItem(item, true)} onChangeText={(value) => this.handleUpdateChange(item.key, value)} onBlurUpdate={() => this.handleUpdateItem(item, false)} onPressDelete={() => this.handleDeleteItem(item)} displayUpdateButton={this.state.displayUpdateButton} />
-              )} style={containerStyles.buttonContainer}>
-              </FlatList>
-            </View>)}
+        {this.state.showEditGoalsForm && (
+          <View style={[containerStyles.textInputContainer, { flex: 1 }]}>
+            <FlatList data={this.state.savedGoals} renderItem={({ item }) => (
+              <FormUpdateInputText value={item.name} autoCapitalize="sentences" onButtonUpdate={() => this.handleUpdateItem(item, true)} onChangeText={(value) => this.handleUpdateChange(item.key, value)} onBlurUpdate={() => this.handleUpdateItem(item, false)} onPressDelete={() => this.handleDeleteItem(item)} displayUpdateButton={this.state.displayUpdateButton} />
+            )} style={containerStyles.buttonContainer}>
+            </FlatList>
+          </View>)}
 
-          {!this.state.showEditGoalsForm && (
-            <View style={[containerStyles.textInputContainer, { flex: 1 }]}>
-              <FlatList data={this.state.savedGoals} renderItem={({ item }) => (
-                <FormText value={item.name} />
-              )} style={containerStyles.buttonContainer}>
-              </FlatList>
-            </View>)}
-        </View>
-      </TouchableWithoutFeedback>
+        {!this.state.showEditGoalsForm && (
+          <View style={[containerStyles.textInputContainer, { flex: 1 }]}>
+            <FlatList data={this.state.savedGoals} renderItem={({ item }) => (
+              <FormText value={item.name} />
+            )} style={containerStyles.buttonContainer}>
+            </FlatList>
+          </View>)}
+      </View>
     );
   }
 }

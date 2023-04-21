@@ -1,4 +1,4 @@
-import { collection, query, where, getDocs, addDoc } from 'firebase/firestore';
+import { collection, query, where, getDocs, addDoc, updateDoc, doc } from 'firebase/firestore';
 import { db } from '../config/firebaseConfig';
 
 export const fetchUserById = async (userId) => {
@@ -8,12 +8,14 @@ export const fetchUserById = async (userId) => {
         const querySnapshot = await getDocs(q);
 
         if (querySnapshot.docs.length > 0 && querySnapshot.docs[0].data()) {
-            return querySnapshot.docs[0].data();
+            let user = querySnapshot.docs[0].data();
+            user.dateOfBirth = user.dateOfBirth.toDate();
+            user.userDocKey = querySnapshot.docs[0].id;
+            return user;
         }
 
         return null;
     } catch (error) {
-        console.log(error);
         return error;
     }
 };
@@ -32,11 +34,28 @@ export const saveUserDetails = async (userId, firstName, lastName, email, phone,
             movieGenres: movieGenres,
             favors: favors,
             degrees: degrees,
+            createdOn: new Date(),
+            updatedOn: new Date(),
         });
 
         return savedUser;
     } catch (error) {
-        console.log(error);
         return error;
+    }
+};
+
+export const updateUser = async (key, userDetails) => {
+    try {
+        await updateDoc(doc(db, 'users', key), {
+            firstName: userDetails.firstName,
+            lastName: userDetails.lastName,
+            phone: userDetails.phone,
+            dateOfBirth: userDetails.dateOfBirth,
+            updatedOn: new Date(),
+        });
+
+        return { success: true, message: 'Updated User' };
+    } catch (error) {
+        throw error;
     }
 };

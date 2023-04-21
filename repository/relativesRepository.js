@@ -3,40 +3,43 @@ import { db } from '../config/firebaseConfig';
 
 export const saveRelative = async (userId, name, relation, dateOfBirth) => {
     try {
-        const response = await addDoc(collection(db, 'relatives'), {
+        await addDoc(collection(db, 'relatives'), {
             uid: userId,
             name: name,
             relation: relation,
             dateOfBirth: dateOfBirth,
+            createdOn: new Date(),
+            updatedOn: new Date(),
         });
 
-        return { success: true, message: 'Saved Relative', response: response };
+        return { success: true, message: 'Saved Relative' };
     } catch (error) {
-        return { success: false, message: error.message, response: error };
+        throw error;
     }
 }
 
 export const updateRelative = async (userId, relativeId, name, relation, dateOfBirth) => {
     try {
-        const response = await updateDoc(doc(db, 'relatives', relativeId), {
+        await updateDoc(doc(db, 'relatives', relativeId), {
             name: name,
             relation: relation,
             dateOfBirth: dateOfBirth,
+            updatedOn: new Date(),
         });
 
-        return { success: true, message: 'Updated Relative', response: response };
+        return { success: true, message: 'Updated Relative' };
     } catch (error) {
-        return { success: false, message: error.message, response: error };
+        throw error;
     }
 }
 
 export const deleteRelative = async (relativeId) => {
     try {
-        const response = await deleteDoc(doc(db, 'relatives', relativeId));
+        await deleteDoc(doc(db, 'relatives', relativeId));
 
-        return { success: true, message: 'Deleted Relative', response: response };
+        return { success: true, message: 'Deleted Relative' };
     } catch (error) {
-        return { success: false, message: error.message, response: error };
+        throw error;
     }
 }
 
@@ -53,6 +56,6 @@ export const fetchUserRelatives = async (userId) => {
 
         return { success: true, message: 'Fetched Relatives', data: relatives };
     } catch (error) {
-        return { success: false, message: error.message, error: error };
+        throw error;
     }
 }

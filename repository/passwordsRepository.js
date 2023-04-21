@@ -3,30 +3,33 @@ import { db } from '../config/firebaseConfig';
 
 export const savePassword = async (userId, website, email, password) => {
     try {
-        const response = await addDoc(collection(db, 'passwords'), {
+        await addDoc(collection(db, 'passwords'), {
             uid: userId,
             website: website,
             email: email,
             password: password,
+            createdOn: new Date(),
+            updatedOn: new Date(),
         });
 
-        return { success: true, message: 'Saved Password', response: response };
+        return { success: true, message: 'Saved Password' };
     } catch (error) {
-        return { success: false, message: error.message, response: error };
+        throw error;
     }
 }
 
-export const updatePassword = async (userId, passwordId, website, email, password, notes) => {
+export const updatePassword = async (passwordId, website, email, password) => {
     try {
-        const response = await updateDoc(doc(db, 'passwords', passwordId), {
+        await updateDoc(doc(db, 'passwords', passwordId), {
             website: website,
             email: email,
             password: password,
+            updatedOn: new Date(),
         });
 
-        return { success: true, message: 'Updated Password', response: response };
+        return { success: true, message: 'Updated Password' };
     } catch (error) {
-        return { success: false, message: error.message, response: error };
+        throw error;
     }
 }
 
@@ -36,7 +39,7 @@ export const deletePassword = async (passwordId) => {
 
         return { success: true, message: 'Deleted Password', response: response };
     } catch (error) {
-        return { success: false, message: error.message, response: error };
+        throw error;
     }
 }
 
@@ -52,6 +55,6 @@ export const fetchUserPasswords = async (userId) => {
 
         return { success: true, message: 'Fetched Passwords', data: passwords };
     } catch (error) {
-        return { success: false, message: error.message, error: error };
+        throw error;
     }
 }

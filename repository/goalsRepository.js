@@ -1,4 +1,4 @@
-import { collection, query, where, getDocs, addDoc, updateDoc, deleteDoc, doc } from 'firebase/firestore';
+import { collection, query, where, getDocs, addDoc, updateDoc, deleteDoc, doc, orderBy, limit } from 'firebase/firestore';
 import { db } from '../config/firebaseConfig';
 
 export const fetchGoalsByUserId = async (userId) => {
@@ -13,8 +13,7 @@ export const fetchGoalsByUserId = async (userId) => {
 
         return null;
     } catch (error) {
-        console.log(error);
-        return { success: false, message: 'Unexpected Error Occurred', error: error };
+        throw error;
     }
 };
 
@@ -28,7 +27,7 @@ export const saveGoal = async (userId, goalName) => {
             return { success: false, message: 'Duplicate Goal' };
         }
 
-        const savedGoal = await addDoc(collection(db, 'goals'), {
+        await addDoc(collection(db, 'goals'), {
             uid: userId,
             name: goalName,
             counter: 0,
@@ -38,8 +37,7 @@ export const saveGoal = async (userId, goalName) => {
 
         return { success: true, message: 'Saved Goal' };
     } catch (error) {
-        console.log(error);
-        return { success: false, message: 'Unexpected Error Occurred', error: error };
+        throw error;
     }
 };
 
@@ -59,7 +57,7 @@ export const updateGoalById = async (goal, counterUpdate) => {
             }
         }
 
-        const updatedGoal = await updateDoc(doc(db, 'goals', goal.key), {
+        await updateDoc(doc(db, 'goals', goal.key), {
             name: goal.name,
             counter: goal.counter,
             updatedOn: new Date()
@@ -67,8 +65,7 @@ export const updateGoalById = async (goal, counterUpdate) => {
 
         return { success: true, message: 'Updated Goal' };
     } catch (error) {
-        console.log(error);
-        return { success: false, message: 'Unexpected Error Occurred', error: error };
+        throw error;
     }
 };
 
@@ -77,10 +74,9 @@ export const deleteGoalById = async (goal) => {
         ;
         await deleteDoc(doc(db, 'goals', goal.key));
 
-        return null;
+        return { success: true, message: 'Deleted Goal' };
     } catch (error) {
-        console.log(error);
-        return { success: false, message: 'Unexpected Error Occurred', error: error };
+        throw error;
     }
 };
 
@@ -89,10 +85,26 @@ const checkDuplicate = async (checkDuplicateQuery) => {
         const querySnapshot = await getDocs(checkDuplicateQuery);
 
         if (querySnapshot.docs.length > 0) {
-            return { duplicate: true, docs: querySnapshot.docs.map((item) => { return {id: item.id, ...item.data()} }) }
+            return { duplicate: true, docs: querySnapshot.docs.map((item) => { return { id: item.id, ...item.data() } }) }
         }
 
         return { duplicate: false };
+    } catch (error) {
+        throw error;
+    }
+}
+
+export const fetchUserGoalsForHome = async (userId) => {
+    try {
+        const q = query(collection(db, 'goals'), where('uid', '==', userId), limit(3));
+        const querySnapshot = await getDocs(q);
+        let goals = [];
+
+        querySnapshot.forEach((doc) => {
+            goals.push({ key: doc.id, ...doc.data() });
+        });
+
+        return { success: true, data: goals };
     } catch (error) {
         throw error;
     }

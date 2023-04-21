@@ -27,7 +27,7 @@ export default function RegisterationForm({ firstName, lastName, email, phone, g
 
         <View style={containerStyles.spaceAround}>
           <FormInputText label="Email" placeholder="john.smith@company.com" value={email} onChangeText={(value) => handleChange('email', value)} keyboardType="email-address" errorText={errors.email || null} />
-          <CustomDatePicker label={'Date of Birth'} dateOfBirth={dateOfBirth} showDatePicker={showDatePicker} handleDateChange={handleDateChange} handleShowDatePicker={handleShowDatePicker} />
+          <CustomDatePicker label={'Date of Birth'} dateOfBirth={dateOfBirth} showDatePicker={showDatePicker} handleDateChange={handleDateChange} handleShowDatePicker={handleShowDatePicker} maximumDate={new Date()} />
         </View>
 
         <View style={containerStyles.rowContainer}>

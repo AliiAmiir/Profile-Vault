@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View } from 'react-native';
+import { View, Alert } from 'react-native';
 import { signInWithEmailAndPassword } from "firebase/auth";
 
 // Import Configs
@@ -40,14 +40,12 @@ export default class Register extends Component {
 
   onLogin = async () => {
     try {
-      const email = this.state.email;
-      const password = this.state.password;
-
-      const userCredential = await signInWithEmailAndPassword(auth, email, password);
+      await signInWithEmailAndPassword(auth, this.state.email, this.state.password);
     } catch (error) {
-      const errorCode = error.code;
-      const errorMessage = error.message;
-      console.log(errorMessage)
+      console.log(error.message);
+      if (error.code === 'auth/wrong-password' || error.code === 'auth/invalid-email' || error.code === 'auth/user-not-found') {
+        Alert.alert('Incorrect Email or Password');
+      }
     }
   }
 

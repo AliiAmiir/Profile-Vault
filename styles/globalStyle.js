@@ -132,6 +132,11 @@ export const textStyles = StyleSheet.create({
     fontSize: 20,
     paddingBottom: 10,
   },
+  textMiniHeading: {
+    fontWeight: 500,
+    fontSize: 18,
+    paddingBottom: 10,
+  },
   errorText: {
     color: 'darkred',
   },
