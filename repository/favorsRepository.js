@@ -9,7 +9,12 @@ export const fetchFavors = async (userId) => {
         let favors = [];
 
         querySnapshot.forEach((doc) => {
-            favors.push({ key: doc.id, ...doc.data() });
+            if (doc.data().recipients) {
+                let recipients = doc.data().recipients.join(', ');
+                favors.push({ key: doc.id, ...doc.data(), recipients });
+            } else {
+                favors.push({ key: doc.id, ...doc.data() });
+            }
         });
 
         return { success: true, data: favors };
@@ -65,12 +70,11 @@ export const saveFavorCategoriesBatch = async (uid, favors) => {
 
 export const saveFavor = async (userId, favorDetails) => {
     try {
-        if (!favorDetails.beneficiary || !favorDetails.beneficiary.trim() || !favorDetails.type || !favorDetails.type.trim()) {
+        if (!favorDetails.recipients || favorDetails.recipients.length < 0 || !favorDetails.type || !favorDetails.type.trim()) {
             return { success: false, message: 'Please enter a required fields' };
         }
 
-        const { beneficiary, type } = favorDetails;
-        const q = query(collection(db, 'favors'), where('uid', '==', userId), where('beneficiary', '==', beneficiary), where('type', '==', type));
+        const q = query(collection(db, 'favors'), where('uid', '==', userId), where('type', '==', favorDetails.type));
 
         const querySnapshot = await checkDuplicate(q);
 
@@ -78,10 +82,24 @@ export const saveFavor = async (userId, favorDetails) => {
             return { success: false, message: 'Duplicate Favor' };
         }
 
+        const filteredRecipients = favorDetails.recipients.filter((recipient) => {
+            if (!recipient || !recipient.trim()) {
+                return false;
+            } else {
+                return recipient.trim();
+            }
+        }).map((recipient) => computeCapitalizedFirstLetter(recipient));
+
+        const uniqueRecipients = [...new Set(filteredRecipients)];
+
+        if (uniqueRecipients.length < 1) {
+            return { success: false, message: 'Please enter a valid recipient' };
+        }
+
         await addDoc(collection(db, 'favors'), {
             uid: userId,
             type: favorDetails.type,
-            beneficiary: favorDetails.beneficiary,
+            recipients: uniqueRecipients,
             createdOn: new Date(),
             updatedOn: new Date()
         });
@@ -94,12 +112,11 @@ export const saveFavor = async (userId, favorDetails) => {
 
 export const updateFavorById = async (favorId, userId, favorDetails) => {
     try {
-        if (!favorDetails.beneficiary || !favorDetails.beneficiary.trim() || !favorDetails.type || !favorDetails.type.trim()) {
+        if (!favorDetails.recipients || favorDetails.recipients.length < 0 || !favorDetails.type || !favorDetails.type.trim()) {
             return { success: false, message: 'Please enter a required fields' };
         }
 
-        const { beneficiary, type } = favorDetails;
-        const q = query(collection(db, 'favors'), where('uid', '==', userId), where('beneficiary', '==', beneficiary), where('type', '==', type));
+        const q = query(collection(db, 'favors'), where('uid', '==', userId), where('type', '==', favorDetails.type));
 
         const duplicateSnapshot = await checkDuplicate(q);
 
@@ -111,10 +128,24 @@ export const updateFavorById = async (favorId, userId, favorDetails) => {
             }
         }
 
+        const filteredRecipients = favorDetails.recipients.filter((recipient) => {
+            if (!recipient || !recipient.trim()) {
+                return false;
+            } else {
+                return recipient.trim();
+            }
+        }).map((recipient) => computeCapitalizedFirstLetter(recipient));
+
+        const uniqueRecipients = [...new Set(filteredRecipients)];
+
+        if (uniqueRecipients.length < 1) {
+            return { success: false, message: 'Please enter a valid recipient' };
+        }
+        
         const favorRef = doc(db, 'favors', favorId);
         await updateDoc(favorRef, {
             type: favorDetails.type,
-            beneficiary: favorDetails.beneficiary,
+            recipients: favorDetails.recipients,
             updatedOn: new Date()
         });
 

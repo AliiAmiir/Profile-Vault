@@ -22,7 +22,7 @@ export default class PersonalFavors extends Component {
     this.state = {
       loading: true,
       newFavorType: '',
-      newFavorBeneficiary: '',
+      newFavorRecipients: '',
       errors: {},
       savedFavors: [],
       displayUpdateButton: true,
@@ -59,14 +59,14 @@ export default class PersonalFavors extends Component {
     try {
       const favorDetails = {
         type: this.state.newFavorType,
-        beneficiary: this.state.newFavorBeneficiary,
+        recipients: this.state.newFavorRecipients.split(','),
       };
 
       const response = await saveFavor(auth.currentUser.uid, favorDetails);
 
       if (response && response.success) {
         Alert.alert(response.message || 'Saved Favor');
-        this.setState({ newFavorType: '', newFavorBeneficiary: '', showFavorInputForm: false })
+        this.setState({ newFavorType: '', newFavorRecipients: '', showFavorInputForm: false })
       } else {
         Alert.alert(response.message || 'Failed to save Favor');
       }
@@ -82,7 +82,12 @@ export default class PersonalFavors extends Component {
     try {
       let savedFavors = this.state.savedFavors;
       let index = savedFavors.findIndex(x => x.key === key);
-      let favorDetails = savedFavors[index];
+      let favor = savedFavors[index];
+
+      const favorDetails = {
+        type: favor.type,
+        recipients: favor.recipients.split(','),
+      };
 
       let response = await updateFavorById(key, auth.currentUser.uid, favorDetails);
 
@@ -148,8 +153,8 @@ export default class PersonalFavors extends Component {
 
         {this.state.showFavorInputForm && (
           <View>
-            <FormInputText placeholder="Favor Beneficiary" value={this.state.newFavorBeneficiary} onChangeText={(value) => this.handleChange('newFavorBeneficiary', value)} autoCapitalize="sentences" errorText={this.state.errors.newFavorName || null} />
             <FormInputText placeholder="Favor Type" value={this.state.newFavorType} onChangeText={(value) => this.handleChange('newFavorType', value)} autoCapitalize="sentences" errorText={this.state.errors.newFavorName || null} />
+            <FormInputText placeholder="Favor Recipients (Comma separated)" value={this.state.newFavorRecipients} onChangeText={(value) => this.handleChange('newFavorRecipients', value)} autoCapitalize="sentences" errorText={this.state.errors.newFavorName || null} />
             <FormButton title='Save Favor' onPress={this.handleSaveFavor} />
             <FormButton title='Cancel' color={'#F2F2F7'} textColor={'#000000'} onPress={this.handleShowFavorInputForm} />
           </View>
@@ -162,7 +167,13 @@ export default class PersonalFavors extends Component {
         {!this.state.showEditFavorForm && !this.state.showFavorInputForm && (
           <FlatList data={this.state.savedFavors} renderItem={({ item }) => (
             <View style={containerStyles.textInputContainer}>
-              <TextInput editable={false} value={`${item.type} for ${item.beneficiary}`} style={formInputTextStyles.input} />
+              {item.recipients && item.recipients.length > 0 && (
+                <TextInput editable={false} value={`${item.type} for ${item.recipients}`} style={formInputTextStyles.input} />
+              )}
+
+              {!item.recipients && (
+                <TextInput editable={false} value={`${item.type} - No recipients added`} style={formInputTextStyles.input} />
+              )}
             </View>
           )}
             keyExtractor={item => item.key}
@@ -174,8 +185,8 @@ export default class PersonalFavors extends Component {
             <View>
               <View style={containerStyles.updateRowContainer}>
                 <View style={[containerStyles.textInputContainer, { flex: 4 }]}>
-                  <TextInput value={item.beneficiary} onChangeText={(value) => this.handleUpdateChange(item.key, { field: 'beneficiary', value: value })} autoCapitalize={'sentences'} style={formInputTextStyles.input} />
-                  <TextInput value={item.type} onChangeText={(value) => this.handleUpdateChange(item.key, { field: 'type', value: value })} autoCapitalize={'sentences'} style={formInputTextStyles.input} />
+                <TextInput value={item.type} onChangeText={(value) => this.handleUpdateChange(item.key, { field: 'type', value: value })} autoCapitalize={'sentences'} style={formInputTextStyles.input} />
+                  <TextInput value={item.recipients} onChangeText={(value) => this.handleUpdateChange(item.key, { field: 'recipients', value: value })} autoCapitalize={'sentences'} style={formInputTextStyles.input} />
                 </View>
               </View>
               <View style={containerStyles.rowContainer}>

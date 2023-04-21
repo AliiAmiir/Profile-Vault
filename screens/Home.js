@@ -201,7 +201,15 @@ export default class Home extends Component {
             {this.state.favors && this.state.favors.length > 0 && (<View style={containerStyles.textContainer}>
               <Text style={textStyles.textSubHeading}>Favors</Text>
               {this.state.favors.map((favor, index) => (
-                <Text style={textStyles.boldText} key={index}>{`${favor.type} for ${favor.beneficiary}`}</Text>
+                <View key={index}>
+                  {favor.recipients && favor.recipients.length > 0 && (
+                    <Text style={textStyles.boldText}>{`${favor.type} for ${favor.recipients}`}</Text>
+                  )}
+
+                  {!favor.recipients && (
+                    <Text style={textStyles.boldText}>{`${favor.type} - No recipients added`}</Text>
+                  )}
+                </View>
               ))}
               <Text style={textStyles.subText}>For more details, navigate to Favors</Text>
             </View>
