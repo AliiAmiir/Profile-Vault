@@ -1,4 +1,4 @@
-import { collection, query, where, getDocs, addDoc, updateDoc, deleteDoc, doc, orderBy, limit } from 'firebase/firestore';
+import { collection, query, where, getDocs, addDoc, updateDoc, deleteDoc, doc, orderBy, limit, writeBatch } from 'firebase/firestore';
 import { db } from '../config/firebaseConfig';
 
 export const fetchFavors = async (userId) => {
@@ -16,6 +16,51 @@ export const fetchFavors = async (userId) => {
         throw error;
     }
 };
+
+export const saveFavorCategoriesBatch = async (uid, favors) => {
+    try {
+        if (!favors || favors.length < 1) {
+            return;
+        }
+
+        const q = query(collection(db, 'favors'), where('uid', '==', uid));
+
+        const querySnapshot = await checkDuplicate(q);
+
+        if (querySnapshot.duplicate) {
+            return { success: false, message: 'Favors for this User already exist' };
+        }
+
+        const filteredFavors = favors.filter((favor) => {
+            if (!favor || !favor.trim()) {
+                return false;
+            } else {
+                return favor.trim();
+            }
+        }).map((favor) => favor.trim());
+
+        const uniqueFavors = [...new Set(filteredFavors)];
+
+        const batch = writeBatch(db);
+
+        uniqueFavors.forEach((favor) => {
+            const favorRef = doc(collection(db, 'favors'));
+            batch.set(favorRef, {
+                uid: uid,
+                type: favor,
+                createdOn: new Date(),
+                updatedOn: new Date()
+            });
+        });
+
+        await batch.commit();
+
+        return { success: true, message: 'Saved Favor Categories' };
+    } catch (error) {
+        console.error(error);
+        throw error;
+    }
+}
 
 export const saveFavor = async (userId, favorDetails) => {
     try {
