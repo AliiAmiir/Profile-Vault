@@ -17,18 +17,39 @@ export const TripsForm = function ({ city, state, country, tripCost, dateFrom, d
     return (
         <ScrollView style={containerStyles.textInputContainer}>
             <View>
-                <FormInputText label="City" value={city} onChangeText={(value) => handleChange('newTripCity', value)} />
-                <FormInputText label="State" value={state} onChangeText={(value) => handleChange('newTripState', value)} />
-                <FormInputText label="Country" value={country} onChangeText={(value) => handleChange('newTripCountry', value)} />
+                <View style={containerStyles.columnContainer}>
+                    <View style={containerStyles.rowContainer}>
+                        <FormInputText autoCapitalize={'sentences'} label="City" value={city} onChangeText={(value) => handleChange('newTripCity', value)} />
+                        <FormInputText autoCapitalize={'sentences'} label="State" value={state} onChangeText={(value) => handleChange('newTripState', value)} />
+                    </View>
+                </View>
+
+                <FormInputText autoCapitalize={'sentences'} label="Country" value={country} onChangeText={(value) => handleChange('newTripCountry', value)} />
                 <CustomDatePicker label={'Date From'} dateOfBirth={dateFrom} showDatePicker={showDatePicker} handleDateChange={handleDateChange} handleShowDatePicker={handleShowDatePicker} maximumDate={maximumDate} />
                 <CustomDatePicker label={'Date To'} dateOfBirth={dateTo} showDatePicker={showDateToPicker} handleDateChange={handleDateToChange} handleShowDatePicker={handleShowDateToPicker} maximumDate={maximumDate} />
-                <FormInputText label="Hotel Name" value={hotelName} onChangeText={(value) => handleChange('newTripHotelName', value)} />
-                <FormInputText label="Hodel Address" value={hotelAddress} onChangeText={(value) => handleChange('newTripHotelAddress', value)} />
-                <FormInputText label="Hotel Cost" keyboardType="decimal-pad" value={hotelCost} onChangeText={(value) => handleChange('newTripHotelCost', value)} />
-                <FormInputText label="Flight Name" value={flightName} onChangeText={(value) => handleChange('newTripFlightName', value)} />
-                <FormInputText label="Flight Cost" keyboardType="decimal-pad" value={flightCost} onChangeText={(value) => handleChange('newTripFlightCost', value)} />
-                <FormInputText label="Car Rental Name" value={carRentalName} onChangeText={(value) => handleChange('newTripCarRentalName', value)} />
-                <FormInputText label="Car Rental Cost" keyboardType="decimal-pad" value={carRentalCost} onChangeText={(value) => handleChange('newTripCarRentalCost', value)} />
+
+                <View style={containerStyles.columnContainer}>
+                    <View style={containerStyles.rowContainer}>
+                        <FormInputText autoCapitalize={'sentences'} label="Hotel Name" value={hotelName} onChangeText={(value) => handleChange('newTripHotelName', value)} />
+                        <FormInputText label="Hotel Cost" keyboardType="decimal-pad" value={hotelCost} onChangeText={(value) => handleChange('newTripHotelCost', value)} />
+                    </View>
+                </View>
+                <FormInputText autoCapitalize={'sentences'} label="Hodel Address" value={hotelAddress} onChangeText={(value) => handleChange('newTripHotelAddress', value)} />
+
+                <View style={containerStyles.columnContainer}>
+                    <View style={containerStyles.rowContainer}>
+                        <FormInputText autoCapitalize={'sentences'} label="Flight Name" value={flightName} onChangeText={(value) => handleChange('newTripFlightName', value)} />
+                        <FormInputText label="Flight Cost" keyboardType="decimal-pad" value={flightCost} onChangeText={(value) => handleChange('newTripFlightCost', value)} />
+                    </View>
+                </View>
+
+                <View style={containerStyles.columnContainer}>
+                    <View style={containerStyles.rowContainer}>
+                        <FormInputText autoCapitalize={'sentences'} label="Car Rental Name" value={carRentalName} onChangeText={(value) => handleChange('newTripCarRentalName', value)} />
+                        <FormInputText label="Car Rental Cost" keyboardType="decimal-pad" value={carRentalCost} onChangeText={(value) => handleChange('newTripCarRentalCost', value)} />
+                    </View>
+                </View>
+
                 <FormInputText label="Total Cost" keyboardType="decimal-pad" value={tripCost} onChangeText={(value) => handleChange('newTripCost', value)} />
             </View>
 
@@ -141,23 +162,50 @@ export const TripsUpdateForm = function ({ itemKey, city, state, country, tripCo
     return (
         <View>
             <View style={containerStyles.textInputContainer}>
-                <FormInputText label="City" value={city} onChangeText={(value) => handleChange(itemKey, { field: 'city', value: value })} />
-                <FormInputText label="State" value={state} onChangeText={(value) => handleChange(itemKey, { field: 'state', value: value })} />
-                <FormInputText label="Country" value={country} onChangeText={(value) => handleChange(itemKey, { field: 'country', value: value })} />
+                <View style={containerStyles.columnContainer}>
+                    <View style={containerStyles.rowContainer}>
+                        <FormInputText autoCapitalize={'sentences'} label="City" value={city} onChangeText={(value) => handleChange(itemKey, { field: 'city', value: value })} />
+                        <FormInputText autoCapitalize={'sentences'} label="State" value={state} onChangeText={(value) => handleChange(itemKey, { field: 'state', value: value })} />
+                    </View>
+                </View>
+
+                <FormInputText autoCapitalize={'sentences'} label="Country" value={country} onChangeText={(value) => handleChange(itemKey, { field: 'country', value: value })} />
                 <CustomDatePicker label={'Date From'} dateOfBirth={dateFrom} showDatePicker={showDatePicker} handleDateChange={(event, value) => handleDateChange(itemKey, value)} handleShowDatePicker={(value) => handleShowDatePicker(itemKey, value)} maximumDate={maximumDate} />
                 <CustomDatePicker label={'Date To'} dateOfBirth={dateTo} showDatePicker={showDateToPicker} handleDateChange={(event, value) => handleDateToChange(itemKey, value)} handleShowDatePicker={(value) => handleShowDateToPicker(itemKey, value)} maximumDate={maximumDate} />
-                <FormInputText label="Hotel Name" value={hotelName} onChangeText={(value) => handleChange(itemKey, { field: 'hotelName', value: value })} />
-                <FormInputText label="Hodel Address" value={hotelAddress} onChangeText={(value) => handleChange(itemKey, { field: 'hotelAddress', value: value })} />
-                <FormInputText label="Hotel Cost" keyboardType="decimal-pad" value={hotelCost} onChangeText={(value) => handleChange(itemKey, { field: 'hotelCost', value: value })} />
-                <FormInputText label="Flight Name" value={flightName} onChangeText={(value) => handleChange(itemKey, { field: 'flightName', value: value })} />
-                <FormInputText label="Flight Cost" keyboardType="decimal-pad" value={flightCost} onChangeText={(value) => handleChange(itemKey, { field: 'flightCost', value: value })} />
-                <FormInputText label="Car Rental Name" value={carRentalName} onChangeText={(value) => handleChange(itemKey, { field: 'carRentalName', value: value })} />
-                <FormInputText label="Car Rental Cost" keyboardType="decimal-pad" value={carRentalCost} onChangeText={(value) => handleChange(itemKey, { field: 'carRentalCost', value: value })} />
+
+                <View style={containerStyles.columnContainer}>
+                    <View style={containerStyles.rowContainer}>
+                        <FormInputText autoCapitalize={'sentences'} label="Hotel Name" value={hotelName} onChangeText={(value) => handleChange(itemKey, { field: 'hotelName', value: value })} />
+                        <FormInputText label="Hotel Cost" keyboardType="decimal-pad" value={hotelCost} onChangeText={(value) => handleChange(itemKey, { field: 'hotelCost', value: value })} />
+                    </View>
+                </View>
+
+                <FormInputText autoCapitalize={'sentences'} label="Hodel Address" value={hotelAddress} onChangeText={(value) => handleChange(itemKey, { field: 'hotelAddress', value: value })} />
+
+                <View style={containerStyles.columnContainer}>
+                    <View style={containerStyles.rowContainer}>
+                        <FormInputText autoCapitalize={'sentences'} label="Flight Name" value={flightName} onChangeText={(value) => handleChange(itemKey, { field: 'flightName', value: value })} />
+                        <FormInputText label="Flight Cost" keyboardType="decimal-pad" value={flightCost} onChangeText={(value) => handleChange(itemKey, { field: 'flightCost', value: value })} />
+                    </View>
+                </View>
+
+                <View style={containerStyles.columnContainer}>
+                    <View style={containerStyles.rowContainer}>
+                        <FormInputText autoCapitalize={'sentences'} label="Car Rental Name" value={carRentalName} onChangeText={(value) => handleChange(itemKey, { field: 'carRentalName', value: value })} />
+                        <FormInputText label="Car Rental Cost" keyboardType="decimal-pad" value={carRentalCost} onChangeText={(value) => handleChange(itemKey, { field: 'carRentalCost', value: value })} />
+                    </View>
+                </View>
+
                 <FormInputText label="Total Cost" keyboardType="decimal-pad" value={tripCost} onChangeText={(value) => handleChange(itemKey, { field: 'tripCost', value: value })} />
             </View>
-            <View style={containerStyles.buttonContainer}>
-                <FormButton title='Delete' color={'#CD5151'} textColor={'#FFFFFF'} onPress={() => onPressDelete(itemKey)} />
-                <FormButton title='Update Trip' onPress={() => onFormSubmit(itemKey)} />
+
+            <View style={containerStyles.rowContainer}>
+                <View style={containerStyles.rowButtonsContainer}>
+                    <FormButton title='Delete' color={'#CD5151'} textColor={'#FFFFFF'} onPress={() => onPressDelete(itemKey)} />
+                </View>
+                <View style={containerStyles.rowButtonsContainer}>
+                    <FormButton title='Update' onPress={() => onFormSubmit(itemKey)} />
+                </View>
             </View>
         </View>
     );

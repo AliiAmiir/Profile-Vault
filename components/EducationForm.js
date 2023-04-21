@@ -17,8 +17,8 @@ export const EducationForm = function ({ institute, degree, dateFrom, dateTo, er
     return (
         <ScrollView style={containerStyles.textInputContainer}>
             <View>
-                <FormInputText label="Institute" value={institute} onChangeText={(value) => handleChange('newInstitute', value)} />
-                <FormInputText label="Degree" value={degree} onChangeText={(value) => handleChange('newDegree', value)} />
+                <FormInputText autoCapitalize={'sentences'} label="Institute" value={institute} onChangeText={(value) => handleChange('newInstitute', value)} />
+                <FormInputText autoCapitalize={'sentences'} label="Degree" value={degree} onChangeText={(value) => handleChange('newDegree', value)} />
                 <CustomDatePicker label={'Enrollment date'} dateOfBirth={dateFrom} showDatePicker={showDatePicker} handleDateChange={handleDateChange} handleShowDatePicker={handleShowDatePicker} maximumDate={maximumDate} />
                 <CustomDatePicker label={'Graduation date'} dateOfBirth={dateTo} showDatePicker={showDateToPicker} handleDateChange={handleDateToChange} handleShowDatePicker={handleShowDateToPicker} maximumDate={maximumDate} />
             </View>
@@ -87,14 +87,19 @@ export const EducationUpdateForm = function ({ itemKey, institute, degree, dateF
     return (
         <View>
             <View style={containerStyles.textInputContainer}>
-                <FormInputText label="Institute" value={institute} onChangeText={(value) => handleChange(itemKey, { field: 'institute', value: value })} />
-                <FormInputText label="Degree" value={degree} onChangeText={(value) => handleChange(itemKey, { field: 'degree', value: value })} />
+                <FormInputText autoCapitalize={'sentences'} label="Institute" value={institute} onChangeText={(value) => handleChange(itemKey, { field: 'institute', value: value })} />
+                <FormInputText autoCapitalize={'sentences'} label="Degree" value={degree} onChangeText={(value) => handleChange(itemKey, { field: 'degree', value: value })} />
                 <CustomDatePicker label={'Enrollment date'} dateOfBirth={dateFrom} showDatePicker={showDatePicker} handleDateChange={(event, value) => handleDateChange(itemKey, value)} handleShowDatePicker={(value) => handleShowDatePicker(itemKey, value)} maximumDate={maximumDate} />
                 <CustomDatePicker label={'Graduation date'} dateOfBirth={dateTo} showDatePicker={showDateToPicker} handleDateChange={(event, value) => handleDateToChange(itemKey, value)} handleShowDatePicker={(value) => handleShowDateToPicker(itemKey, value)} maximumDate={maximumDate} />
             </View>
-            <View style={containerStyles.buttonContainer}>
-                <FormButton title='Delete' color={'#CD5151'} textColor={'#FFFFFF'} onPress={() => onPressDelete(itemKey)} />
-                <FormButton title='Save Education' onPress={() => onFormSubmit(itemKey)} />
+
+            <View style={containerStyles.rowContainer}>
+                <View style={containerStyles.rowButtonsContainer}>
+                    <FormButton title='Delete' color={'#CD5151'} textColor={'#FFFFFF'} onPress={() => onPressDelete(itemKey)} />
+                </View>
+                <View style={containerStyles.rowButtonsContainer}>
+                    <FormButton title='Update' onPress={() => onFormSubmit(itemKey)} />
+                </View>
             </View>
         </View>
     );

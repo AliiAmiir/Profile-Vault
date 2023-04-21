@@ -238,7 +238,7 @@ export default class Trips extends Component {
     return (
       <View style={[containerStyles.defaultContainer, { justifyContent: 'flex-start' }]}>
         <View style={containerStyles.formContainer}>
-          {!this.state.showTripsInputForm && (
+          {!this.state.showTripsInputForm && !this.state.showEditTripsForm && (
             <FormButton title='Add a Trip' color={'#F2F2F7'} textColor={'#000000'} onPress={this.handleShowTripsInputForm} />
           )}
 
@@ -269,7 +269,7 @@ export default class Trips extends Component {
             />
           )}
 
-          {this.state.showEditTripsForm && !this.state.showTripsInputForm && (<FormButton title='Done' color={'#F2F2F7'} textColor={'#000000'} onPress={this.handleShowEditTripsForm} />)}
+          {this.state.showEditTripsForm && !this.state.showTripsInputForm && (<FormButton title='Cancel' color={'#F2F2F7'} textColor={'#000000'} onPress={this.handleShowEditTripsForm} />)}
 
           {!this.state.showEditTripsForm && !this.state.showTripsInputForm && (<FormButton title='Edit Trips' color={'#F2F2F7'} textColor={'#000000'} onPress={this.handleShowEditTripsForm} />)}
 

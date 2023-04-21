@@ -190,7 +190,7 @@ export default class Significants extends Component {
     return (
       <View style={[containerStyles.defaultContainer, {justifyContent: 'flex-start'}]}>
         <View style={containerStyles.formContainer}>
-          {!this.state.showSignificantsInputForm && (
+          {!this.state.showSignificantsInputForm && !this.state.showEditSignificantsForm  && (
             <FormButton title='Add a Significant' color={'#F2F2F7'} textColor={'#000000'} onPress={this.handleShowSignificantsInputForm} />
           )}
 
@@ -212,9 +212,9 @@ export default class Significants extends Component {
             />
           )}
 
-          {this.state.showEditSignificantsForm && (<FormButton title='Done' onPress={this.handleShowEditSignificantsForm} />)}
+          {this.state.showEditSignificantsForm && !this.state.showSignificantsInputForm && (<FormButton title='Cancel' color={'#F2F2F7'} textColor={'#000000'}  onPress={this.handleShowEditSignificantsForm} />)}
 
-          {!this.state.showEditSignificantsForm && (<FormButton title='Edit Significants' color={'#F2F2F7'} textColor={'#000000'} onPress={this.handleShowEditSignificantsForm} />)}
+          {!this.state.showEditSignificantsForm && !this.state.showSignificantsInputForm && (<FormButton title='Edit Significants' color={'#F2F2F7'} textColor={'#000000'} onPress={this.handleShowEditSignificantsForm} />)}
       
           {!this.state.showEditSignificantsForm && (
             <FlatList data={this.state.savedSignificants} renderItem={({ item }) => (<SignificantsDisplayForm name={item.name} relation={item.relation} dateOfBirth={item.dateOfBirth} anniversary={item.anniversary} />)} keyExtractor={item => item.key} />)}

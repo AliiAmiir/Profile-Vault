@@ -212,7 +212,7 @@ export default class Education extends Component {
     return (
       <View style={[containerStyles.defaultContainer, { justifyContent: 'flex-start' }]}>
         <View style={containerStyles.formContainer}>
-          {!this.state.showEducationInputForm && (
+          {!this.state.showEducationInputForm && !this.state.showEditEducationForm  && (
             <FormButton title='Add an Education' color={'#F2F2F7'} textColor={'#000000'} onPress={this.handleShowEducationInputForm} />
           )}
 
@@ -234,7 +234,7 @@ export default class Education extends Component {
             />
           )}
 
-          {this.state.showEditEducationForm && !this.state.showEducationInputForm && (<FormButton title='Done' color={'#F2F2F7'} textColor={'#000000'} onPress={this.handleShowEditEducationForm} />)}
+          {this.state.showEditEducationForm && !this.state.showEducationInputForm && (<FormButton title='Cancel' color={'#F2F2F7'} textColor={'#000000'} onPress={this.handleShowEditEducationForm} />)}
 
           {!this.state.showEditEducationForm && !this.state.showEducationInputForm && (<FormButton title='Edit Education' color={'#F2F2F7'} textColor={'#000000'} onPress={this.handleShowEditEducationForm} />)}
 
