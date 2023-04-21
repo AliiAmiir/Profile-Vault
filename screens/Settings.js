@@ -26,6 +26,7 @@ export default class Settings extends Component {
       isSignedIn: false,
       firstName: '',
       lastName: '',
+      gender: '',
       email: '',
       currentPassword: '',
       confirmPassword: '',
@@ -80,6 +81,7 @@ export default class Settings extends Component {
         loading: false,
         firstName: userData.firstName,
         lastName: userData.lastName,
+        gender: userData.gender,
         email: userData.email,
         dateOfBirth: userData.dateOfBirth,
         phone: userData.phone,
@@ -188,8 +190,11 @@ export default class Settings extends Component {
         {!this.state.showEditUserForm && (
           <ScrollView>
             <View style={containerStyles.textInputContainer}>
-              <FormText label="First Name" value={this.state.firstName} />
-              <FormText label="Last Name" value={this.state.lastName} />
+              <View style={containerStyles.rowContainer}>
+                <FormText label="First Name" value={this.state.firstName} />
+                <FormText label="Last Name" value={this.state.lastName} />
+              </View>
+              <FormText label="Gender" value={this.state.gender} />
               <FormText label={'Date of Birth'} value={this.state.dateOfBirth.toLocaleDateString()} />
               <FormText label="Email" value={this.state.email} />
               <FormText label="Phone" keyboardType={'phone-pad'} value={this.state.phone} />
@@ -207,8 +212,10 @@ export default class Settings extends Component {
         {this.state.showEditUserForm && (
           <ScrollView>
             <View style={containerStyles.textInputContainer}>
-              <FormInputText label="First Name" value={this.state.firstName} onChangeText={(value) => this.handleChange('firstName', value)} autoCapitalize="sentences" />
-              <FormInputText label="Last Name" value={this.state.lastName} onChangeText={(value) => this.handleChange('lastName', value)} autoCapitalize="sentences" />
+              <View style={containerStyles.rowContainer}>
+                <FormInputText label="First Name" value={this.state.firstName} onChangeText={(value) => this.handleChange('firstName', value)} autoCapitalize="sentences" />
+                <FormInputText label="Last Name" value={this.state.lastName} onChangeText={(value) => this.handleChange('lastName', value)} autoCapitalize="sentences" />
+              </View>
               <CustomDatePicker label={'Date of Birth'} dateOfBirth={this.state.dateOfBirth} showDatePicker={this.state.showDatePicker} handleDateChange={this.handleDateChange} handleShowDatePicker={this.handleShowDatePicker} maximumDate={new Date()} />
               <FormText label="Email (Not Editable)" value={this.state.email} />
               <FormInputText label="Phone" keyboardType={'phone-pad'} value={this.state.phone} onChangeText={(value) => this.handleChange('phone', value)} autoCapitalize="sentences" />

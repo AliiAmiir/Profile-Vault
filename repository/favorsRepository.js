@@ -19,6 +19,10 @@ export const fetchFavors = async (userId) => {
 
 export const saveFavor = async (userId, favorDetails) => {
     try {
+        if (!favorDetails.beneficiary || !favorDetails.beneficiary.trim() || !favorDetails.type || !favorDetails.type.trim()) {
+            return { success: false, message: 'Please enter a required fields' };
+        }
+
         const { beneficiary, type } = favorDetails;
         const q = query(collection(db, 'favors'), where('uid', '==', userId), where('beneficiary', '==', beneficiary), where('type', '==', type));
 
@@ -44,6 +48,10 @@ export const saveFavor = async (userId, favorDetails) => {
 
 export const updateFavorById = async (favorId, userId, favorDetails) => {
     try {
+        if (!favorDetails.beneficiary || !favorDetails.beneficiary.trim() || !favorDetails.type || !favorDetails.type.trim()) {
+            return { success: false, message: 'Please enter a required fields' };
+        }
+
         const { beneficiary, type } = favorDetails;
         const q = query(collection(db, 'favors'), where('uid', '==', userId), where('beneficiary', '==', beneficiary), where('type', '==', type));
 

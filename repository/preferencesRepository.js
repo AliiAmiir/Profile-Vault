@@ -1,25 +1,13 @@
 import { collection, query, where, getDocs, addDoc, updateDoc, deleteDoc, doc, orderBy, limit } from 'firebase/firestore';
 import { db } from '../config/firebaseConfig';
 
-export const fetchPreferencesByUserId = async (userId) => {
+export const savePreference = async (userId, preference) => {
     try {
-        const q = query(collection(db, 'preferences'), where('uid', '==', userId));
-
-        const querySnapshot = await getDocs(q);
-
-        if (querySnapshot.docs.length > 0) {
-            return querySnapshot.docs;
+        if (!preference.name || !preference.name.trim() || !preference.type || !preference.type.trim()) {
+            return { success: false, message: 'Please enter a required fields' };
         }
 
-        return null;
-    } catch (error) {
-        throw error;
-    }
-};
-
-export const savePreference = async (userId, preferenceName) => {
-    try {
-        const q = query(collection(db, 'preferences'), where('uid', '==', userId), where('name', '==', preferenceName));
+        const q = query(collection(db, 'preferences'), where('uid', '==', userId), where('name', '==', preference.name), where('type', '==', preference.type));
 
         const querySnapshot = await checkDuplicate(q);
 
@@ -29,7 +17,8 @@ export const savePreference = async (userId, preferenceName) => {
 
         await addDoc(collection(db, 'preferences'), {
             uid: userId,
-            name: preferenceName,
+            name: preference.name,
+            type: preference.type,
             createdOn: new Date(),
             updatedOn: new Date()
         });
@@ -40,22 +29,27 @@ export const savePreference = async (userId, preferenceName) => {
     }
 };
 
-export const updatePreferenceById = async (preference) => {
+export const updatePreferenceById = async (preferenceId, preference) => {
     try {
-        const q = query(collection(db, 'preferences'), where('uid', '==', preference.uid), where('name', '==', preference.name));
+        if (!preference.name || !preference.name.trim() || !preference.type || !preference.type.trim()) {
+            return { success: false, message: 'Please enter a required fields' };
+        }
+
+        const q = query(collection(db, 'preferences'), where('uid', '==', preference.uid), where('name', '==', preference.name), where('type', '==', preference.type));
 
         const duplicateSnapshot = await checkDuplicate(q);
 
         if (duplicateSnapshot.duplicate) {
-            const duplicates = duplicateSnapshot.docs.filter((doc) => doc.id !== preference.key);
+            const duplicates = duplicateSnapshot.docs.filter((doc) => doc.id !== preferenceId);
 
             if (duplicates.length > 0) {
                 return { success: false, message: 'Duplicate Preference' };
             }
         }
 
-        await updateDoc(doc(db, 'preferences', preference.key), {
+        await updateDoc(doc(db, 'preferences', preferenceId), {
             name: preference.name,
+            type: preference.type,
             updatedOn: new Date()
         });
 
@@ -65,16 +59,36 @@ export const updatePreferenceById = async (preference) => {
     }
 };
 
-export const deletePreferenceById = async (preference) => {
+export const deletePreferenceById = async (preferenceId) => {
     try {
         ;
-        await deleteDoc(doc(db, 'preferences', preference.key));
+        await deleteDoc(doc(db, 'preferences', preferenceId));
 
         return { success: true, message: 'Deleted Preference' };
     } catch (error) {
         throw error;
     }
 };
+
+export const fetchUserPreferences = async (userId, docLimit) => {
+    try {
+        let q = query(collection(db, 'preferences'), where('uid', '==', userId));
+
+        if (docLimit && docLimit > 0) {
+            q = query(collection(db, 'preferences'), where('uid', '==', userId), limit(3));
+        }
+        const querySnapshot = await getDocs(q);
+        let preferences = [];
+
+        querySnapshot.forEach((doc) => {
+            preferences.push({ key: doc.id, ...doc.data() });
+        });
+
+        return { success: true, data: preferences };
+    } catch (error) {
+        throw error;
+    }
+}
 
 const checkDuplicate = async (checkDuplicateQuery) => {
     try {
@@ -85,22 +99,6 @@ const checkDuplicate = async (checkDuplicateQuery) => {
         }
 
         return { duplicate: false };
-    } catch (error) {
-        throw error;
-    }
-}
-
-export const fetchPreferencesForHome = async (userId) => {
-    try {
-        const q = query(collection(db, 'preferences'), where('uid', '==', userId), limit(3));
-        const querySnapshot = await getDocs(q);
-        let preferences = [];
-
-        querySnapshot.forEach((doc) => {
-            preferences.push({ key: doc.id, ...doc.data() });
-        });
-
-        return { success: true, data: preferences };
     } catch (error) {
         throw error;
     }

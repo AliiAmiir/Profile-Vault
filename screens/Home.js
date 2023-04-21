@@ -8,7 +8,7 @@ import { computeAge } from '../utils/computeUtil';
 import { fetchUserById } from '../repository/userRepository';
 import { fetchUserGoalsForHome } from '../repository/goalsRepository';
 import { fetchUpcomingTripsForHome } from '../repository/tripsRepository';
-import { fetchPreferencesForHome } from '../repository/preferencesRepository';
+import { fetchUserPreferences } from '../repository/preferencesRepository';
 import { fetchFavorsForHome } from '../repository/favorsRepository';
 
 // Import Configs
@@ -138,7 +138,7 @@ export default class Home extends Component {
 
   async fetchPreferences() {
     try {
-      const response = await fetchPreferencesForHome(auth.currentUser.uid);
+      const response = await fetchUserPreferences(auth.currentUser.uid);
 
       if (response && response.success) {
         this.setState({ preferences: response.data });
@@ -217,7 +217,7 @@ export default class Home extends Component {
             {this.state.preferences && this.state.preferences.length > 0 && (<View style={containerStyles.textContainer}>
               <Text style={textStyles.textSubHeading}>Preferences</Text>
               {this.state.preferences.map((preference, index) => (
-                <Text style={textStyles.boldText} key={index}>{preference.name}</Text>
+                <Text style={textStyles.boldText} key={index}>{`${preference.type} - ${preference.name}`}</Text>
               ))}
               <Text style={textStyles.subText}>For more details, navigate to Preferences</Text>
             </View>

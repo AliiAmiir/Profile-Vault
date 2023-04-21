@@ -1,19 +1,18 @@
 import React, { Component } from 'react';
-import { View, FlatList, Alert } from 'react-native';
+import { View, FlatList, TextInput, Alert } from 'react-native';
 
 // Import Configs
 import { auth } from '../config/firebaseConfig';
 
 // Import Repositories
-import { fetchPreferencesByUserId, savePreference, updatePreferenceById, deletePreferenceById } from '../repository/preferencesRepository';
+import { fetchUserPreferences, savePreference, updatePreferenceById, deletePreferenceById } from '../repository/preferencesRepository';
 
 // Import StyleSheets
-import { containerStyles } from '../styles/globalStyle';
+import { containerStyles, formInputTextStyles } from '../styles/globalStyle';
 
 // Import Components
 import FormButton from '../components/FormButton';
 import FormInputText from '../components/FormInputText';
-import FormUpdateInputText from '../components/FormUpdateInputText';
 import FormText from '../components/FormText';
 
 export default class PersonalPreferences extends Component {
@@ -23,6 +22,7 @@ export default class PersonalPreferences extends Component {
     this.state = {
       loading: true,
       newPreferenceName: '',
+      newPreferenceType: '',
       errors: {},
       savedPreferences: [],
       showPreferenceInputForm: false,
@@ -46,26 +46,31 @@ export default class PersonalPreferences extends Component {
   handleUpdateChange = (key, value) => {
     let savedPreferences = this.state.savedPreferences;
     let index = savedPreferences.findIndex(x => x.key === key);
-    savedPreferences[index].name = value;
+    let valueAtIndex = savedPreferences[index];
+    valueAtIndex[value.field] = value.value;
 
-    // Add validation
+    savedPreferences[index] = valueAtIndex;
 
     this.setState({ savedPreferences: savedPreferences });
   };
 
   handleSavePreference = async () => {
     try {
-      const response = await savePreference(auth.currentUser.uid, this.state.newPreferenceName);
+      const newPreference = {
+        name: this.state.newPreferenceName,
+        type: this.state.newPreferenceType,
+      };
+
+      const response = await savePreference(auth.currentUser.uid, newPreference);
 
       if (response && response.success) {
         Alert.alert(response.message || 'Saved Preference');
-        this.setState({ newPreferenceName: '', showPreferenceInputForm: false })
+        this.setState({ newPreferenceName: '', newPreferenceType: '', showPreferenceInputForm: false })
       } else {
         Alert.alert(response.message || 'Failed to save Preference');
-        this.setState({ newPreferenceName: '' })
       }
 
-      await this.fetchUserPreferences();
+      await this.fetchPreferences();
     } catch (error) {
       console.log(error.message);
       Alert.alert('Unexpected Error Occurred');
@@ -74,9 +79,13 @@ export default class PersonalPreferences extends Component {
 
   handleUpdateItem = async (item) => {
     try {
-      let preference = item;
+      let preference = {
+        name: item.name,
+        type: item.type,
+        uid: item.uid,
+      };
 
-      let response = await updatePreferenceById(preference);
+      let response = await updatePreferenceById(item.key, preference);
       let message = 'Updated Preference';
 
       if (response && response.success) {
@@ -90,7 +99,7 @@ export default class PersonalPreferences extends Component {
 
       Alert.alert(message);
 
-      await this.fetchUserPreferences();
+      await this.fetchPreferences();
     } catch (error) {
       console.log(error.message);
       Alert.alert('Unexpected Error Occurred');
@@ -99,10 +108,10 @@ export default class PersonalPreferences extends Component {
 
   handleDeleteItem = async (item) => {
     try {
-      await deletePreferenceById(item);
+      await deletePreferenceById(item.key);
       Alert.alert('Deleted Preference');
 
-      await this.fetchUserPreferences();
+      await this.fetchPreferences();
     } catch (error) {
       console.log(error.message);
       Alert.alert('Unexpected Error Occurred');
@@ -110,29 +119,21 @@ export default class PersonalPreferences extends Component {
   }
 
   componentDidMount() {
-    this.fetchUserPreferences();
+    this.fetchPreferences();
   }
 
   componentWillUnmount() {
-    if (this.fetchUserPreferences) {
-      this.fetchUserPreferences();
-    }
+
   }
 
-  async fetchUserPreferences() {
+  async fetchPreferences() {
     try {
-      const preferencesData = await fetchPreferencesByUserId(auth.currentUser.uid);
+      const response = await fetchUserPreferences(auth.currentUser.uid);
 
-      if (preferencesData && preferencesData.length > 0) {
-        this.setState({
-          loading: false,
-          savedPreferences: preferencesData.map((preference) => {
-            let savedPreference = preference.data();
-            savedPreference.key = preference.id;
-
-            return savedPreference;
-          })
-        });
+      if (response && response.success) {
+        this.setState({ savedPreferences: response.data });
+      } else {
+        Alert.alert(response.message || 'Failed to fetch Preferences');
       }
     } catch (error) {
       console.log(error.message);
@@ -140,50 +141,61 @@ export default class PersonalPreferences extends Component {
     }
   }
 
-  handleNavigation = (componentName) => {
-    const { navigation } = this.props;
-    navigation.navigate(componentName);
-  };
-
   render() {
     return (
-      <View style={containerStyles.defaultContainer}>
-        {this.state.showPreferenceInputForm && (
-          <View style={[containerStyles.textInputContainer, { flex: 0.5 }]}>
-            <FormInputText placeholder="New Preference" value={this.state.newPreferenceName} onChangeText={(value) => this.handleChange('newPreferenceName', value)} autoCapitalize="sentences" errorText={this.state.errors.newPreferenceName || null} />
+      <View style={[containerStyles.defaultContainer, { justifyContent: 'flex-start' }, containerStyles.formContainer]}>
+        {this.state.showPreferenceInputForm && !this.state.showEditPreferencesForm && (
+          <View>
+            <FormInputText placeholder="Preference Name" value={this.state.newPreferenceName} onChangeText={(value) => this.handleChange('newPreferenceName', value)} autoCapitalize="sentences" />
+            <FormInputText placeholder="Preference Type" value={this.state.newPreferenceType} onChangeText={(value) => this.handleChange('newPreferenceType', value)} autoCapitalize="sentences" />
             <FormButton title='Save Preference' onPress={this.handleSavePreference} />
-          </View>)}
+            <FormButton title='Cancel' color={'#F2F2F7'} textColor={'#000000'} onPress={this.handleShowPreferenceInputForm} />
+          </View>
+        )}
 
-        {!this.state.showPreferenceInputForm && (
+        {!this.state.showPreferenceInputForm && !this.state.showEditPreferencesForm && (
           <View style={containerStyles.textInputContainer}>
-            <FormButton title='Add a Preference' color={'#F2F2F7'} textColor={'#000000'} onPress={this.handleShowPreferenceInputForm} />
+            <FormButton title='Add Preference' color={'#F2F2F7'} textColor={'#000000'} onPress={this.handleShowPreferenceInputForm} />
           </View>)}
 
         {this.state.showEditPreferencesForm && (
           <View style={containerStyles.textInputContainer}>
-            <FormButton title='Done' onPress={this.handleShowEditPreferenceForm} />
+            <FormButton title='Cancel' color={'#F2F2F7'} textColor={'#000000'} onPress={this.handleShowEditPreferenceForm} />
           </View>)}
 
-        {!this.state.showEditPreferencesForm && (
+        {!this.state.showEditPreferencesForm && !this.state.showPreferenceInputForm && (
           <View style={containerStyles.textInputContainer}>
             <FormButton title='Edit Preferences' color={'#F2F2F7'} textColor={'#000000'} onPress={this.handleShowEditPreferenceForm} />
           </View>)}
 
         {this.state.showEditPreferencesForm && (
-          <View style={[containerStyles.textInputContainer, { flex: 1 }]}>
-            <FlatList data={this.state.savedPreferences} renderItem={({ item }) => (
-              <FormUpdateInputText value={item.name} autoCapitalize="sentences" onButtonUpdate={() => this.handleUpdateItem(item, true)} onChangeText={(value) => this.handleUpdateChange(item.key, value)} onBlurUpdate={() => this.handleUpdateItem(item, false)} onPressDelete={() => this.handleDeleteItem(item)} displayUpdateButton={false} />
-            )} style={containerStyles.buttonContainer}>
-            </FlatList>
-          </View>)}
+          <FlatList data={this.state.savedPreferences} renderItem={({ item }) => (
+            <View>
+              <View style={containerStyles.updateRowContainer}>
+                <View style={[containerStyles.textInputContainer, { flex: 4 }]}>
+                  <TextInput value={item.name} onChangeText={(value) => this.handleUpdateChange(item.key, { field: 'name', value: value })} autoCapitalize={'sentences'} style={formInputTextStyles.input} />
+                  <TextInput value={item.type} onChangeText={(value) => this.handleUpdateChange(item.key, { field: 'type', value: value })} autoCapitalize={'sentences'} style={formInputTextStyles.input} />
+                </View>
+              </View>
+              <View style={containerStyles.rowContainer}>
+                <View style={containerStyles.rowButtonsContainer}>
+                  <FormButton title='Delete' color={'#CD5151'} textColor={'#FFFFFF'} onPress={() => this.handleDeleteItem(item)} />
+                </View>
+                <View style={containerStyles.rowButtonsContainer}>
+                  <FormButton title='Update' onPress={() => this.handleUpdateItem(item, true)} />
+                </View>
+              </View>
+            </View>
+          )} style={containerStyles.buttonContainer}>
+          </FlatList>
+        )}
 
-        {!this.state.showEditPreferencesForm && (
-          <View style={[containerStyles.textInputContainer, { flex: 1 }]}>
-            <FlatList data={this.state.savedPreferences} renderItem={({ item }) => (
-              <FormText value={item.name} />
-            )} style={containerStyles.buttonContainer}>
-            </FlatList>
-          </View>)}
+        {!this.state.showEditPreferencesForm && !this.state.showPreferenceInputForm && (
+          <FlatList data={this.state.savedPreferences} renderItem={({ item }) => (
+            <FormText value={`${item.type} - ${item.name}`} />
+          )} style={containerStyles.buttonContainer}>
+          </FlatList>
+        )}
       </View>
     );
   }

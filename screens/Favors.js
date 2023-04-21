@@ -52,7 +52,6 @@ export default class PersonalFavors extends Component {
 
     savedFavors[index] = valueAtIndex;
 
-    // Add validation
     this.setState({ savedFavors: savedFavors });
   };
 
@@ -70,7 +69,6 @@ export default class PersonalFavors extends Component {
         this.setState({ newFavorType: '', newFavorBeneficiary: '', showFavorInputForm: false })
       } else {
         Alert.alert(response.message || 'Failed to save Favor');
-        this.setState({ newFavorType: '', newFavorBeneficiary: '', showFavorInputForm: false })
       }
 
       await this.fetchUserFavors();
@@ -87,18 +85,13 @@ export default class PersonalFavors extends Component {
       let favorDetails = savedFavors[index];
 
       let response = await updateFavorById(key, auth.currentUser.uid, favorDetails);
-      let message = 'Updated favor';
 
       if (response && response.success) {
-        message = response.message || 'Updated Favor';
-
-        this.setState({ newFavorType: '', newFavorBeneficiary: '' })
+        Alert.alert(response.message || 'Updated Favor');
       } else {
-        message = response.message || 'Failed to update Favor';
-        this.setState({ newFavorType: '', newFavorBeneficiary: '' })
+        Alert.alert(response.message || 'Failed to update Favor');
       }
 
-      Alert.alert(message);
       await this.fetchUserFavors();
     } catch (error) {
       console.log(error.message);
@@ -148,58 +141,56 @@ export default class PersonalFavors extends Component {
 
   render() {
     return (
-      <View style={[containerStyles.defaultContainer, { justifyContent: 'flex-start' }]}>
-        <View style={containerStyles.formContainer}>
-          {!this.state.showFavorInputForm && !this.state.showEditFavorForm && (
-            <FormButton title='Add a Favor' color={'#F2F2F7'} textColor={'#000000'} onPress={this.handleShowFavorInputForm} />
-          )}
+      <View style={[containerStyles.defaultContainer, { justifyContent: 'flex-start' }, containerStyles.formContainer]}>
+        {!this.state.showFavorInputForm && !this.state.showEditFavorForm && (
+          <FormButton title='Add a Favor' color={'#F2F2F7'} textColor={'#000000'} onPress={this.handleShowFavorInputForm} />
+        )}
 
-          {this.state.showFavorInputForm && (
-            <View>
-              <FormInputText placeholder="Favor Beneficiary" value={this.state.newFavorBeneficiary} onChangeText={(value) => this.handleChange('newFavorBeneficiary', value)} autoCapitalize="sentences" errorText={this.state.errors.newFavorName || null} />
-              <FormInputText placeholder="Favor Type" value={this.state.newFavorType} onChangeText={(value) => this.handleChange('newFavorType', value)} autoCapitalize="sentences" errorText={this.state.errors.newFavorName || null} />
-              <FormButton title='Save Favor' onPress={this.handleSaveFavor} />
-              <FormButton title='Cancel' color={'#F2F2F7'} textColor={'#000000'} onPress={this.handleShowFavorInputForm} />
+        {this.state.showFavorInputForm && (
+          <View>
+            <FormInputText placeholder="Favor Beneficiary" value={this.state.newFavorBeneficiary} onChangeText={(value) => this.handleChange('newFavorBeneficiary', value)} autoCapitalize="sentences" errorText={this.state.errors.newFavorName || null} />
+            <FormInputText placeholder="Favor Type" value={this.state.newFavorType} onChangeText={(value) => this.handleChange('newFavorType', value)} autoCapitalize="sentences" errorText={this.state.errors.newFavorName || null} />
+            <FormButton title='Save Favor' onPress={this.handleSaveFavor} />
+            <FormButton title='Cancel' color={'#F2F2F7'} textColor={'#000000'} onPress={this.handleShowFavorInputForm} />
+          </View>
+        )}
+
+        {this.state.showEditFavorForm && !this.state.showFavorInputForm && (<FormButton title='Cancel' color={'#F2F2F7'} textColor={'#000000'} onPress={this.handleShowEditFavorForm} />)}
+
+        {!this.state.showEditFavorForm && !this.state.showFavorInputForm && (<FormButton title='Edit Favor' color={'#F2F2F7'} textColor={'#000000'} onPress={this.handleShowEditFavorForm} />)}
+
+        {!this.state.showEditFavorForm && !this.state.showFavorInputForm && (
+          <FlatList data={this.state.savedFavors} renderItem={({ item }) => (
+            <View style={containerStyles.textInputContainer}>
+              <TextInput editable={false} value={`${item.type} for ${item.beneficiary}`} style={formInputTextStyles.input} />
             </View>
           )}
+            keyExtractor={item => item.key}
+          />
+        )}
 
-          {this.state.showEditFavorForm && !this.state.showFavorInputForm && (<FormButton title='Cancel' color={'#F2F2F7'} textColor={'#000000'} onPress={this.handleShowEditFavorForm} />)}
-
-          {!this.state.showEditFavorForm && !this.state.showFavorInputForm && (<FormButton title='Edit Favor' color={'#F2F2F7'} textColor={'#000000'} onPress={this.handleShowEditFavorForm} />)}
-
-          {!this.state.showEditFavorForm && !this.state.showFavorInputForm && (
-            <FlatList data={this.state.savedFavors} renderItem={({ item }) => (
-              <View style={containerStyles.textInputContainer}>
-                <TextInput editable={false} value={`${item.type} for ${item.beneficiary}`} style={formInputTextStyles.input} />
-              </View>
-            )}
-              keyExtractor={item => item.key}
-            />
-          )}
-
-          {this.state.showEditFavorForm && !this.state.showFavorInputForm && (
-            <FlatList data={this.state.savedFavors} renderItem={({ item }) => (
-              <View>
-                <View style={containerStyles.updateRowContainer}>
-                  <View style={[containerStyles.textInputContainer, { flex: 4 }]}>
-                    <TextInput value={item.beneficiary} onChangeText={(value) => this.handleUpdateChange(item.key, { field: 'beneficiary', value: value })} autoCapitalize={'sentences'} style={formInputTextStyles.input} />
-                    <TextInput value={item.type} onChangeText={(value) => this.handleUpdateChange(item.key, { field: 'type', value: value })} autoCapitalize={'sentences'} style={formInputTextStyles.input} />
-                  </View>
-                </View>
-                <View style={containerStyles.rowContainer}>
-                  <View style={containerStyles.rowButtonsContainer}>
-                    <FormButton title='Delete' color={'#CD5151'} textColor={'#FFFFFF'} onPress={() => this.handleDeleteItem(item.key)} />
-                  </View>
-                  <View style={containerStyles.rowButtonsContainer}>
-                    <FormButton title='Update' onPress={() => this.handleUpdateFavor(item.key)} />
-                  </View>
+        {this.state.showEditFavorForm && !this.state.showFavorInputForm && (
+          <FlatList data={this.state.savedFavors} renderItem={({ item }) => (
+            <View>
+              <View style={containerStyles.updateRowContainer}>
+                <View style={[containerStyles.textInputContainer, { flex: 4 }]}>
+                  <TextInput value={item.beneficiary} onChangeText={(value) => this.handleUpdateChange(item.key, { field: 'beneficiary', value: value })} autoCapitalize={'sentences'} style={formInputTextStyles.input} />
+                  <TextInput value={item.type} onChangeText={(value) => this.handleUpdateChange(item.key, { field: 'type', value: value })} autoCapitalize={'sentences'} style={formInputTextStyles.input} />
                 </View>
               </View>
-            )}
-              keyExtractor={item => item.key}
-            />
+              <View style={containerStyles.rowContainer}>
+                <View style={containerStyles.rowButtonsContainer}>
+                  <FormButton title='Delete' color={'#CD5151'} textColor={'#FFFFFF'} onPress={() => this.handleDeleteItem(item.key)} />
+                </View>
+                <View style={containerStyles.rowButtonsContainer}>
+                  <FormButton title='Update' onPress={() => this.handleUpdateFavor(item.key)} />
+                </View>
+              </View>
+            </View>
           )}
-        </View>
+            keyExtractor={item => item.key}
+          />
+        )}
       </View>
     );
   }
