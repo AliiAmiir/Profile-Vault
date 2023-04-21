@@ -1,4 +1,4 @@
-import { collection, query, where, getDocs, addDoc, updateDoc, deleteDoc, doc } from 'firebase/firestore';
+import { collection, query, where, getDocs, addDoc, updateDoc, deleteDoc, doc, orderBy, limit } from 'firebase/firestore';
 import { db } from '../config/firebaseConfig';
 
 export const saveTrip = async (userId, tripDetails) => {
@@ -124,6 +124,24 @@ export const fetchUserTrips = async (userId) => {
         });
 
         return { success: true, message: 'Fetched Trips', data: trips };
+    } catch (error) {
+        throw error;
+    }
+}
+
+export const fetchUpcomingTripsForHome = async (userId) => {
+    try {
+        const q = query(collection(db, 'trips'), where('uid', '==', userId), limit(3));
+        const querySnapshot = await getDocs(q);
+        let trips = [];
+
+        querySnapshot.forEach((doc) => {
+            let dateFrom = doc.data().dateFrom.toDate();
+            let dateTo = doc.data().dateTo.toDate();
+            trips.push({ key: doc.id, ...doc.data(), dateFrom, dateTo });
+        });
+
+        return { success: true, data: trips };
     } catch (error) {
         throw error;
     }

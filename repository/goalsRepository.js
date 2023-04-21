@@ -1,4 +1,4 @@
-import { collection, query, where, getDocs, addDoc, updateDoc, deleteDoc, doc } from 'firebase/firestore';
+import { collection, query, where, getDocs, addDoc, updateDoc, deleteDoc, doc, orderBy, limit } from 'firebase/firestore';
 import { db } from '../config/firebaseConfig';
 
 export const fetchGoalsByUserId = async (userId) => {
@@ -89,6 +89,22 @@ const checkDuplicate = async (checkDuplicateQuery) => {
         }
 
         return { duplicate: false };
+    } catch (error) {
+        throw error;
+    }
+}
+
+export const fetchUserGoalsForHome = async (userId) => {
+    try {
+        const q = query(collection(db, 'goals'), where('uid', '==', userId), limit(3));
+        const querySnapshot = await getDocs(q);
+        let goals = [];
+
+        querySnapshot.forEach((doc) => {
+            goals.push({ key: doc.id, ...doc.data() });
+        });
+
+        return { success: true, data: goals };
     } catch (error) {
         throw error;
     }

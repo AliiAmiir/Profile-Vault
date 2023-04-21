@@ -1,7 +1,7 @@
-import { collection, query, where, getDocs, addDoc, updateDoc, deleteDoc, doc } from 'firebase/firestore';
+import { collection, query, where, getDocs, addDoc, updateDoc, deleteDoc, doc, orderBy, limit } from 'firebase/firestore';
 import { db } from '../config/firebaseConfig';
 
-export const fetchFavors= async (userId) => {
+export const fetchFavors = async (userId) => {
     try {
         const q = query(collection(db, 'favors'), where('uid', '==', userId));
         const querySnapshot = await getDocs(q);
@@ -89,4 +89,20 @@ export const checkDuplicate = async (q) => {
     }
 
     return { duplicate: false };
+}
+
+export const fetchFavorsForHome = async (userId) => {
+    try {
+        const q = query(collection(db, 'favors'), where('uid', '==', userId), limit(3));
+        const querySnapshot = await getDocs(q);
+        let favors = [];
+
+        querySnapshot.forEach((doc) => {
+            favors.push({ key: doc.id, ...doc.data() });
+        });
+
+        return { success: true, data: favors };
+    } catch (error) {
+        throw error;
+    }
 }

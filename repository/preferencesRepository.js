@@ -1,4 +1,4 @@
-import { collection, query, where, getDocs, addDoc, updateDoc, deleteDoc, doc } from 'firebase/firestore';
+import { collection, query, where, getDocs, addDoc, updateDoc, deleteDoc, doc, orderBy, limit } from 'firebase/firestore';
 import { db } from '../config/firebaseConfig';
 
 export const fetchPreferencesByUserId = async (userId) => {
@@ -85,6 +85,22 @@ const checkDuplicate = async (checkDuplicateQuery) => {
         }
 
         return { duplicate: false };
+    } catch (error) {
+        throw error;
+    }
+}
+
+export const fetchPreferencesForHome = async (userId) => {
+    try {
+        const q = query(collection(db, 'preferences'), where('uid', '==', userId), limit(3));
+        const querySnapshot = await getDocs(q);
+        let preferences = [];
+
+        querySnapshot.forEach((doc) => {
+            preferences.push({ key: doc.id, ...doc.data() });
+        });
+
+        return { success: true, data: preferences };
     } catch (error) {
         throw error;
     }

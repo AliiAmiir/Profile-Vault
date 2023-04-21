@@ -55,7 +55,7 @@ export const fetchUserHealth = async (userId) => {
             health.push({ key: doc.id, ...doc.data(), checkUpDate });
         });
 
-        return { success: true, message: 'Fetched Health', data: health };
+        return { success: true, data: health };
     } catch (error) {
         throw error;
     }
