@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
-import { View, ScrollView, Alert } from 'react-native';
-import { reauthenticateWithCredential, EmailAuthProvider } from 'firebase/auth';
+import { View, ScrollView, Text, Alert } from 'react-native';
+import { reauthenticateWithCredential, EmailAuthProvider, updatePassword } from 'firebase/auth';
 
 // Import Configs
 import { auth } from '../config/firebaseConfig';
@@ -9,7 +9,7 @@ import { auth } from '../config/firebaseConfig';
 import { fetchUserById, updateUser } from '../repository/userRepository';
 
 // Import StyleSheets
-import { containerStyles } from '../styles/globalStyle';
+import { containerStyles, textStyles } from '../styles/globalStyle';
 
 // Import Components
 import FormButton from '../components/FormButton';
@@ -59,11 +59,8 @@ export default class Settings extends Component {
   handleSignOut = async () => {
     try {
       await auth.signOut();
-
-      const { navigation } = this.props;
-      navigation.navigate('Login');
     } catch (error) {
-      console.log(error);
+      console.log(error.message);
     }
   };
 
@@ -72,9 +69,7 @@ export default class Settings extends Component {
   }
 
   componentWillUnmount() {
-    if (this.fetchUserData) {
-      this.fetchUserData();
-    }
+    
   }
 
   async fetchUserData() {
@@ -91,7 +86,7 @@ export default class Settings extends Component {
         userDocKey: userData.userDocKey,
       });
     } catch (error) {
-      console.log(error);
+      console.log(error.message);
       Alert.alert('Unexpected Error Occurred');
     }
   }
@@ -110,7 +105,7 @@ export default class Settings extends Component {
       return true;
     } catch (error) {
       console.log(error.message);
-      if (error.message.includes('wrong-password')) {
+      if (error.code === 'auth/wrong-password') {
         Alert.alert('Invalid password');
         return false;
       } else {
@@ -135,19 +130,34 @@ export default class Settings extends Component {
 
       return reAuthValidation;
     } catch (error) {
-      console.log(error);
+      console.log(error.message);
       throw error;
     }
   }
 
-  handleUpdateUser = async () => {
+  handleUpdatePassword = async () => {
     try {
       const passwordValidation = await this.handlePasswordValidation();
 
-      // if (this.state.enablePasswordChange && !this.state.newPassword) {
-      //   Alert.alert('New password can not be empty');
-      //   return;
-      // }
+      if (passwordValidation) {
+        await updatePassword(auth.currentUser, this.state.newPassword);
+
+        Alert.alert('Password Updated');
+        this.handleShowEditUserForm();
+      }
+    } catch (error) {
+      console.log(error.message);
+      if(error.code === 'auth/weak-password') {
+        Alert.alert('Weak password, less than 6 characters');
+      } else {
+      Alert.alert('Unexpected Error Occurred');
+      }
+    }
+  };
+
+  handleUpdateUser = async () => {
+    try {
+      const passwordValidation = await this.handlePasswordValidation();
 
       if (passwordValidation) {
         const userDetails = {
@@ -167,7 +177,7 @@ export default class Settings extends Component {
         }
       }
     } catch (error) {
-      console.log(error);
+      console.log(error.message);
       Alert.alert('Unexpected Error Occurred');
     }
   };
@@ -180,7 +190,7 @@ export default class Settings extends Component {
             <View style={containerStyles.textInputContainer}>
               <FormText label="First Name" value={this.state.firstName} />
               <FormText label="Last Name" value={this.state.lastName} />
-              <FormText label={'Date of Birth'} dateOfBirth={this.state.dateOfBirth.toLocaleDateString()} />
+              <FormText label={'Date of Birth'} value={this.state.dateOfBirth.toLocaleDateString()} />
               <FormText label="Email" value={this.state.email} />
               <FormText label="Phone" keyboardType={'phone-pad'} value={this.state.phone} />
             </View>
@@ -190,7 +200,7 @@ export default class Settings extends Component {
           </ScrollView>
         )}
 
-        {this.state.showEditUserForm && (<FormButton title='Cancel' color={'#F2F2F7'} textColor={'#000000'} onPress={this.handleShowEditUserForm} />)}
+        {this.state.showEditUserForm && (<FormButton title='Cancel User Update' color={'#F2F2F7'} textColor={'#000000'} onPress={this.handleShowEditUserForm} />)}
 
         {!this.state.showEditUserForm && (<FormButton title='Edit User Details' color={'#F2F2F7'} textColor={'#000000'} onPress={this.handleShowEditUserForm} />)}
 
@@ -205,16 +215,20 @@ export default class Settings extends Component {
               <FormInputText label="Current Password" value={this.state.currentPassword} onChangeText={(value) => this.handleChange('currentPassword', value)} secureTextEntry />
               <FormInputText label="Confirm Password" value={this.state.confirmPassword} onChangeText={(value) => this.handleChange('confirmPassword', value)} secureTextEntry />
 
-              {this.state.enablePasswordChange && (<FormButton title='Cancel' color={'#F2F2F7'} textColor={'#000000'} onPress={this.handleEnablePasswordChange} />)}
+              {this.state.enablePasswordChange && (<FormButton title='Cancel Password Update' color={'#F2F2F7'} textColor={'#000000'} onPress={this.handleEnablePasswordChange} />)}
               {!this.state.enablePasswordChange && (<FormButton title='Edit Password' color={'#F2F2F7'} textColor={'#000000'} onPress={this.handleEnablePasswordChange} />)}
 
               {this.state.enablePasswordChange && (
-                <FormInputText label="New Password" value={this.state.newPassword} onChangeText={(value) => this.handleChange('newPassword', value)} secureTextEntry />
+                <View>
+                  <FormInputText label="New Password" value={this.state.newPassword} onChangeText={(value) => this.handleChange('newPassword', value)} secureTextEntry />
+                  <FormButton title='Update Password' onPress={this.handleUpdatePassword} />
+                  <Text style={textStyles.subText}>This button will only update the password</Text>
+                </View>
               )}
             </View>
             <View style={containerStyles.buttonContainer}>
               <FormButton title='Save Changes' onPress={this.handleUpdateUser} />
-              <FormButton title='Logout' color={'#CD5151'} textColor={'#FFFFFF'} onPress={this.handleSignOut} />
+              <Text style={textStyles.subText}>This button will only update the user details</Text>
             </View>
           </ScrollView>
         )}

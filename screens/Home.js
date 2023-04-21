@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Text, ScrollView } from 'react-native';
+import { View, Text, ScrollView, Alert } from 'react-native';
 
 // Import Utils
 import { computeAge } from '../utils/computeUtil';
@@ -37,24 +37,27 @@ export default class Home extends Component {
   }
 
   componentWillUnmount() {
-    if (this.fetchUserData) {
-      this.fetchUserData();
-    }
+    
   }
 
   async fetchUserData() {
-    const userData = await fetchUserById(auth.currentUser.uid);
-    const age = computeAge(userData.dateOfBirth)
-
-    this.setState({
-      loading: false,
-      firstName: userData.firstName,
-      lastName: userData.lastName,
-      email: userData.email,
-      dateOfBirth: userData.dateOfBirth,
-      phone: userData.phone,
-      age: age,
-    });
+    try {
+      const userData = await fetchUserById(auth.currentUser.uid);
+      const age = computeAge(userData.dateOfBirth)
+  
+      this.setState({
+        loading: false,
+        firstName: userData.firstName,
+        lastName: userData.lastName,
+        email: userData.email,
+        dateOfBirth: userData.dateOfBirth,
+        phone: userData.phone,
+        age: age,
+      });
+    } catch (error) {
+      console.log(error.message);
+      Alert.alert('Error occurred while fetching user data');
+    }
   }
 
   render() {
