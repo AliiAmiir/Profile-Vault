@@ -26,7 +26,6 @@ export default class Health extends Component {
       newHealthMedicines: [{ name: '', dosage: '', frequency: '' }],
       errors: {},
       savedHealthDetails: [],
-      displayUpdateButton: true,
       showHealthInputForm: false,
       showEditHealthForm: false,
     }

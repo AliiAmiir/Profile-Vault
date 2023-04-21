@@ -1,29 +1,29 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { View, Text, TextInput, TouchableOpacity } from 'react-native';
-import Icon from 'react-native-vector-icons/FontAwesome';
+import { View, Text, TextInput } from 'react-native';
 
 // Import Styles
-import { containerStyles, formInputTextStyles, formButtonStyles, textStyles } from '../styles/globalStyle';
+import { containerStyles, formInputTextStyles, textStyles } from '../styles/globalStyle';
 
-export default function FormUpdateInputText({ label, displayUpdateButton, placeholder, value, onChangeText, onBlurUpdate, autoCapitalize, keyboardType, secureTextEntry, errorText, onButtonUpdate, onPressDelete }) {
+// Import Components
+import FormButton from './FormButton';
+
+export default function FormUpdateInputText({ label, placeholder, value, onChangeText, onUpdatePress, autoCapitalize, keyboardType, secureTextEntry, errorText, onPressDelete }) {
     return (
-        <View style={containerStyles.updateRowContainer}>
-            {displayUpdateButton && (
-            <View style={formButtonStyles.rowUpdateButton}>
-                <TouchableOpacity onPress={onButtonUpdate}>
-                    <Icon name="plus" size={15} color="lightblue" />
-                </TouchableOpacity>
-            </View>)}
+        <View>
             <View style={[containerStyles.textInputContainer, { flex: 4 }]}>
                 <Text style={formInputTextStyles.label}>{label}</Text>
-                <TextInput placeholder={placeholder} value={value} onChangeText={onChangeText} onBlur={onBlurUpdate} autoCapitalize={autoCapitalize} keyboardType={keyboardType} secureTextEntry={secureTextEntry} style={formInputTextStyles.input} />
+                <TextInput placeholder={placeholder} value={value} onChangeText={onChangeText} autoCapitalize={autoCapitalize} keyboardType={keyboardType} secureTextEntry={secureTextEntry} style={formInputTextStyles.input} />
                 {errorText !== null && (<Text style={textStyles.errorText}>{errorText}</Text>)}
             </View>
-            <View style={formButtonStyles.rowDeleteButton}>
-                <TouchableOpacity onPress={onPressDelete}>
-                    <Icon name="trash" size={15} color="red" />
-                </TouchableOpacity>
+
+            <View style={containerStyles.rowContainer}>
+                <View style={containerStyles.rowButtonsContainer}>
+                    <FormButton title='Delete' color={'#CD5151'} textColor={'#FFFFFF'} onPress={onPressDelete} />
+                </View>
+                <View style={containerStyles.rowButtonsContainer}>
+                    <FormButton title='Update' onPress={onUpdatePress} />
+                </View>
             </View>
         </View>
     );
@@ -31,13 +31,12 @@ export default function FormUpdateInputText({ label, displayUpdateButton, placeh
 
 FormUpdateInputText.propTypes = {
     value: PropTypes.any,
-    displayUpdateButton: PropTypes.bool,
     autoCapitalize: PropTypes.string,
     keyboardType: PropTypes.string,
     secureTextEntry: PropTypes.bool,
     errorText: PropTypes.string,
     onChangeText: PropTypes.func,
-    onBlurUpdate: PropTypes.func,
+    onUpdatePress: PropTypes.func,
     onPressDelete: PropTypes.func,
     onButtonUpdate: PropTypes.func
 };
@@ -47,5 +46,4 @@ FormUpdateInputText.defaultProps = {
     keyboardType: 'default',
     secureTextEntry: false,
     errorText: null,
-    displayUpdateButton: false,
 };

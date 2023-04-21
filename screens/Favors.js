@@ -25,7 +25,6 @@ export default class PersonalFavors extends Component {
       newFavorRecipients: '',
       errors: {},
       savedFavors: [],
-      displayUpdateButton: true,
       showFavorInputForm: false,
       showEditFavorForm: false,
     }

@@ -28,7 +28,6 @@ export default class Education extends Component {
       showDateToPicker: false,
       errors: {},
       savedEducation: [],
-      displayUpdateButton: true,
       showEducationInputForm: false,
       showEditEducationForm: false,
     }

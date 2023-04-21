@@ -25,11 +25,15 @@ export default class Passwords extends Component {
       newPassword: '',
       errors: {},
       savedPasswords: [],
-      displayUpdateButton: true,
       showPasswordInputForm: false,
       showEditPasswordForm: false,
+      showPassword: false,
     }
   }
+
+  handleShowPassword = () => {
+    this.setState({ showPassword: !this.state.showPassword });
+  };
 
   handleShowPasswordInputForm = () => {
     this.setState({ showPasswordInputForm: !this.state.showPasswordInputForm });
@@ -134,9 +138,9 @@ export default class Passwords extends Component {
 
   render() {
     return (
-      <View style={[containerStyles.defaultContainer, {justifyContent: 'flex-start'}]}>
+      <View style={[containerStyles.defaultContainer, { justifyContent: 'flex-start' }]}>
         <View style={containerStyles.formContainer}>
-          {!this.state.showPasswordInputForm && (
+          {!this.state.showPasswordInputForm && !this.state.showEditPasswordForm && (
             <FormButton title='Add a Password' color={'#F2F2F7'} textColor={'#000000'} onPress={this.handleShowPasswordInputForm} />
           )}
 
@@ -144,15 +148,39 @@ export default class Passwords extends Component {
             <PasswordForm handleChange={this.handleChange} onFormClose={this.handleShowPasswordInputForm} onFormSubmit={this.handleSavePassword} website={this.state.newWebsite} email={this.state.newEmail} password={this.state.newPassword} />
           )}
 
-          {this.state.showEditPasswordForm && (<FormButton title='Done' onPress={this.handleShowEditPasswordForm} />)}
+          {this.state.showEditPasswordForm && !this.state.showPasswordInputForm && (<FormButton title='Cancel' color={'#F2F2F7'} textColor={'#000000'} onPress={this.handleShowEditPasswordForm} />)}
 
-          {!this.state.showEditPasswordForm && (<FormButton title='Edit Passwords' color={'#F2F2F7'} textColor={'#000000'} onPress={this.handleShowEditPasswordForm} />)}
-      
+          {!this.state.showEditPasswordForm && !this.state.showPasswordInputForm && (<FormButton title='Edit Passwords' color={'#F2F2F7'} textColor={'#000000'} onPress={this.handleShowEditPasswordForm} />)}
+
           {!this.state.showEditPasswordForm && (
-            <FlatList data={this.state.savedPasswords} renderItem={({ item }) => (<PasswordDisplayForm website={item.website} email={item.email} password={item.password} />)} keyExtractor={item => item.key} />)}
+            <FlatList data={this.state.savedPasswords} renderItem={({ item }) => (
+              <PasswordDisplayForm
+                website={item.website}
+                email={item.email}
+                password={item.password}
+                showPassword={this.state.showPassword}
+                onPressShowPassword={this.handleShowPassword}
+              />
+            )}
+              keyExtractor={item => item.key}
+            />
+          )}
 
           {this.state.showEditPasswordForm && (
-            <FlatList data={this.state.savedPasswords} renderItem={({ item }) => (<PasswordUpdateForm website={item.website} email={item.email} password={item.password} itemKey={item.key} handleChange={this.handleUpdateChange} onFormSubmit={this.handleUpdatePassword} onPressDelete={this.handleDeletePassword} />)} keyExtractor={item => item.key} />)}
+            <FlatList data={this.state.savedPasswords} renderItem={({ item }) => (
+              <PasswordUpdateForm
+                website={item.website}
+                email={item.email}
+                password={item.password}
+                itemKey={item.key}
+                handleChange={this.handleUpdateChange}
+                onFormSubmit={this.handleUpdatePassword}
+                onPressDelete={this.handleDeletePassword}
+              />
+            )}
+              keyExtractor={item => item.key}
+            />
+          )}
         </View>
       </View>
     );

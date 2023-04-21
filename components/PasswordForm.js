@@ -1,12 +1,13 @@
 import PropTypes from 'prop-types';
 import React from 'react';
-import { View } from 'react-native';
+import { View, Text } from 'react-native';
+import { Button } from 'react-native-elements';
+import Icon from 'react-native-vector-icons/FontAwesome';
 
 // Import StyleSheets
-import { containerStyles } from '../styles/globalStyle';
+import { containerStyles, textStyles, formButtonStyles } from '../styles/globalStyle';
 
 // Import Components
-import FormText from './FormText';
 import FormButton from './FormButton';
 import FormInputText from './FormInputText';
 
@@ -15,8 +16,8 @@ export const PasswordForm = function ({ website, email, password, errors, handle
         <View style={containerStyles.textInputContainer}>
             <View>
                 <FormInputText label="Website" value={website} onChangeText={(value) => handleChange('newWebsite', value)} />
-                <FormInputText label='Email' value={email} onChangeText={(value) => handleChange('newEmail', value)} />
-                <FormInputText label='Password' value={password} onChangeText={(value) => handleChange('newPassword', value)} />
+                <FormInputText label='Email/Username' value={email} onChangeText={(value) => handleChange('newEmail', value)} />
+                <FormInputText secureTextEntry={true} label='Password' value={password} onChangeText={(value) => handleChange('newPassword', value)} />
             </View>
 
             <View style={containerStyles.buttonContainer}>
@@ -44,12 +45,22 @@ PasswordForm.defaultProps = {
     errors: null,
 };
 
-export const PasswordDisplayForm = function ({ website, email, password }) {
+export const PasswordDisplayForm = function ({ website, email, password, showPassword, onPressShowPassword }) {
     return (
         <View style={containerStyles.textInputContainer}>
-            <FormText label="Website" value={website} />
-            <FormText label='Email' value={email} />
-            <FormText label='Password' value={password} />
+            <View style={containerStyles.rowContainerSpaceBetween}>
+                <View style={[containerStyles.rowPasswordButtonContainer]}>
+                    <Text style={textStyles.textSubHeading}>{website}</Text>
+                    <Text style={textStyles.boldText}>Email/Username: <Text style={textStyles.subText}>{email}</Text></Text>
+                    {!showPassword && (<Text style={textStyles.boldText}>Password: <Text style={textStyles.subText}>******</Text></Text>)}
+                    {showPassword && (<Text style={textStyles.boldText}>Password: <Text style={textStyles.subText}>{password}</Text></Text>)}
+                </View>
+
+                <View style={containerStyles.rowPasswordButtonContainer}>
+                    {!showPassword && (<Button onPress={onPressShowPassword} type='clear' icon={<Icon name="eye" size={15} color="black" />} />)}
+                    {showPassword && (<Button onPress={onPressShowPassword} type='clear' icon={<Icon name="eye-slash" size={15} color="black" />} />)}
+                </View>
+            </View>
         </View>
     );
 }
@@ -58,12 +69,15 @@ PasswordDisplayForm.propTypes = {
     website: PropTypes.string,
     email: PropTypes.string,
     password: PropTypes.string,
+    showPassword: PropTypes.bool,
+    onPressShowPassword: PropTypes.func,
 };
 
 PasswordDisplayForm.defaultProps = {
     website: '',
     email: '',
     password: '',
+    showPassword: false,
 };
 
 export const PasswordUpdateForm = function ({ itemKey, website, email, password, errors, handleChange, onFormSubmit, onPressDelete }) {
@@ -71,12 +85,16 @@ export const PasswordUpdateForm = function ({ itemKey, website, email, password,
         <View>
             <View style={containerStyles.textInputContainer}>
                 <FormInputText label="Website" value={website} onChangeText={(value) => handleChange(itemKey, { field: 'website', value: value })} />
-                <FormInputText label='Email' value={email} onChangeText={(value) => handleChange(itemKey, { field: 'email', value: value })} />
-                <FormInputText label='Password' value={password} onChangeText={(value) => handleChange(itemKey, { field: 'password', value: value })} />
+                <FormInputText label='Email/Username' value={email} onChangeText={(value) => handleChange(itemKey, { field: 'email', value: value })} />
+                <FormInputText secureTextEntry={true} label='Password' value={password} onChangeText={(value) => handleChange(itemKey, { field: 'password', value: value })} />
             </View>
-            <View style={containerStyles.buttonContainer}>
-                <FormButton title='Delete' color={'#CD5151'} textColor={'#FFFFFF'} onPress={() => onPressDelete(itemKey)} />
-                <FormButton title='Save Password' onPress={() => onFormSubmit(itemKey)} />
+            <View style={containerStyles.rowContainer}>
+                <View style={containerStyles.rowButtonsContainer}>
+                    <FormButton title='Delete' color={'#CD5151'} textColor={'#FFFFFF'} onPress={() => onPressDelete(itemKey)} />
+                </View>
+                <View style={containerStyles.rowButtonsContainer}>
+                    <FormButton title='Update' onPress={() => onFormSubmit(itemKey)} />
+                </View>
             </View>
         </View>
     );

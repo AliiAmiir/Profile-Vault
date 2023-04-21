@@ -28,7 +28,6 @@ export default class Job extends Component {
       showDateToPicker: false,
       errors: {},
       savedJobs: [],
-      displayUpdateButton: true,
       showJobInputForm: false,
       showEditJobForm: false,
     }

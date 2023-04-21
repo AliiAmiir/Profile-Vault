@@ -28,7 +28,6 @@ export default class Significants extends Component {
       showDatePickerAnniversary: false,
       errors: {},
       savedSignificants: [],
-      displayUpdateButton: true,
       showSignificantsInputForm: false,
       showEditSignificantsForm: false,
     }

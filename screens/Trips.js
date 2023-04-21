@@ -37,7 +37,6 @@ export default class Trips extends Component {
       newTripCarRentalCost: '',
       errors: {},
       savedTrips: [],
-      displayUpdateButton: true,
       showTripsInputForm: false,
       showEditTripsForm: false,
     }

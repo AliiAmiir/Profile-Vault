@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
-import { View, FlatList, Alert } from 'react-native';
+import { View, FlatList, Text, TouchableOpacity, Alert } from 'react-native';
+import Icon from 'react-native-vector-icons/FontAwesome';
 
 // Import Configs
 import { auth } from '../config/firebaseConfig';
@@ -8,7 +9,7 @@ import { auth } from '../config/firebaseConfig';
 import { fetchGoalsByUserId, saveGoal, updateGoalById, deleteGoalById } from '../repository/goalsRepository';
 
 // Import StyleSheets
-import { containerStyles } from '../styles/globalStyle';
+import { containerStyles, formButtonStyles } from '../styles/globalStyle';
 
 // Import Components
 import FormButton from '../components/FormButton';
@@ -25,7 +26,6 @@ export default class PersonalGoals extends Component {
       newGoalName: '',
       errors: {},
       savedGoals: [],
-      displayUpdateButton: true,
       showGoalInputForm: false,
       showEditGoalsForm: false,
     }
@@ -165,14 +165,14 @@ export default class PersonalGoals extends Component {
             <FormButton title='Add a Goal' onPress={this.handleSaveGoal} />
           </View>)}
 
-        {!this.state.showGoalInputForm && (
+        {!this.state.showGoalInputForm && !this.state.showEditGoalsForm && (
           <View style={containerStyles.textInputContainer}>
             <FormButton title='Add a Goal' color={'#F2F2F7'} textColor={'#000000'} onPress={this.handleShowGoalInputForm} />
           </View>)}
 
         {this.state.showEditGoalsForm && (
           <View style={containerStyles.textInputContainer}>
-            <FormButton title='Done' onPress={this.handleShowEditGoalForm} />
+            <FormButton title='Cancel' color={'#F2F2F7'} textColor={'#000000'} onPress={this.handleShowEditGoalForm} />
           </View>)}
 
         {!this.state.showEditGoalsForm && (
@@ -183,7 +183,7 @@ export default class PersonalGoals extends Component {
         {this.state.showEditGoalsForm && (
           <View style={[containerStyles.textInputContainer, { flex: 1 }]}>
             <FlatList data={this.state.savedGoals} renderItem={({ item }) => (
-              <FormUpdateInputText value={item.name} autoCapitalize="sentences" onButtonUpdate={() => this.handleUpdateItem(item, true)} onChangeText={(value) => this.handleUpdateChange(item.key, value)} onBlurUpdate={() => this.handleUpdateItem(item, false)} onPressDelete={() => this.handleDeleteItem(item)} displayUpdateButton={this.state.displayUpdateButton} />
+              <FormUpdateInputText value={item.name} autoCapitalize="sentences" onChangeText={(value) => this.handleUpdateChange(item.key, value)} onUpdatePress={() => this.handleUpdateItem(item, false)} onPressDelete={() => this.handleDeleteItem(item)} />
             )} style={containerStyles.buttonContainer}>
             </FlatList>
           </View>)}
@@ -191,7 +191,20 @@ export default class PersonalGoals extends Component {
         {!this.state.showEditGoalsForm && (
           <View style={[containerStyles.textInputContainer, { flex: 1 }]}>
             <FlatList data={this.state.savedGoals} renderItem={({ item }) => (
-              <FormText value={item.name} />
+
+              <View style={containerStyles.rowContainerSpaceBetween}>
+                <View style={containerStyles.rowCounterButtonContainer}>
+                <FormText value={`${item.name}, ${item.counter} day(s) streak`} />
+                </View>
+
+                <View style={containerStyles.rowCounterButtonContainer}>
+                  <TouchableOpacity style={[formButtonStyles.formButton, formButtonStyles.counterButton]} onPress={() => this.handleUpdateItem(item, true)}>
+                    <Text style={[formButtonStyles.formButtonText]}>
+                      <Icon name="plus" size={15} color="white" />
+                    </Text>
+                  </TouchableOpacity>
+                </View>
+              </View>
             )} style={containerStyles.buttonContainer}>
             </FlatList>
           </View>)}

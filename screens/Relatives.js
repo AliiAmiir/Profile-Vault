@@ -26,7 +26,6 @@ export default class Relatives extends Component {
       showDatePicker: false,
       errors: {},
       savedRelatives: [],
-      displayUpdateButton: true,
       showRelativesInputForm: false,
       showEditRelativesForm: false,
     }

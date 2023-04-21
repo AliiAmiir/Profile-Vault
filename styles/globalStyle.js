@@ -14,8 +14,22 @@ export const containerStyles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-around',
   },
+  rowContainerSpaceBetween: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
   rowButtonsContainer: {
     minWidth: 150,
+  },
+  rowCounterButtonContainer: {
+    minWidth: 40,
+    alignContent: 'center',
+    justifyContent: 'center',
+  },
+  rowPasswordButtonContainer: {
+    minWidth: 20,
+    alignContent: 'center',
+    justifyContent: 'center',
   },
   columnContainer: {
     flexDirection: 'column',
@@ -122,6 +136,13 @@ export const formButtonStyles = StyleSheet.create({
     paddingVertical: 5,
     paddingHorizontal: 5,
     justifyContent: 'center',
+  },
+  counterButton: {
+    flex: 0.5,
+    paddingVertical: 5,
+    paddingHorizontal: 5,
+    justifyContent: 'center',
+    alignContent: 'center',
   },
 });
 
