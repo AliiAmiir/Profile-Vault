@@ -37,7 +37,7 @@ export default function RegisterationForm({ firstName, lastName, email, phone, g
 
         <View style={containerStyles.spaceAround}>
           <FormInputText label="Hobbies" placeholder="E.g. Football, Tennis" value={hobbies} onChangeText={(value) => handleChange('hobbies', value)} autoCapitalize="sentences" errorText={errors.hobbies || null} />
-          <FormInputText label="Favors" placeholder="E.g. Gardening, Dog Walking" value={favors} onChangeText={(value) => handleChange('favors', value)} autoCapitalize="sentences" errorText={errors.favors || null} />
+          <FormInputText label="Favors Categories (comma separated)" placeholder="E.g. Gardening, Dog Walking" value={favors} onChangeText={(value) => handleChange('favors', value)} autoCapitalize="sentences" errorText={errors.favors || null} />
           <FormInputText label="Movie Genres" placeholder="E.g. Thriller, Mystery" value={movieGenres} onChangeText={(value) => handleChange('movieGenres', value)} autoCapitalize="sentences" errorText={errors.movieGenres || null} />
           <FormInputText label="Degrees" placeholder="E.g. Bachelors, Masters" value={degrees} onChangeText={(value) => handleChange('degrees', value)} autoCapitalize="sentences" errorText={errors.degrees || null} />
         </View>

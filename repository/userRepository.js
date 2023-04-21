@@ -20,25 +20,31 @@ export const fetchUserById = async (userId) => {
     }
 };
 
-export const saveUserDetails = async (userId, firstName, lastName, email, phone, gender, dateOfBirth, hobbies, movieGenres, favors, degrees) => {
+export const saveUser = async (uid, userDetails) => {
     try {
-        const savedUser = await addDoc(collection(db, 'users'), {
-            uid: userId,
-            firstName: firstName,
-            lastName: lastName,
-            email: email,
-            phone: phone,
-            gender: gender,
-            dateOfBirth: dateOfBirth,
-            hobbies: hobbies,
-            movieGenres: movieGenres,
-            favors: favors,
-            degrees: degrees,
+        if (!uid) {
+            throw new Error('User Id is missing');
+        }
+
+        if (!userDetails.firstName || !userDetails.firstName.trim() || !userDetails.lastName || !userDetails.lastName.trim() || !userDetails.email || !userDetails.email.trim() || !userDetails.phone || !userDetails.phone.trim() || !userDetails.gender || !userDetails.gender.trim() || !userDetails.dateOfBirth) {
+            throw new Error('Required User Details are missing');
+        }
+
+        await addDoc(collection(db, 'users'), {
+            uid: uid,
+            firstName: userDetails.firstName,
+            lastName: userDetails.lastName,
+            email: userDetails.email,
+            phone: userDetails.phone,
+            gender: userDetails.gender,
+            dateOfBirth: userDetails.dateOfBirth,
+            hobbies: userDetails.hobbies,
+            movieGenres: userDetails.movieGenres,
             createdOn: new Date(),
             updatedOn: new Date(),
         });
 
-        return savedUser;
+        return { success: true };
     } catch (error) {
         return error;
     }
@@ -54,7 +60,7 @@ export const updateUser = async (key, userDetails) => {
             updatedOn: new Date(),
         });
 
-        return { success: true, message: 'Updated User' };
+        return { success: true };
     } catch (error) {
         throw error;
     }

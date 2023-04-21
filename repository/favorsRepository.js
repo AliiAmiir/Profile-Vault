@@ -1,5 +1,6 @@
 import { collection, query, where, getDocs, addDoc, updateDoc, deleteDoc, doc, orderBy, limit, writeBatch } from 'firebase/firestore';
 import { db } from '../config/firebaseConfig';
+import { computeCapitalizedFirstLetter } from '../utils/computeUtil';
 
 export const fetchFavors = async (userId) => {
     try {
@@ -37,7 +38,7 @@ export const saveFavorCategoriesBatch = async (uid, favors) => {
             } else {
                 return favor.trim();
             }
-        }).map((favor) => favor.trim());
+        }).map((favor) => computeCapitalizedFirstLetter(favor));
 
         const uniqueFavors = [...new Set(filteredFavors)];
 

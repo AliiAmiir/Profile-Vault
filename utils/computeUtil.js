@@ -24,3 +24,13 @@ export const computeAge = (dateOfBirth) => {
     return age;
 };
 
+export const computeCapitalizedFirstLetter = (input) => {
+    let capitalizedString = 'N/A';
+    if (!input || !input.trim()) {
+        console.log('Invalid input string');
+        return capitalizedString;
+    }
+
+    capitalizedString = input.trim().charAt(0).toUpperCase() + input.trim().slice(1);
+    return capitalizedString;
+}

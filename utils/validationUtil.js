@@ -22,7 +22,7 @@ export const validateRegistrationFields = (fieldName, fieldValue, password, exis
             errors.email = emailRegex.test(fieldValue) ? null : 'Invalid email';
             break;
         case 'phone':
-            const phoneRegex = /^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4}$/ ;
+            const phoneRegex = /^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4}$/;
             errors.phone = phoneRegex.test(fieldValue) ? null : 'Invalid phone number';
             break;
         case 'gender':
@@ -33,6 +33,14 @@ export const validateRegistrationFields = (fieldName, fieldValue, password, exis
             break;
         case 'confirmPassword':
             errors.confirmPassword = fieldValue == password ? null : 'Passwords mismatch';
+            break;
+        case 'favors':
+            const favorsRegex = /^[a-zA-Z, ]+$/;
+            if (fieldValue.length > 0) {
+                errors.favors = favorsRegex.test(fieldValue) ? null : 'Invalid favors, only letters, spaces and commas allowed';
+            } else {
+                errors.favors = null;
+            }
             break;
         default:
             break;

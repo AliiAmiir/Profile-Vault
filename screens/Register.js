@@ -17,7 +17,8 @@ import Logo from '../components/Logo';
 import RegisterationForm from '../components/RegistrationForm';
 
 // Import Repositories
-import { saveUserDetails } from '../repository/userRepository';
+import { saveUser } from '../repository/userRepository';
+import { saveFavorCategoriesBatch } from '../repository/favorsRepository';
 
 export default class Register extends Component {
   constructor(props) {
@@ -65,15 +66,28 @@ export default class Register extends Component {
 
   onRegister = async () => {
     try {
-      const email = this.state.email;
-      const password = this.state.password;
-      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+      const userDetails = {
+        firstName: this.state.firstName,
+        lastName: this.state.lastName,
+        email: this.state.email,
+        phone: this.state.phone,
+        gender: this.state.gender,
+        dateOfBirth: this.state.dateOfBirth,
+        hobbies: this.state.hobbies,
+        movieGenres: this.state.movieGenres,
+        password: this.state.password,
+      };
 
+      const userCredential = await createUserWithEmailAndPassword(auth, userDetails.email, userDetails.password);
       const user = userCredential.user;
 
-      await saveUserDetails(user.uid, this.state.firstName, this.state.lastName, this.state.email, this.state.phone, this.state.gender, this.state.dateOfBirth, this.state.hobbies, this.state.movieGenres, this.state.favors, this.state.degrees);
-
+      await saveUser(user.uid, userDetails);
       Alert.alert('User Registered Successfully');
+
+      const favorCategories = this.state.favors.split(',');
+      if (favorCategories && favorCategories.length > 0) {
+        await saveFavorCategoriesBatch(user.uid, favorCategories);
+      }
     } catch (error) {
       console.log(error.message);
       Alert.alert('Unexpected Error Occurred');
