@@ -14,6 +14,9 @@ export const containerStyles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-around',
   },
+  rowButtonsContainer: {
+    minWidth: 150,
+  },
   columnContainer: {
     flexDirection: 'column',
     justifyContent: 'space-around',

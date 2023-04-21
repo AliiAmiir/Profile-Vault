@@ -150,7 +150,7 @@ export default class PersonalFavors extends Component {
     return (
       <View style={[containerStyles.defaultContainer, { justifyContent: 'flex-start' }]}>
         <View style={containerStyles.formContainer}>
-          {!this.state.showFavorInputForm && (
+          {!this.state.showFavorInputForm && !this.state.showEditFavorForm && (
             <FormButton title='Add a Favor' color={'#F2F2F7'} textColor={'#000000'} onPress={this.handleShowFavorInputForm} />
           )}
 
@@ -163,7 +163,7 @@ export default class PersonalFavors extends Component {
             </View>
           )}
 
-          {this.state.showEditFavorForm && !this.state.showFavorInputForm && (<FormButton title='Done' color={'#F2F2F7'} textColor={'#000000'} onPress={this.handleShowEditFavorForm} />)}
+          {this.state.showEditFavorForm && !this.state.showFavorInputForm && (<FormButton title='Cancel' color={'#F2F2F7'} textColor={'#000000'} onPress={this.handleShowEditFavorForm} />)}
 
           {!this.state.showEditFavorForm && !this.state.showFavorInputForm && (<FormButton title='Edit Favor' color={'#F2F2F7'} textColor={'#000000'} onPress={this.handleShowEditFavorForm} />)}
 
@@ -182,18 +182,17 @@ export default class PersonalFavors extends Component {
               <View>
                 <View style={containerStyles.updateRowContainer}>
                   <View style={[containerStyles.textInputContainer, { flex: 4 }]}>
-                    <TextInput value={item.beneficiary} onChangeText={(value) => this.handleUpdateChange(item.key, { field: 'beneficiary', value: value })} autoCapitalize={true} style={formInputTextStyles.input} />
-                    <TextInput value={item.type} onChangeText={(value) => this.handleUpdateChange(item.key, { field: 'type', value: value })} autoCapitalize={true} style={formInputTextStyles.input} />
-                  </View>
-
-                  <View style={formButtonStyles.rowDeleteButton}>
-                    <TouchableOpacity onPress={() => this.handleDeleteItem(item.key)}>
-                      <Icon name="trash" size={25} color="red" />
-                    </TouchableOpacity>
+                    <TextInput value={item.beneficiary} onChangeText={(value) => this.handleUpdateChange(item.key, { field: 'beneficiary', value: value })} autoCapitalize={'sentences'} style={formInputTextStyles.input} />
+                    <TextInput value={item.type} onChangeText={(value) => this.handleUpdateChange(item.key, { field: 'type', value: value })} autoCapitalize={'sentences'} style={formInputTextStyles.input} />
                   </View>
                 </View>
-                <View style={containerStyles.buttonContainer}>
-                  <FormButton title='Update Favor' onPress={() => this.handleUpdateFavor(item.key)} />
+                <View style={containerStyles.rowContainer}>
+                  <View style={containerStyles.rowButtonsContainer}>
+                    <FormButton title='Delete' color={'#CD5151'} textColor={'#FFFFFF'} onPress={() => this.handleDeleteItem(item.key)} />
+                  </View>
+                  <View style={containerStyles.rowButtonsContainer}>
+                    <FormButton title='Update' onPress={() => this.handleUpdateFavor(item.key)} />
+                  </View>
                 </View>
               </View>
             )}
