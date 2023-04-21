@@ -162,7 +162,7 @@ export default class Relatives extends Component {
     return (
       <View style={[containerStyles.defaultContainer, {justifyContent: 'flex-start'}]}>
         <View style={containerStyles.formContainer}>
-          {!this.state.showRelativesInputForm && (
+          {!this.state.showRelativesInputForm && !this.state.showEditRelativesForm && (
             <FormButton title='Add a Relative' color={'#F2F2F7'} textColor={'#000000'} onPress={this.handleShowRelativesInputForm} />
           )}
 
@@ -170,9 +170,9 @@ export default class Relatives extends Component {
             <RelativesForm handleChange={this.handleChange} onFormClose={this.handleShowRelativesInputForm} onFormSubmit={this.handleSaveRelative} name={this.state.newRelativeName} relation={this.state.newRelativeRelation} dateOfBirth={this.state.newRelativeDateOfBirth} showDatePicker={this.state.showDatePicker} handleShowDatePicker={this.handleShowDatePicker} handleDateChange={this.handleDateChange} />
           )}
 
-          {this.state.showEditRelativesForm && (<FormButton title='Done' onPress={this.handleShowEditRelativesForm} />)}
+          {this.state.showEditRelativesForm && !this.state.showRelativesInputForm && (<FormButton title='Cancel' color={'#F2F2F7'} textColor={'#000000'} onPress={this.handleShowEditRelativesForm} />)}
 
-          {!this.state.showEditRelativesForm && (<FormButton title='Edit Relatives' color={'#F2F2F7'} textColor={'#000000'} onPress={this.handleShowEditRelativesForm} />)}
+          {!this.state.showEditRelativesForm && !this.state.showRelativesInputForm && (<FormButton title='Edit Relatives' color={'#F2F2F7'} textColor={'#000000'} onPress={this.handleShowEditRelativesForm} />)}
       
           {!this.state.showEditRelativesForm && (
             <FlatList data={this.state.savedRelatives} renderItem={({ item }) => (<RelativesDisplayForm name={item.name} relation={item.relation} dateOfBirth={item.dateOfBirth} />)} keyExtractor={item => item.key} />)}

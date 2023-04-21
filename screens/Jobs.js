@@ -213,7 +213,7 @@ export default class Job extends Component {
     return (
       <View style={[containerStyles.defaultContainer, { justifyContent: 'flex-start' }]}>
         <View style={containerStyles.formContainer}>
-          {!this.state.showJobInputForm && (
+          {!this.state.showJobInputForm && !this.state.showEditJobForm && (
             <FormButton title='Add a Job' color={'#F2F2F7'} textColor={'#000000'} onPress={this.handleShowJobInputForm} />
           )}
 
@@ -235,7 +235,7 @@ export default class Job extends Component {
             />
           )}
 
-          {this.state.showEditJobForm && !this.state.showJobInputForm && (<FormButton title='Done' onPress={this.handleShowEditJobForm} />)}
+          {this.state.showEditJobForm && !this.state.showJobInputForm && (<FormButton title='Cancel' color={'#F2F2F7'} textColor={'#000000'} onPress={this.handleShowEditJobForm} />)}
 
           {!this.state.showEditJobForm && !this.state.showJobInputForm && (<FormButton title='Edit Job' color={'#F2F2F7'} textColor={'#000000'} onPress={this.handleShowEditJobForm} />)}
 

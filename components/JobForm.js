@@ -17,8 +17,8 @@ export const JobForm = function ({ company, title, dateFrom, dateTo, errors, han
     return (
         <ScrollView style={containerStyles.textInputContainer}>
             <View>
-                <FormInputText label="Company" value={company} onChangeText={(value) => handleChange('newCompany', value)} />
-                <FormInputText label="Title" value={title} onChangeText={(value) => handleChange('newTitle', value)} />
+                <FormInputText autoCapitalize={'sentences'} label="Company" value={company} onChangeText={(value) => handleChange('newCompany', value)} />
+                <FormInputText autoCapitalize={'sentences'} label="Title" value={title} onChangeText={(value) => handleChange('newTitle', value)} />
                 <CustomDatePicker label={'Start date'} dateOfBirth={dateFrom} showDatePicker={showDatePicker} handleDateChange={handleDateChange} handleShowDatePicker={handleShowDatePicker} maximumDate={maximumDate} />
                 <CustomDatePicker label={'End date'} dateOfBirth={dateTo} showDatePicker={showDateToPicker} handleDateChange={handleDateToChange} handleShowDatePicker={handleShowDateToPicker} maximumDate={maximumDate} />
             </View>
@@ -87,14 +87,18 @@ export const JobUpdateForm = function ({ itemKey, company, title, dateFrom, date
     return (
         <View>
             <View style={containerStyles.textInputContainer}>
-                <FormInputText label="Company" value={company} onChangeText={(value) => handleChange(itemKey, { field: 'company', value: value })} />
-                <FormInputText label="Degree" value={title} onChangeText={(value) => handleChange(itemKey, { field: 'title', value: value })} />
+                <FormInputText autoCapitalize={'sentences'} label="Company" value={company} onChangeText={(value) => handleChange(itemKey, { field: 'company', value: value })} />
+                <FormInputText autoCapitalize={'sentences'} label="Title" value={title} onChangeText={(value) => handleChange(itemKey, { field: 'title', value: value })} />
                 <CustomDatePicker label={'Start date'} dateOfBirth={dateFrom} showDatePicker={showDatePicker} handleDateChange={(event, value) => handleDateChange(itemKey, value)} handleShowDatePicker={(value) => handleShowDatePicker(itemKey, value)} maximumDate={maximumDate} />
                 <CustomDatePicker label={'End date'} dateOfBirth={dateTo} showDatePicker={showDateToPicker} handleDateChange={(event, value) => handleDateToChange(itemKey, value)} handleShowDatePicker={(value) => handleShowDateToPicker(itemKey, value)} maximumDate={maximumDate} />
             </View>
-            <View style={containerStyles.buttonContainer}>
-                <FormButton title='Delete' color={'#CD5151'} textColor={'#FFFFFF'} onPress={() => onPressDelete(itemKey)} />
-                <FormButton title='Save Job' onPress={() => onFormSubmit(itemKey)} />
+            <View style={containerStyles.rowContainer}>
+                <View style={containerStyles.rowButtonsContainer}>
+                    <FormButton title='Delete' color={'#CD5151'} textColor={'#FFFFFF'} onPress={() => onPressDelete(itemKey)} />
+                </View>
+                <View style={containerStyles.rowButtonsContainer}>
+                    <FormButton title='Update' onPress={() => onFormSubmit(itemKey)} />
+                </View>
             </View>
         </View>
     );

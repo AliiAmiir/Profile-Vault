@@ -1,23 +1,21 @@
 import PropTypes from 'prop-types';
 import React from 'react';
-import { View } from 'react-native';
+import { View, Text } from 'react-native';
 
 // Import StyleSheets
-import { containerStyles } from '../styles/globalStyle';
+import { containerStyles, textStyles } from '../styles/globalStyle';
 
 // Import Components
-import FormText from './FormText';
 import FormButton from './FormButton';
 import FormInputText from './FormInputText';
 import CustomDatePicker from './CustomDatePicker';
-import CustomPicker from './CustomPicker';
 
 export const RelativesForm = function ({ name, relation, dateOfBirth, errors, handleChange, onFormSubmit, onFormClose, showDatePicker, handleShowDatePicker, handleDateChange }) {
     return (
         <View style={containerStyles.textInputContainer}>
             <View>
-                <FormInputText label="Name" value={name} onChangeText={(value) => handleChange('newRelativeName', value)} />
-                <FormInputText label='Relation' value={relation} onChangeText={(value) => handleChange('newRelativeRelation', value)} />
+                <FormInputText autoCapitalize={'sentences'} label="Name" value={name} onChangeText={(value) => handleChange('newRelativeName', value)} />
+                <FormInputText autoCapitalize={'sentences'} label='Relation' value={relation} onChangeText={(value) => handleChange('newRelativeRelation', value)} />
                 <CustomDatePicker label={'Date of Birth'} dateOfBirth={dateOfBirth} showDatePicker={showDatePicker} handleDateChange={handleDateChange} handleShowDatePicker={handleShowDatePicker} maximumDate={new Date()} />
             </View>
 
@@ -52,9 +50,9 @@ RelativesForm.defaultProps = {
 export const RelativesDisplayForm = function ({ name, relation, dateOfBirth }) {
     return (
         <View style={containerStyles.textInputContainer}>
-            <FormText label="Name" value={name} />
-            <FormText label='Relation' value={relation} />
-            <FormText label='Date of Birth' value={dateOfBirth.toLocaleDateString()} />
+            <Text style={textStyles.textSubHeading}>{name}</Text>
+            <Text style={textStyles.boldText}>Relation: <Text style={textStyles.subText}>{relation}</Text></Text>
+            <Text style={textStyles.boldText}>Birthday: <Text style={textStyles.subText}>{dateOfBirth.toLocaleDateString()}</Text></Text>
         </View>
     );
 }
@@ -74,13 +72,18 @@ export const RelativesUpdateForm = function ({ itemKey, name, relation, dateOfBi
     return (
         <View>
             <View style={containerStyles.textInputContainer}>
-                <FormInputText label='Name' value={name} onChangeText={(value) => handleChange(itemKey, { field: 'name', value: value })} />
-                <FormInputText label='Relation' value={relation} onChangeText={(value) => handleChange(itemKey, { field: 'relation', value: value })} />
+                <FormInputText autoCapitalize={'sentences'} label='Name' value={name} onChangeText={(value) => handleChange(itemKey, { field: 'name', value: value })} />
+                <FormInputText autoCapitalize={'sentences'} label='Relation' value={relation} onChangeText={(value) => handleChange(itemKey, { field: 'relation', value: value })} />
                 <CustomDatePicker label={'Date of Birth'} dateOfBirth={dateOfBirth} showDatePicker={showDatePicker} handleDateChange={(event, value) => handleDateChange(itemKey, value)} handleShowDatePicker={(value) => handleShowDatePicker(itemKey, value)} maximumDate={new Date()} />
             </View>
-            <View style={containerStyles.buttonContainer}>
-                <FormButton title='Delete' color={'#CD5151'} textColor={'#FFFFFF'} onPress={() => onPressDelete(itemKey)} />
-                <FormButton title='Save Relative' onPress={() => onFormSubmit(itemKey)} />
+
+            <View style={containerStyles.rowContainer}>
+                <View style={containerStyles.rowButtonsContainer}>
+                    <FormButton title='Delete' color={'#CD5151'} textColor={'#FFFFFF'} onPress={() => onPressDelete(itemKey)} />
+                </View>
+                <View style={containerStyles.rowButtonsContainer}>
+                    <FormButton title='Update' onPress={() => onFormSubmit(itemKey)} />
+                </View>
             </View>
         </View>
     );
