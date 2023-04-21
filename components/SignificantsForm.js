@@ -18,8 +18,8 @@ export const SignificantsForm = function ({ name, relation, dateOfBirth, anniver
             <View>
                 <FormInputText label="Name" value={name} onChangeText={(value) => handleChange('newSignificantName', value)} />
                 <FormInputText label='Relation' value={relation} onChangeText={(value) => handleChange('newSignificantRelation', value)} />
-                <CustomDatePicker label={'Date of Birth'} dateOfBirth={dateOfBirth} showDatePicker={showDatePicker} handleDateChange={handleDateChange} handleShowDatePicker={handleShowDatePicker} />
-                <CustomDatePicker label={'Anniversary'} dateOfBirth={anniversary} showDatePicker={showDatePickerAnniversary} handleDateChange={handleDateChangeAnniversary} handleShowDatePicker={handleShowDatePickerAnniversary} />
+                <CustomDatePicker label={'Date of Birth'} dateOfBirth={dateOfBirth} showDatePicker={showDatePicker} handleDateChange={handleDateChange} handleShowDatePicker={handleShowDatePicker} maximumDate={new Date()} />
+                <CustomDatePicker label={'Anniversary'} dateOfBirth={anniversary} showDatePicker={showDatePickerAnniversary} handleDateChange={handleDateChangeAnniversary} handleShowDatePicker={handleShowDatePickerAnniversary} maximumDate={new Date()} />
             </View>
 
             <View style={containerStyles.buttonContainer}>
@@ -84,8 +84,8 @@ export const SignificantsUpdateForm = function ({ itemKey, name, relation, dateO
             <View style={containerStyles.textInputContainer}>
                 <FormInputText label='Name' value={name} onChangeText={(value) => handleChange(itemKey, { field: 'name', value: value })} />
                 <FormInputText label='Relation' value={relation} onChangeText={(value) => handleChange(itemKey, { field: 'relation', value: value })} />
-                <CustomDatePicker label={'Date of Birth'} dateOfBirth={dateOfBirth} showDatePicker={showDatePicker} handleDateChange={(event, value) => handleDateChange(itemKey, value)} handleShowDatePicker={(value) => handleShowDatePicker(itemKey, value)} />
-                <CustomDatePicker label={'Anniversary'} dateOfBirth={anniversary} showDatePicker={showDatePickerAnniversary} handleDateChange={(event, value) => handleDateChangeAnniversary(itemKey, value)} handleShowDatePicker={(value) => handleShowDatePickerAnniversary(itemKey, value)} />
+                <CustomDatePicker label={'Date of Birth'} dateOfBirth={dateOfBirth} showDatePicker={showDatePicker} handleDateChange={(event, value) => handleDateChange(itemKey, value)} handleShowDatePicker={(value) => handleShowDatePicker(itemKey, value)} maximumDate={new Date()} />
+                <CustomDatePicker label={'Anniversary'} dateOfBirth={anniversary} showDatePicker={showDatePickerAnniversary} handleDateChange={(event, value) => handleDateChangeAnniversary(itemKey, value)} handleShowDatePicker={(value) => handleShowDatePickerAnniversary(itemKey, value)} maximumDate={new Date()} />
             </View>
             <View style={containerStyles.buttonContainer}>
                 <FormButton title='Delete' color={'#CD5151'} textColor={'#FFFFFF'} onPress={() => onPressDelete(itemKey)} />

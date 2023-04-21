@@ -150,14 +150,14 @@ export default class Trips extends Component {
         country: this.state.newTripCountry,
         dateFrom: this.state.newTripDateFrom,
         dateTo: this.state.newTripDateTo,
-        tripCost: this.state.newTripCost,
+        tripCost: this.state.newTripCost || '0',
         hotelName: this.state.newTripHotelName,
         hotelAddress: this.state.newTripHotelAddress,
-        hotelCost: this.state.newTripHotelCost,
+        hotelCost: this.state.newTripHotelCost || '0',
         flightName: this.state.newTripFlightName,
-        flightCost: this.state.newTripFlightCost,
+        flightCost: this.state.newTripFlightCost || '0',
         carRentalName: this.state.newTripCarRentalName,
-        carRentalCost: this.state.newTripCarRentalCost,
+        carRentalCost: this.state.newTripCarRentalCost || '0',
       };
 
       const response = await saveTrip(auth.currentUser.uid, tripDetails);
@@ -168,8 +168,6 @@ export default class Trips extends Component {
         this.setState(defaultState)
       } else {
         Alert.alert(response.message || 'Failed to save Trip');
-        let defaultState = this.getDefaultState();
-        this.setState(defaultState)
       }
 
       await this.fetchUserTrips();
@@ -272,7 +270,7 @@ export default class Trips extends Component {
             />
           )}
 
-          {this.state.showEditTripsForm && !this.state.showTripsInputForm && (<FormButton title='Done' onPress={this.handleShowEditTripsForm} />)}
+          {this.state.showEditTripsForm && !this.state.showTripsInputForm && (<FormButton title='Done' color={'#F2F2F7'} textColor={'#000000'} onPress={this.handleShowEditTripsForm} />)}
 
           {!this.state.showEditTripsForm && !this.state.showTripsInputForm && (<FormButton title='Edit Trips' color={'#F2F2F7'} textColor={'#000000'} onPress={this.handleShowEditTripsForm} />)}
 

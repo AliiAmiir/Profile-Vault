@@ -69,7 +69,7 @@ export default class Settings extends Component {
   }
 
   componentWillUnmount() {
-    
+
   }
 
   async fetchUserData() {
@@ -147,10 +147,10 @@ export default class Settings extends Component {
       }
     } catch (error) {
       console.log(error.message);
-      if(error.code === 'auth/weak-password') {
+      if (error.code === 'auth/weak-password') {
         Alert.alert('Weak password, less than 6 characters');
       } else {
-      Alert.alert('Unexpected Error Occurred');
+        Alert.alert('Unexpected Error Occurred');
       }
     }
   };
@@ -209,7 +209,7 @@ export default class Settings extends Component {
             <View style={containerStyles.textInputContainer}>
               <FormInputText label="First Name" value={this.state.firstName} onChangeText={(value) => this.handleChange('firstName', value)} autoCapitalize="sentences" />
               <FormInputText label="Last Name" value={this.state.lastName} onChangeText={(value) => this.handleChange('lastName', value)} autoCapitalize="sentences" />
-              <CustomDatePicker label={'Date of Birth'} dateOfBirth={this.state.dateOfBirth} showDatePicker={this.state.showDatePicker} handleDateChange={this.handleDateChange} handleShowDatePicker={this.handleShowDatePicker} />
+              <CustomDatePicker label={'Date of Birth'} dateOfBirth={this.state.dateOfBirth} showDatePicker={this.state.showDatePicker} handleDateChange={this.handleDateChange} handleShowDatePicker={this.handleShowDatePicker} maximumDate={new Date()} />
               <FormText label="Email (Not Editable)" value={this.state.email} />
               <FormInputText label="Phone" keyboardType={'phone-pad'} value={this.state.phone} onChangeText={(value) => this.handleChange('phone', value)} autoCapitalize="sentences" />
               <FormInputText label="Current Password" value={this.state.currentPassword} onChangeText={(value) => this.handleChange('currentPassword', value)} secureTextEntry />

@@ -6,7 +6,7 @@ import DateTimePicker from '@react-native-community/datetimepicker';
 // Import Styles
 import { containerStyles, formInputTextStyles } from '../styles/globalStyle';
 
-export default function CustomDatePicker({ label, dateOfBirth, showDatePicker, textColor, handleDateChange, handleShowDatePicker }) {
+export default function CustomDatePicker({ label, dateOfBirth, showDatePicker, textColor, handleDateChange, handleShowDatePicker, maximumDate }) {
     return (
 
         <View style={containerStyles.textInputContainer}>
@@ -16,7 +16,7 @@ export default function CustomDatePicker({ label, dateOfBirth, showDatePicker, t
                     {dateOfBirth.toLocaleDateString()}
                 </Text>
             </TouchableOpacity>
-            {showDatePicker && (<DateTimePicker value={dateOfBirth} mode="date" display={Platform.OS === 'ios' ? 'spinner' : 'default'} onChange={handleDateChange} maximumDate={new Date()} />)}
+            {showDatePicker && (<DateTimePicker value={dateOfBirth} mode="date" display={Platform.OS === 'ios' ? 'spinner' : 'default'} onChange={handleDateChange} maximumDate={maximumDate} />)}
         </View>
     );
 }
@@ -26,6 +26,7 @@ CustomDatePicker.propTypes = {
     showDatePicker: PropTypes.bool,
     dateOfBirth: PropTypes.instanceOf(Date),
     textColor: PropTypes.string,
+    maximumDate: PropTypes.instanceOf(Date),
     handleDateChange: PropTypes.func,
     handleShowDatePicker: PropTypes.func,
 };
@@ -33,4 +34,5 @@ CustomDatePicker.propTypes = {
 CustomDatePicker.defaultProps = {
     textColor: '#ffffff',
     showDatePicker: false,
+    maximumDate: new Date(),
 };

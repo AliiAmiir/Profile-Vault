@@ -18,7 +18,7 @@ export const HealthForm = function ({ checkUpType, checkUpDate, medicines, error
         <ScrollView style={containerStyles.textInputContainer}>
             <View>
                 <FormInputText label="Check Up Type" value={checkUpType} onChangeText={(value) => handleChange('newHealthCheckUpType', value)} />
-                <CustomDatePicker label={'Check Up Date'} dateOfBirth={checkUpDate} showDatePicker={showDatePicker} handleDateChange={handleDateChange} handleShowDatePicker={handleShowDatePicker} />
+                <CustomDatePicker label={'Check Up Date'} dateOfBirth={checkUpDate} showDatePicker={showDatePicker} handleDateChange={handleDateChange} handleShowDatePicker={handleShowDatePicker} maximumDate={new Date()} />
                 <View style={containerStyles.textInputContainer}>
                     <Text style={[formInputTextStyles.label, textStyles.textSubHeading]}>Medicines</Text>
                     {medicines.map((medicine, index) => (
@@ -111,7 +111,7 @@ export const HealthUpdateForm = function ({ itemKey, checkUpType, checkUpDate, m
         <View>
             <View style={containerStyles.textInputContainer}>
                 <FormInputText label='Check Up Type' value={checkUpType} onChangeText={(value) => handleChange(itemKey, { field: 'checkUpType', value: value })} />
-                <CustomDatePicker label={'Check Up Date'} dateOfBirth={checkUpDate} showDatePicker={showDatePicker} handleDateChange={(event, value) => handleDateChange(itemKey, value)} handleShowDatePicker={(value) => handleShowDatePicker(itemKey, value)} />
+                <CustomDatePicker label={'Check Up Date'} dateOfBirth={checkUpDate} showDatePicker={showDatePicker} handleDateChange={(event, value) => handleDateChange(itemKey, value)} handleShowDatePicker={(value) => handleShowDatePicker(itemKey, value)} maximumDate={new Date()} />
                 <View style={containerStyles.textInputContainer}>
                     <Text style={[formInputTextStyles.label, textStyles.textSubHeading]}>Medicines</Text>
                     {medicines.map((medicine, index) => (

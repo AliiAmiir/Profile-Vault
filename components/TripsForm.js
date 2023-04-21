@@ -11,14 +11,17 @@ import FormInputText from './FormInputText';
 import CustomDatePicker from './CustomDatePicker';
 
 export const TripsForm = function ({ city, state, country, tripCost, dateFrom, dateTo, hotelName, hotelCost, hotelAddress, flightName, flightCost, carRentalName, carRentalCost, errors, handleChange, onFormSubmit, onFormClose, showDatePicker, handleShowDatePicker, handleDateChange, showDateToPicker, handleShowDateToPicker, handleDateToChange }) {
+    const maximumDate = new Date();
+    maximumDate.setFullYear(maximumDate.getFullYear() + 5);
+
     return (
         <ScrollView style={containerStyles.textInputContainer}>
             <View>
                 <FormInputText label="City" value={city} onChangeText={(value) => handleChange('newTripCity', value)} />
                 <FormInputText label="State" value={state} onChangeText={(value) => handleChange('newTripState', value)} />
                 <FormInputText label="Country" value={country} onChangeText={(value) => handleChange('newTripCountry', value)} />
-                <CustomDatePicker label={'Date From'} dateOfBirth={dateFrom} showDatePicker={showDatePicker} handleDateChange={handleDateChange} handleShowDatePicker={handleShowDatePicker} />
-                <CustomDatePicker label={'Date To'} dateOfBirth={dateTo} showDatePicker={showDateToPicker} handleDateChange={handleDateToChange} handleShowDatePicker={handleShowDateToPicker} />
+                <CustomDatePicker label={'Date From'} dateOfBirth={dateFrom} showDatePicker={showDatePicker} handleDateChange={handleDateChange} handleShowDatePicker={handleShowDatePicker} maximumDate={maximumDate} />
+                <CustomDatePicker label={'Date To'} dateOfBirth={dateTo} showDatePicker={showDateToPicker} handleDateChange={handleDateToChange} handleShowDatePicker={handleShowDateToPicker} maximumDate={maximumDate} />
                 <FormInputText label="Hotel Name" value={hotelName} onChangeText={(value) => handleChange('newTripHotelName', value)} />
                 <FormInputText label="Hodel Address" value={hotelAddress} onChangeText={(value) => handleChange('newTripHotelAddress', value)} />
                 <FormInputText label="Hotel Cost" keyboardType="decimal-pad" value={hotelCost} onChangeText={(value) => handleChange('newTripHotelCost', value)} />
@@ -132,14 +135,17 @@ TripsDisplayForm.defaultProps = {
 };
 
 export const TripsUpdateForm = function ({ itemKey, city, state, country, tripCost, dateFrom, dateTo, hotelName, hotelCost, hotelAddress, flightName, flightCost, carRentalName, carRentalCost, errors, handleChange, onFormSubmit, onPressDelete, showDatePicker, handleShowDatePicker, handleDateChange, showDateToPicker, handleShowDateToPicker, handleDateToChange }) {
+    const maximumDate = new Date();
+    maximumDate.setFullYear(maximumDate.getFullYear() + 5);
+
     return (
         <View>
             <View style={containerStyles.textInputContainer}>
                 <FormInputText label="City" value={city} onChangeText={(value) => handleChange(itemKey, { field: 'city', value: value })} />
                 <FormInputText label="State" value={state} onChangeText={(value) => handleChange(itemKey, { field: 'state', value: value })} />
                 <FormInputText label="Country" value={country} onChangeText={(value) => handleChange(itemKey, { field: 'country', value: value })} />
-                <CustomDatePicker label={'Date From'} dateOfBirth={dateFrom} showDatePicker={showDatePicker} handleDateChange={(event, value) => handleDateChange(itemKey, value)} handleShowDatePicker={(value) => handleShowDatePicker(itemKey, value)} />
-                <CustomDatePicker label={'Date To'} dateOfBirth={dateTo} showDatePicker={showDateToPicker} handleDateChange={(event, value) => handleDateToChange(itemKey, value)} handleShowDatePicker={(value) => handleShowDateToPicker(itemKey, value)} />
+                <CustomDatePicker label={'Date From'} dateOfBirth={dateFrom} showDatePicker={showDatePicker} handleDateChange={(event, value) => handleDateChange(itemKey, value)} handleShowDatePicker={(value) => handleShowDatePicker(itemKey, value)} maximumDate={maximumDate} />
+                <CustomDatePicker label={'Date To'} dateOfBirth={dateTo} showDatePicker={showDateToPicker} handleDateChange={(event, value) => handleDateToChange(itemKey, value)} handleShowDatePicker={(value) => handleShowDateToPicker(itemKey, value)} maximumDate={maximumDate} />
                 <FormInputText label="Hotel Name" value={hotelName} onChangeText={(value) => handleChange(itemKey, { field: 'hotelName', value: value })} />
                 <FormInputText label="Hodel Address" value={hotelAddress} onChangeText={(value) => handleChange(itemKey, { field: 'hotelAddress', value: value })} />
                 <FormInputText label="Hotel Cost" keyboardType="decimal-pad" value={hotelCost} onChangeText={(value) => handleChange(itemKey, { field: 'hotelCost', value: value })} />
@@ -151,7 +157,7 @@ export const TripsUpdateForm = function ({ itemKey, city, state, country, tripCo
             </View>
             <View style={containerStyles.buttonContainer}>
                 <FormButton title='Delete' color={'#CD5151'} textColor={'#FFFFFF'} onPress={() => onPressDelete(itemKey)} />
-                <FormButton title='Save Trip' onPress={() => onFormSubmit(itemKey)} />
+                <FormButton title='Update Trip' onPress={() => onFormSubmit(itemKey)} />
             </View>
         </View>
     );

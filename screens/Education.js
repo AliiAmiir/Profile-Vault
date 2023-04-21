@@ -235,7 +235,7 @@ export default class Education extends Component {
             />
           )}
 
-          {this.state.showEditEducationForm && !this.state.showEducationInputForm && (<FormButton title='Done' onPress={this.handleShowEditEducationForm} />)}
+          {this.state.showEditEducationForm && !this.state.showEducationInputForm && (<FormButton title='Done' color={'#F2F2F7'} textColor={'#000000'} onPress={this.handleShowEditEducationForm} />)}
 
           {!this.state.showEditEducationForm && !this.state.showEducationInputForm && (<FormButton title='Edit Education' color={'#F2F2F7'} textColor={'#000000'} onPress={this.handleShowEditEducationForm} />)}
 

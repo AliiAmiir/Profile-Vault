@@ -11,13 +11,16 @@ import FormInputText from './FormInputText';
 import CustomDatePicker from './CustomDatePicker';
 
 export const EducationForm = function ({ institute, degree, dateFrom, dateTo, errors, handleChange, onFormSubmit, onFormClose, showDatePicker, handleShowDatePicker, handleDateChange, showDateToPicker, handleShowDateToPicker, handleDateToChange }) {
+    let maximumDate = new Date();
+    maximumDate.setFullYear(maximumDate.getFullYear() + 10);
+
     return (
         <ScrollView style={containerStyles.textInputContainer}>
             <View>
                 <FormInputText label="Institute" value={institute} onChangeText={(value) => handleChange('newInstitute', value)} />
                 <FormInputText label="Degree" value={degree} onChangeText={(value) => handleChange('newDegree', value)} />
-                <CustomDatePicker label={'Enrollment date'} dateOfBirth={dateFrom} showDatePicker={showDatePicker} handleDateChange={handleDateChange} handleShowDatePicker={handleShowDatePicker} />
-                <CustomDatePicker label={'Graduation date'} dateOfBirth={dateTo} showDatePicker={showDateToPicker} handleDateChange={handleDateToChange} handleShowDatePicker={handleShowDateToPicker} />
+                <CustomDatePicker label={'Enrollment date'} dateOfBirth={dateFrom} showDatePicker={showDatePicker} handleDateChange={handleDateChange} handleShowDatePicker={handleShowDatePicker} maximumDate={maximumDate} />
+                <CustomDatePicker label={'Graduation date'} dateOfBirth={dateTo} showDatePicker={showDateToPicker} handleDateChange={handleDateToChange} handleShowDatePicker={handleShowDateToPicker} maximumDate={maximumDate} />
             </View>
 
             <View style={containerStyles.buttonContainer}>
@@ -78,13 +81,16 @@ EducationDisplayForm.defaultProps = {
 };
 
 export const EducationUpdateForm = function ({ itemKey, institute, degree, dateFrom, dateTo, errors, handleChange, onFormSubmit, onPressDelete, showDatePicker, handleShowDatePicker, handleDateChange, showDateToPicker, handleShowDateToPicker, handleDateToChange }) {
+    let maximumDate = new Date();
+    maximumDate.setFullYear(maximumDate.getFullYear() + 10);
+
     return (
         <View>
             <View style={containerStyles.textInputContainer}>
                 <FormInputText label="Institute" value={institute} onChangeText={(value) => handleChange(itemKey, { field: 'institute', value: value })} />
                 <FormInputText label="Degree" value={degree} onChangeText={(value) => handleChange(itemKey, { field: 'degree', value: value })} />
-                <CustomDatePicker label={'Enrollment date'} dateOfBirth={dateFrom} showDatePicker={showDatePicker} handleDateChange={(event, value) => handleDateChange(itemKey, value)} handleShowDatePicker={(value) => handleShowDatePicker(itemKey, value)} />
-                <CustomDatePicker label={'Graduation date'} dateOfBirth={dateTo} showDatePicker={showDateToPicker} handleDateChange={(event, value) => handleDateToChange(itemKey, value)} handleShowDatePicker={(value) => handleShowDateToPicker(itemKey, value)} />
+                <CustomDatePicker label={'Enrollment date'} dateOfBirth={dateFrom} showDatePicker={showDatePicker} handleDateChange={(event, value) => handleDateChange(itemKey, value)} handleShowDatePicker={(value) => handleShowDatePicker(itemKey, value)} maximumDate={maximumDate} />
+                <CustomDatePicker label={'Graduation date'} dateOfBirth={dateTo} showDatePicker={showDateToPicker} handleDateChange={(event, value) => handleDateToChange(itemKey, value)} handleShowDatePicker={(value) => handleShowDateToPicker(itemKey, value)} maximumDate={maximumDate} />
             </View>
             <View style={containerStyles.buttonContainer}>
                 <FormButton title='Delete' color={'#CD5151'} textColor={'#FFFFFF'} onPress={() => onPressDelete(itemKey)} />
