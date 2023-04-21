@@ -151,7 +151,7 @@ export default class PersonalPreferences extends Component {
         {this.state.showPreferenceInputForm && (
           <View style={[containerStyles.textInputContainer, { flex: 0.5 }]}>
             <FormInputText placeholder="New Preference" value={this.state.newPreferenceName} onChangeText={(value) => this.handleChange('newPreferenceName', value)} autoCapitalize="sentences" errorText={this.state.errors.newPreferenceName || null} />
-            <FormButton title='Add a Preference' onPress={this.handleSavePreference} />
+            <FormButton title='Save Preference' onPress={this.handleSavePreference} />
           </View>)}
 
         {!this.state.showPreferenceInputForm && (

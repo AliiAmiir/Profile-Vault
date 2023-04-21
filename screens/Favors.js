@@ -1,19 +1,19 @@
 import React, { Component } from 'react';
-import { View, FlatList, Alert, TouchableWithoutFeedback, Keyboard } from 'react-native';
+import { View, FlatList, TextInput, Alert, TouchableOpacity } from 'react-native';
+import Icon from 'react-native-vector-icons/FontAwesome';
 
 // Import Configs
 import { auth } from '../config/firebaseConfig';
 
 // Import Repositories
-import { fetchFavorByUserId, saveFavor, updateFavorById, deleteFavorById } from '../repository/favorsRepository';
+import { fetchFavors, saveFavor, updateFavorById, deleteFavorById } from '../repository/favorsRepository';
 
 // Import StyleSheets
-import { containerStyles } from '../styles/globalStyle';
+import { containerStyles, formInputTextStyles, formButtonStyles } from '../styles/globalStyle';
 
 // Import Components
 import FormButton from '../components/FormButton';
 import FormInputText from '../components/FormInputText';
-import FormUpdateInputText from '../components/FormUpdateInputText';
 
 export default class PersonalFavors extends Component {
   constructor(props) {
@@ -21,12 +21,23 @@ export default class PersonalFavors extends Component {
 
     this.state = {
       loading: true,
-      newFavorName: '',
+      newFavorType: '',
+      newFavorBeneficiary: '',
       errors: {},
       savedFavors: [],
       displayUpdateButton: true,
+      showFavorInputForm: false,
+      showEditFavorForm: false,
     }
   }
+
+  handleShowFavorInputForm = () => {
+    this.setState({ showFavorInputForm: !this.state.showFavorInputForm });
+  };
+
+  handleShowEditFavorForm = () => {
+    this.setState({ showEditFavorForm: !this.state.showEditFavorForm });
+  };
 
   handleChange = (key, value) => {
     // Add validation
@@ -36,23 +47,30 @@ export default class PersonalFavors extends Component {
   handleUpdateChange = (key, value) => {
     let savedFavors = this.state.savedFavors;
     let index = savedFavors.findIndex(x => x.key === key);
-    savedFavors[index].name = value;
+    let valueAtIndex = savedFavors[index];
+    valueAtIndex[value.field] = value.value;
+
+    savedFavors[index] = valueAtIndex;
 
     // Add validation
-
     this.setState({ savedFavors: savedFavors });
   };
 
   handleSaveFavor = async () => {
     try {
-      const response = await saveFavor(auth.currentUser.uid, this.state.newFavorName);
+      const favorDetails = {
+        type: this.state.newFavorType,
+        beneficiary: this.state.newFavorBeneficiary,
+      };
+
+      const response = await saveFavor(auth.currentUser.uid, favorDetails);
 
       if (response && response.success) {
         Alert.alert(response.message || 'Saved Favor');
-        this.setState({ newFavorName: '' })
+        this.setState({ newFavorType: '', newFavorBeneficiary: '', showFavorInputForm: false })
       } else {
         Alert.alert(response.message || 'Failed to save Favor');
-        this.setState({ newFavorName: '' })
+        this.setState({ newFavorType: '', newFavorBeneficiary: '', showFavorInputForm: false })
       }
 
       await this.fetchUserFavors();
@@ -62,51 +80,46 @@ export default class PersonalFavors extends Component {
     }
   }
 
-  handleUpdateItem = async (item, increaseCounter) => {
+  handleUpdateFavor = async (key) => {
     try {
-      let favor = item;
-      if (increaseCounter) {
-        let counter = favor.counter;
-        counter = counter + 1;
+      let savedFavors = this.state.savedFavors;
+      let index = savedFavors.findIndex(x => x.key === key);
+      let favorDetails = savedFavors[index];
 
-        favor.counter = counter;
-      }
-
-      let response = await updateFavorById(favor, increaseCounter);
+      let response = await updateFavorById(key, auth.currentUser.uid, favorDetails);
       let message = 'Updated favor';
 
       if (response && response.success) {
-        if (increaseCounter) {
-          message = 'Updated Streak';
-        } else {
-          message = response.message || 'Updated Favor';
-        }
+        message = response.message || 'Updated Favor';
 
-        this.setState({ newFavorName: '' })
+        this.setState({ newFavorType: '', newFavorBeneficiary: '' })
       } else {
         message = response.message || 'Failed to update Favor';
-        this.setState({ newFavorName: '' })
+        this.setState({ newFavorType: '', newFavorBeneficiary: '' })
       }
 
       Alert.alert(message);
-
       await this.fetchUserFavors();
     } catch (error) {
       console.log(error.message);
-      Alert.alert('Error occurred while adding a new Favor');
+      Alert.alert('Unexpected Error Occurred');
     }
   }
 
-  handleDeleteItem = async (item) => {
+  handleDeleteItem = async (key) => {
     try {
-      await deleteFavorById(item);
+      const response = await deleteFavorById(key);
 
-      Alert.alert('Deleted Favor');
+      if (response && response.success) {
+        Alert.alert(response.message || 'Deleted Favor');
+      } else {
+        Alert.alert(response.message || 'Failed to Delete Favor');
+      }
 
       await this.fetchUserFavors();
     } catch (error) {
       console.log(error.message);
-      Alert.alert('Error occurred while adding a new Favor');
+      Alert.alert('Unexpected Error Occurred');
     }
   }
 
@@ -115,48 +128,80 @@ export default class PersonalFavors extends Component {
   }
 
   componentWillUnmount() {
-    if (this.fetchUserFavors) {
-      this.fetchUserFavors();
-    }
+
   }
 
   async fetchUserFavors() {
-    const FavorsData = await fetchFavorByUserId(auth.currentUser.uid);
+    try {
+      const response = await fetchFavors(auth.currentUser.uid);
 
-    if (FavorsData && FavorsData.length > 0) {
-      this.setState({
-        loading: false,
-        savedFavors: FavorsData.map((favor) => {
-          let savedFavor = favor.data();
-          savedFavor.key = favor.id;
-
-          return savedFavor;
-        })
-      });
+      if (response && response.success) {
+        this.setState({ savedFavors: response.data });
+      } else {
+        Alert.alert(response.message || 'Failed to Fetch Favors');
+      }
+    } catch (error) {
+      console.log(error.message);
+      Alert.alert('Unexpected Error Occurred');
     }
   }
 
-  handleNavigation = (componentName) => {
-    const { navigation } = this.props;
-    navigation.navigate(componentName);
-  };
-
   render() {
     return (
-      <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
-        <View style={containerStyles.defaultContainer}>
-          <View style={[containerStyles.textInputContainer, { flex: 0.5 }]}>
-            <FormInputText placeholder="New Favor" value={this.state.newFavorName} onChangeText={(value) => this.handleChange('newFavorName', value)} autoCapitalize="sentences" errorText={this.state.errors.newFavorName || null} />
-            <FormButton title='Add a Favors' color={'#F2F2F7'} textColor={'#000000'} onPress={this.handleSaveFavor} />
-          </View>
-          <View style={[containerStyles.textInputContainer, { flex: 1 }]}>
+      <View style={[containerStyles.defaultContainer, { justifyContent: 'flex-start' }]}>
+        <View style={containerStyles.formContainer}>
+          {!this.state.showFavorInputForm && (
+            <FormButton title='Add a Favor' color={'#F2F2F7'} textColor={'#000000'} onPress={this.handleShowFavorInputForm} />
+          )}
+
+          {this.state.showFavorInputForm && (
+            <View>
+              <FormInputText placeholder="Favor Beneficiary" value={this.state.newFavorBeneficiary} onChangeText={(value) => this.handleChange('newFavorBeneficiary', value)} autoCapitalize="sentences" errorText={this.state.errors.newFavorName || null} />
+              <FormInputText placeholder="Favor Type" value={this.state.newFavorType} onChangeText={(value) => this.handleChange('newFavorType', value)} autoCapitalize="sentences" errorText={this.state.errors.newFavorName || null} />
+              <FormButton title='Save Favor' onPress={this.handleSaveFavor} />
+              <FormButton title='Cancel' color={'#F2F2F7'} textColor={'#000000'} onPress={this.handleShowFavorInputForm} />
+            </View>
+          )}
+
+          {this.state.showEditFavorForm && !this.state.showFavorInputForm && (<FormButton title='Done' color={'#F2F2F7'} textColor={'#000000'} onPress={this.handleShowEditFavorForm} />)}
+
+          {!this.state.showEditFavorForm && !this.state.showFavorInputForm && (<FormButton title='Edit Favor' color={'#F2F2F7'} textColor={'#000000'} onPress={this.handleShowEditFavorForm} />)}
+
+          {!this.state.showEditFavorForm && !this.state.showFavorInputForm && (
             <FlatList data={this.state.savedFavors} renderItem={({ item }) => (
-              <FormUpdateInputText value={item.name} autoCapitalize="sentences" onButtonUpdate={() => this.handleUpdateItem(item, true)} onChangeText={(value) => this.handleUpdateChange(item.key, value)} onBlurUpdate={() => this.handleUpdateItem(item, false)} onPressDelete={() => this.handleDeleteItem(item)} displayUpdateButton={this.state.displayUpdateButton} />
-            )} style={containerStyles.buttonContainer}>
-            </FlatList>
-          </View>
+              <View style={containerStyles.textInputContainer}>
+                <TextInput editable={false} value={`${item.type} for ${item.beneficiary}`} style={formInputTextStyles.input} />
+              </View>
+            )}
+              keyExtractor={item => item.key}
+            />
+          )}
+
+          {this.state.showEditFavorForm && !this.state.showFavorInputForm && (
+            <FlatList data={this.state.savedFavors} renderItem={({ item }) => (
+              <View>
+                <View style={containerStyles.updateRowContainer}>
+                  <View style={[containerStyles.textInputContainer, { flex: 4 }]}>
+                    <TextInput value={item.beneficiary} onChangeText={(value) => this.handleUpdateChange(item.key, { field: 'beneficiary', value: value })} autoCapitalize={true} style={formInputTextStyles.input} />
+                    <TextInput value={item.type} onChangeText={(value) => this.handleUpdateChange(item.key, { field: 'type', value: value })} autoCapitalize={true} style={formInputTextStyles.input} />
+                  </View>
+
+                  <View style={formButtonStyles.rowDeleteButton}>
+                    <TouchableOpacity onPress={() => this.handleDeleteItem(item.key)}>
+                      <Icon name="trash" size={25} color="red" />
+                    </TouchableOpacity>
+                  </View>
+                </View>
+                <View style={containerStyles.buttonContainer}>
+                  <FormButton title='Update Favor' onPress={() => this.handleUpdateFavor(item.key)} />
+                </View>
+              </View>
+            )}
+              keyExtractor={item => item.key}
+            />
+          )}
         </View>
-      </TouchableWithoutFeedback>
+      </View>
     );
   }
 }

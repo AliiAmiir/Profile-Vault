@@ -173,7 +173,6 @@ export default class Education extends Component {
     }
   };
 
-
   handleDeleteEducation = async (key) => {
     try {
       const response = await deleteEducation(key);
