@@ -1,25 +1,27 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { View, Text, TouchableOpacity } from 'react-native';
+import { Button } from 'react-native-elements';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
 // Import Styles
-import { containerStyles, formInputTextStyles, formButtonStyles, textStyles } from '../styles/globalStyle';
+import { containerStyles, textStyles } from '../styles/globalStyle';
 import FormInputText from './FormInputText';
 
 export const MedicineForm = ({ index, medicine, handleChange, addMedicineRow, removeMedicineRow, errorText }) => {
     return (
-        <View>
-            <FormInputText label="Name" value={medicine.name} onChangeText={(value) => handleChange(index, 'name', value)} />
-            <FormInputText label="Dosage" value={medicine.dosage} onChangeText={(value) => handleChange(index, 'dosage', value)} />
-            <FormInputText label="Frequency" value={medicine.frequency} onChangeText={(value) => handleChange(index, 'frequency', value)} />
-            <View style={containerStyles.row}>
-                <TouchableOpacity onPress={addMedicineRow}>
-                    <Icon name="plus" size={20} color="lightblue" />
-                </TouchableOpacity>
-                <TouchableOpacity onPress={() => removeMedicineRow(index)}>
-                    <Icon name="trash" size={20} color="red" />
-                </TouchableOpacity>
+        <View style={containerStyles.textInputContainer}>
+            <View style={containerStyles.rowContainerSpaceBetween}>
+                <View style={[containerStyles.rowMedicineButtonContainer]}>
+                    <FormInputText autoCapitalize={'sentences'} label="Name" value={medicine.name} onChangeText={(value) => handleChange(index, 'name', value)} />
+                    <FormInputText label="Dosage (in mg)" keyboardType={'numeric'} value={medicine.dosage} onChangeText={(value) => handleChange(index, 'dosage', value)} />
+                    <FormInputText autoCapitalize={'sentences'} label="Frequency" value={medicine.frequency} onChangeText={(value) => handleChange(index, 'frequency', value)} />
+                </View>
+
+                <View style={containerStyles.rowPasswordButtonContainer}>
+                    <Button onPress={addMedicineRow} type='clear' icon={<Icon name="plus" size={20} color="#6374D1" />} />
+                    <Button onPress={() => removeMedicineRow(index)} type='clear' icon={<Icon name="trash" size={20} color="#CD5151" />} />
+                </View>
             </View>
         </View>
     );
@@ -74,17 +76,18 @@ MedicineDisplayForm.defaultProps = {
 
 export const MedicineUpdateForm = ({ itemKey, index, medicine, handleChange, addMedicineRow, removeMedicineRow }) => {
     return (
-        <View>
-            <FormInputText label="Name" value={medicine.name} onChangeText={(value) => handleChange(itemKey, index, 'name', value)} />
-            <FormInputText label="Dosage" value={medicine.dosage} onChangeText={(value) => handleChange(itemKey, index, 'dosage', value)} />
-            <FormInputText label="Frequency" value={medicine.frequency} onChangeText={(value) => handleChange(itemKey, index, 'frequency', value)} />
-            <View style={containerStyles.row}>
-                <TouchableOpacity onPress={() => addMedicineRow(itemKey)}>
-                    <Icon name="plus" size={20} color="lightblue" />
-                </TouchableOpacity>
-                <TouchableOpacity onPress={() => removeMedicineRow(itemKey)}>
-                    <Icon name="trash" size={20} color="red" />
-                </TouchableOpacity>
+        <View style={containerStyles.textInputContainer}>
+            <View style={containerStyles.rowContainerSpaceBetween}>
+                <View style={[containerStyles.rowMedicineButtonContainer]}>
+            <FormInputText autoCapitalize={'sentences'} label="Name" value={medicine.name} onChangeText={(value) => handleChange(itemKey, index, 'name', value)} />
+            <FormInputText label="Dosage (in mg)" keyboardType={'numeric'} value={medicine.dosage} onChangeText={(value) => handleChange(itemKey, index, 'dosage', value)} />
+            <FormInputText autoCapitalize={'sentences'} label="Frequency" value={medicine.frequency} onChangeText={(value) => handleChange(itemKey, index, 'frequency', value)} />
+                </View>
+
+                <View style={containerStyles.rowPasswordButtonContainer}>
+                    <Button onPress={() => addMedicineRow(itemKey)} type='clear' icon={<Icon name="plus" size={20} color="#6374D1" />} />
+                    <Button onPress={() => removeMedicineRow(itemKey)} type='clear' icon={<Icon name="trash" size={20} color="#CD5151" />} />
+                </View>
             </View>
         </View>
     );

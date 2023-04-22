@@ -31,6 +31,11 @@ export const containerStyles = StyleSheet.create({
     alignContent: 'center',
     justifyContent: 'center',
   },
+  rowMedicineButtonContainer: {
+    minWidth: 20,
+    alignContent: 'center',
+    justifyContent: 'center',
+  },
   columnContainer: {
     flexDirection: 'column',
     justifyContent: 'space-around',

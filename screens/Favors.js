@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
-import { View, FlatList, TextInput, Alert, TouchableOpacity } from 'react-native';
-import Icon from 'react-native-vector-icons/FontAwesome';
+import { View, FlatList, TextInput, Alert } from 'react-native';
 
 // Import Configs
 import { auth } from '../config/firebaseConfig';

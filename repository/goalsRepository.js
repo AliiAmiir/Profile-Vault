@@ -1,17 +1,21 @@
 import { collection, query, where, getDocs, addDoc, updateDoc, deleteDoc, doc, orderBy, limit } from 'firebase/firestore';
 import { db } from '../config/firebaseConfig';
 
-export const fetchGoalsByUserId = async (userId) => {
+export const fetchUserGoals = async (userId, docLimit) => {
     try {
-        const q = query(collection(db, 'goals'), where('uid', '==', userId));
+        let q = query(collection(db, 'goals'), where('uid', '==', userId));
 
-        const querySnapshot = await getDocs(q);
-
-        if (querySnapshot.docs.length > 0) {
-            return querySnapshot.docs;
+        if (docLimit && docLimit > 0) {
+            q = query(collection(db, 'goals'), where('uid', '==', userId), limit(3));
         }
+        const querySnapshot = await getDocs(q);
+        let goals = [];
 
-        return null;
+        querySnapshot.forEach((doc) => {
+            goals.push({ key: doc.id, ...doc.data() });
+        });
+
+        return { success: true, data: goals };
     } catch (error) {
         throw error;
     }
@@ -69,12 +73,11 @@ export const updateGoalById = async (goal, counterUpdate) => {
     }
 };
 
-export const deleteGoalById = async (goal) => {
+export const deleteGoalById = async (goalId) => {
     try {
-        ;
-        await deleteDoc(doc(db, 'goals', goal.key));
+        await deleteDoc(doc(db, 'goals', goalId));
 
-        return { success: true, message: 'Deleted Goal' };
+        return { success: true };
     } catch (error) {
         throw error;
     }
@@ -94,18 +97,3 @@ const checkDuplicate = async (checkDuplicateQuery) => {
     }
 }
 
-export const fetchUserGoalsForHome = async (userId) => {
-    try {
-        const q = query(collection(db, 'goals'), where('uid', '==', userId), limit(3));
-        const querySnapshot = await getDocs(q);
-        let goals = [];
-
-        querySnapshot.forEach((doc) => {
-            goals.push({ key: doc.id, ...doc.data() });
-        });
-
-        return { success: true, data: goals };
-    } catch (error) {
-        throw error;
-    }
-}

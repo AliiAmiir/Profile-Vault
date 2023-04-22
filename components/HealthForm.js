@@ -10,14 +10,13 @@ import FormText from './FormText';
 import FormButton from './FormButton';
 import FormInputText from './FormInputText';
 import CustomDatePicker from './CustomDatePicker';
-import CustomPicker from './CustomPicker';
 import { MedicineForm, MedicineDisplayForm, MedicineUpdateForm } from './MedicineForm';
 
 export const HealthForm = function ({ checkUpType, checkUpDate, medicines, errors, handleChange, handleChangeMedicine, onFormSubmit, onFormClose, showDatePicker, handleShowDatePicker, handleDateChange, handleAddMedicine, handleRemoveMedicine }) {
     return (
         <ScrollView style={containerStyles.textInputContainer}>
             <View>
-                <FormInputText label="Check Up Type" value={checkUpType} onChangeText={(value) => handleChange('newHealthCheckUpType', value)} />
+                <FormInputText autoCapitalize={'sentences'} label="Check Up Type" value={checkUpType} onChangeText={(value) => handleChange('newHealthCheckUpType', value)} />
                 <CustomDatePicker label={'Check Up Date'} dateOfBirth={checkUpDate} showDatePicker={showDatePicker} handleDateChange={handleDateChange} handleShowDatePicker={handleShowDatePicker} maximumDate={new Date()} />
                 <View style={containerStyles.textInputContainer}>
                     <Text style={[formInputTextStyles.label, textStyles.textSubHeading]}>Medicines</Text>
@@ -110,7 +109,7 @@ export const HealthUpdateForm = function ({ itemKey, checkUpType, checkUpDate, m
     return (
         <View>
             <View style={containerStyles.textInputContainer}>
-                <FormInputText label='Check Up Type' value={checkUpType} onChangeText={(value) => handleChange(itemKey, { field: 'checkUpType', value: value })} />
+                <FormInputText autoCapitalize={'sentences'} label='Check Up Type' value={checkUpType} onChangeText={(value) => handleChange(itemKey, { field: 'checkUpType', value: value })} />
                 <CustomDatePicker label={'Check Up Date'} dateOfBirth={checkUpDate} showDatePicker={showDatePicker} handleDateChange={(event, value) => handleDateChange(itemKey, value)} handleShowDatePicker={(value) => handleShowDatePicker(itemKey, value)} maximumDate={new Date()} />
                 <View style={containerStyles.textInputContainer}>
                     <Text style={[formInputTextStyles.label, textStyles.textSubHeading]}>Medicines</Text>
@@ -127,9 +126,14 @@ export const HealthUpdateForm = function ({ itemKey, checkUpType, checkUpDate, m
                     ))}
                 </View>
             </View>
-            <View style={containerStyles.buttonContainer}>
-                <FormButton title='Delete' color={'#CD5151'} textColor={'#FFFFFF'} onPress={() => onPressDelete(itemKey)} />
-                <FormButton title='Save Health' onPress={() => onFormSubmit(itemKey)} />
+
+            <View style={containerStyles.rowContainer}>
+                <View style={containerStyles.rowButtonsContainer}>
+                    <FormButton title='Delete' color={'#CD5151'} textColor={'#FFFFFF'} onPress={() => onPressDelete(itemKey)} />
+                </View>
+                <View style={containerStyles.rowButtonsContainer}>
+                    <FormButton title='Update' onPress={() => onFormSubmit(itemKey)} />
+                </View>
             </View>
         </View>
     );

@@ -6,7 +6,7 @@ import { computeAge } from '../utils/computeUtil';
 
 // Import Repositories
 import { fetchUserById } from '../repository/userRepository';
-import { fetchUserGoalsForHome } from '../repository/goalsRepository';
+import { fetchUserGoals } from '../repository/goalsRepository';
 import { fetchUpcomingTripsForHome } from '../repository/tripsRepository';
 import { fetchUserPreferences } from '../repository/preferencesRepository';
 import { fetchFavorsForHome } from '../repository/favorsRepository';
@@ -93,7 +93,7 @@ export default class Home extends Component {
 
   async fetchGoals() {
     try {
-      const response = await fetchUserGoalsForHome(auth.currentUser.uid);
+      const response = await fetchUserGoals(auth.currentUser.uid, 3);
 
       if (response && response.success) {
         this.setState({ goals: response.data });
@@ -138,7 +138,7 @@ export default class Home extends Component {
 
   async fetchPreferences() {
     try {
-      const response = await fetchUserPreferences(auth.currentUser.uid);
+      const response = await fetchUserPreferences(auth.currentUser.uid, 3);
 
       if (response && response.success) {
         this.setState({ preferences: response.data });

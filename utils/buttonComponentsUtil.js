@@ -1,5 +1,5 @@
 export const manageScreenButtons = [
-    { name: 'Personal Goals', componentName: 'PersonalGoal' },
+    { name: 'Personal Goals', componentName: 'Goals' },
     { name: 'Preferences', componentName: 'Preferences' },
     { name: 'Passwords', componentName: 'Passwords' },
     { name: 'Relatives', componentName: 'Relatives' },

@@ -57,8 +57,8 @@ export const PasswordDisplayForm = function ({ website, email, password, showPas
                 </View>
 
                 <View style={containerStyles.rowPasswordButtonContainer}>
-                    {!showPassword && (<Button onPress={onPressShowPassword} type='clear' icon={<Icon name="eye" size={15} color="black" />} />)}
-                    {showPassword && (<Button onPress={onPressShowPassword} type='clear' icon={<Icon name="eye-slash" size={15} color="black" />} />)}
+                    {!showPassword && (<Button onPress={onPressShowPassword} type='clear' icon={<Icon name="eye" size={20} color="black" />} />)}
+                    {showPassword && (<Button onPress={onPressShowPassword} type='clear' icon={<Icon name="eye-slash" size={20} color="black" />} />)}
                 </View>
             </View>
         </View>

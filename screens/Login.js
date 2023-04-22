@@ -64,7 +64,7 @@ export default class Register extends Component {
       <View style={containerStyles.defaultContainer}>
         <Logo />
         <View style={containerStyles.textInputContainer}>
-          <FormInputText label="Email" placeholder="john.smith@comany.com" value={this.state.email} onChangeText={this.handleEmailChange} autoCapitalize="sentences" />
+          <FormInputText keyboardType="email-address" label="Email" placeholder="john.smith@comany.com" value={this.state.email} onChangeText={this.handleEmailChange} />
           <FormInputText label="Password" placeholder="password" value={this.state.password} onChangeText={this.handlePasswordChange} secureTextEntry />
         </View>
         <View style={containerStyles.buttonContainer}>

@@ -6,7 +6,7 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import { auth } from '../config/firebaseConfig';
 
 // Import Repositories
-import { fetchGoalsByUserId, saveGoal, updateGoalById, deleteGoalById } from '../repository/goalsRepository';
+import { fetchUserGoals, saveGoal, updateGoalById, deleteGoalById } from '../repository/goalsRepository';
 
 // Import StyleSheets
 import { containerStyles, formButtonStyles } from '../styles/globalStyle';
@@ -108,9 +108,9 @@ export default class PersonalGoals extends Component {
     }
   }
 
-  handleDeleteItem = async (item) => {
+  handleDeleteItem = async (key) => {
     try {
-      await deleteGoalById(item);
+      await deleteGoalById(key);
       Alert.alert('Deleted Goal');
 
       await this.fetchUserGoals();
@@ -132,18 +132,12 @@ export default class PersonalGoals extends Component {
 
   async fetchUserGoals() {
     try {
-      const goalsData = await fetchGoalsByUserId(auth.currentUser.uid);
+      const response = await fetchUserGoals(auth.currentUser.uid);
 
-      if (goalsData && goalsData.length > 0) {
-        this.setState({
-          loading: false,
-          savedGoals: goalsData.map((goal) => {
-            let savedGoal = goal.data();
-            savedGoal.key = goal.id;
-
-            return savedGoal;
-          })
-        });
+      if (response && response.success) {
+        this.setState({ savedGoals: response.data });
+      } else {
+        Alert.alert(response.message || 'Failed to fetch Goals');
       }
     } catch (error) {
       console.log(error.message);
@@ -183,7 +177,7 @@ export default class PersonalGoals extends Component {
         {this.state.showEditGoalsForm && (
           <View style={[containerStyles.textInputContainer, { flex: 1 }]}>
             <FlatList data={this.state.savedGoals} renderItem={({ item }) => (
-              <FormUpdateInputText value={item.name} autoCapitalize="sentences" onChangeText={(value) => this.handleUpdateChange(item.key, value)} onUpdatePress={() => this.handleUpdateItem(item, false)} onPressDelete={() => this.handleDeleteItem(item)} />
+              <FormUpdateInputText value={item.name} autoCapitalize="sentences" onChangeText={(value) => this.handleUpdateChange(item.key, value)} onUpdatePress={() => this.handleUpdateItem(item, false)} onPressDelete={() => this.handleDeleteItem(item.key)} />
             )} style={containerStyles.buttonContainer}>
             </FlatList>
           </View>)}
@@ -200,7 +194,7 @@ export default class PersonalGoals extends Component {
                 <View style={containerStyles.rowCounterButtonContainer}>
                   <TouchableOpacity style={[formButtonStyles.formButton, formButtonStyles.counterButton]} onPress={() => this.handleUpdateItem(item, true)}>
                     <Text style={[formButtonStyles.formButtonText]}>
-                      <Icon name="plus" size={15} color="white" />
+                      <Icon name="plus" size={20} color="white" />
                     </Text>
                   </TouchableOpacity>
                 </View>

@@ -28,7 +28,7 @@ export const AuthScreenStack = () => {
 export const ManageScreenStack = () => {
     return (
         <ManageStack.Navigator>
-            <ManageStack.Screen name="ManageMain" component={Manage} options={{ headerShown: false }} />
+            <ManageStack.Screen name="Main" component={Manage} options={{ headerShown: false }} />
             <ManageStack.Screen name="Education" component={Education} />
             <ManageStack.Screen name="Health" component={Health} />
             <ManageStack.Screen name="Passwords" component={Passwords} />
@@ -36,7 +36,7 @@ export const ManageScreenStack = () => {
             <ManageStack.Screen name="Significants" component={Significants} />
             <ManageStack.Screen name="Favors" component={Favors} />
             <ManageStack.Screen name="Jobs" component={Jobs} />
-            <ManageStack.Screen name="PersonalGoal" component={PersonalGoal} />
+            <ManageStack.Screen name="Goals" component={PersonalGoal} />
             <ManageStack.Screen name="Relatives" component={Relatives} />
             <ManageStack.Screen name="Trips" component={Trips} />
         </ManageStack.Navigator>

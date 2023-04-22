@@ -232,8 +232,8 @@ export default class Health extends Component {
     return (
       <View style={[containerStyles.defaultContainer, { justifyContent: 'flex-start' }]}>
         <View style={containerStyles.formContainer}>
-          {!this.state.showHealthInputForm && (
-            <FormButton title='Add a Health' color={'#F2F2F7'} textColor={'#000000'} onPress={this.handleShowHealthInputForm} />
+          {!this.state.showHealthInputForm && !this.state.showEditHealthForm  && (
+            <FormButton title='Add Health Information' color={'#F2F2F7'} textColor={'#000000'} onPress={this.handleShowHealthInputForm} />
           )}
 
           {this.state.showHealthInputForm && (
@@ -253,7 +253,7 @@ export default class Health extends Component {
             />
           )}
 
-          {this.state.showEditHealthForm && !this.state.showHealthInputForm && (<FormButton title='Done' onPress={this.handleShowEditHealthForm} />)}
+          {this.state.showEditHealthForm && !this.state.showHealthInputForm && (<FormButton title='Cancel' color={'#F2F2F7'} textColor={'#000000'} onPress={this.handleShowEditHealthForm} />)}
 
           {!this.state.showEditHealthForm && !this.state.showHealthInputForm && (<FormButton title='Edit Health' color={'#F2F2F7'} textColor={'#000000'} onPress={this.handleShowEditHealthForm} />)}
 
