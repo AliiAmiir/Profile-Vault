@@ -14,6 +14,9 @@ import { containerStyles } from '../styles/globalStyle';
 import FormButton from '../components/FormButton';
 import { EducationForm, EducationDisplayForm, EducationUpdateForm } from '../components/EducationForm';
 
+// Import Utils
+import { exportFile } from '../utils/exportFileUtil';
+
 export default class Education extends Component {
   constructor(props) {
     super(props);
@@ -204,6 +207,31 @@ export default class Education extends Component {
     }
   };
 
+  handleExport = async () => {
+    try {
+      if (!this.state.savedEducation || this.state.savedEducation.length < 1) {
+        Alert.alert('No relevant data found');
+        return;
+      }
+
+      const educationDetails = [];
+      this.state.savedEducation.forEach((education) => {
+        educationDetails.push({
+          institute: education.institute,
+          degree: education.degree,
+          dateFrom: education.dateFrom.toLocaleDateString(),
+          dateTo: education.dateTo.toLocaleDateString(),
+        });
+      });
+
+      const fileName = 'education_' + auth.currentUser.uid + '.json';
+      await exportFile(educationDetails, fileName);
+    } catch (error) {
+      console.log(error.message);
+      Alert.alert('Unexpected Error Occurred');
+    }
+  }
+
   componentDidMount() {
     this.fetchUserEducation();
   }
@@ -212,6 +240,10 @@ export default class Education extends Component {
     return (
       <View style={[containerStyles.defaultContainer, { justifyContent: 'flex-start' }]}>
         <View style={containerStyles.formContainer}>
+        {!this.state.showEducationInputForm && !this.state.showEditEducationForm  && (
+            <FormButton title='Export Education Details' onPress={this.handleExport} />
+          )}
+
           {!this.state.showEducationInputForm && !this.state.showEditEducationForm  && (
             <FormButton title='Add an Education' color={'#F2F2F7'} textColor={'#000000'} onPress={this.handleShowEducationInputForm} />
           )}
