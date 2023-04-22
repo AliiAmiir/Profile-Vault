@@ -19,6 +19,7 @@ import RegisterationForm from '../components/RegistrationForm';
 // Import Repositories
 import { saveUser } from '../repository/userRepository';
 import { saveFavorCategoriesBatch } from '../repository/favorsRepository';
+import { saveMoviePreferencesBatch } from '../repository/preferencesRepository';
 
 export default class Register extends Component {
   constructor(props) {
@@ -38,10 +39,8 @@ export default class Register extends Component {
       showDatePicker: false,
       password: '',
       confirmPassword: '',
-      hobbies: '',
       movieGenres: '',
       favors: '',
-      degrees: '',
     }
   }
 
@@ -59,6 +58,10 @@ export default class Register extends Component {
   };
 
   handleChange = (key, value) => {
+    if (key === 'password') {
+      this.setState({ confirmPassword: '' });
+    }
+
     const errors = validateRegistrationFields(key, value, this.state.password, this.state.errors);
     const isSignUpEnabled = isSignUpEnabledCheck(this.state.firstName, this.state.lastName, this.state.email, this.state.phone, this.state.gender, this.state.dateOfBirth, this.state.password, this.state.confirmPassword, errors);
     this.setState({ [key]: value, showDatePicker: false, errors: errors, showGenderPicker: false, isSignUpEnabled: isSignUpEnabled });
@@ -73,8 +76,6 @@ export default class Register extends Component {
         phone: this.state.phone,
         gender: this.state.gender,
         dateOfBirth: this.state.dateOfBirth,
-        hobbies: this.state.hobbies,
-        movieGenres: this.state.movieGenres,
         password: this.state.password,
       };
 
@@ -87,6 +88,11 @@ export default class Register extends Component {
       const favorCategories = this.state.favors.split(',');
       if (favorCategories && favorCategories.length > 0) {
         await saveFavorCategoriesBatch(user.uid, favorCategories);
+      }
+
+      const movieGenres = this.state.movieGenres.split(',');
+      if (movieGenres && movieGenres.length > 0) {
+        await saveMoviePreferencesBatch(user.uid, movieGenres);
       }
     } catch (error) {
       console.log(error.message);
@@ -121,10 +127,8 @@ export default class Register extends Component {
           showDatePicker={this.state.showDatePicker}
           password={this.state.password}
           confirmPassword={this.state.confirmPassword}
-          hobbies={this.state.hobbies}
           movieGenres={this.state.movieGenres}
           favors={this.state.favors}
-          degrees={this.state.degrees}
           errors={this.state.errors}
           isSignUpEnabled={this.state.isSignUpEnabled}
           handleShowDatePicker={this.handleShowDatePicker}

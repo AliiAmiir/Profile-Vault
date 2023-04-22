@@ -11,7 +11,7 @@ import FormButton from './FormButton';
 import CustomDatePicker from './CustomDatePicker';
 import CustomPicker from './CustomPicker';
 
-export default function RegisterationForm({ firstName, lastName, email, phone, gender, genderPickerOptions, showGenderPicker, handleShowGenderPicker, dateOfBirth, showDatePicker, password, confirmPassword, hobbies, movieGenres, favors, degrees, errors, isSignUpEnabled, handleShowDatePicker, handleChange, handleDateChange, onFormSubmit }) {
+export default function RegisterationForm({ firstName, lastName, email, phone, gender, genderPickerOptions, showGenderPicker, handleShowGenderPicker, dateOfBirth, showDatePicker, password, confirmPassword, movieGenres, favors, errors, isSignUpEnabled, handleShowDatePicker, handleChange, handleDateChange, onFormSubmit }) {
   return (
     <ScrollView>
       <View style={containerStyles.columnContainer}>
@@ -36,10 +36,8 @@ export default function RegisterationForm({ firstName, lastName, email, phone, g
         </View>
 
         <View style={containerStyles.spaceAround}>
-          <FormInputText label="Hobbies" placeholder="E.g. Football, Tennis" value={hobbies} onChangeText={(value) => handleChange('hobbies', value)} autoCapitalize="sentences" errorText={errors.hobbies || null} />
           <FormInputText label="Favors Categories (comma separated)" placeholder="E.g. Gardening, Dog Walking" value={favors} onChangeText={(value) => handleChange('favors', value)} autoCapitalize="sentences" errorText={errors.favors || null} />
-          <FormInputText label="Movie Genres" placeholder="E.g. Thriller, Mystery" value={movieGenres} onChangeText={(value) => handleChange('movieGenres', value)} autoCapitalize="sentences" errorText={errors.movieGenres || null} />
-          <FormInputText label="Degrees" placeholder="E.g. Bachelors, Masters" value={degrees} onChangeText={(value) => handleChange('degrees', value)} autoCapitalize="sentences" errorText={errors.degrees || null} />
+          <FormInputText label="Movie Genres Preferences (comma separated)" placeholder="E.g. Thriller, Mystery" value={movieGenres} onChangeText={(value) => handleChange('movieGenres', value)} autoCapitalize="sentences" errorText={errors.movieGenres || null} />
         </View>
       </View>
 
@@ -63,10 +61,8 @@ RegisterationForm.propTypes = {
   showDatePicker: PropTypes.bool,
   password: PropTypes.string,
   confirmPassword: PropTypes.string,
-  hobbies: PropTypes.string,
   movieGenres: PropTypes.string,
   favors: PropTypes.string,
-  degrees: PropTypes.string,
   errors: PropTypes.object,
   isSignUpEnabled: PropTypes.bool,
   handleShowDatePicker: PropTypes.func,
@@ -85,9 +81,7 @@ RegisterationForm.defaultProps = {
   showDatePicker: false,
   password: '',
   confirmPassword: '',
-  hobbies: '',
   movieGenres: '',
   favors: '',
-  degrees: '',
   isSignUpEnabled: false,
 };

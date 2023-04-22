@@ -32,7 +32,7 @@ export const validateRegistrationFields = (fieldName, fieldValue, password, exis
             errors.password = fieldValue.length >= 6 ? null : 'Invalid password';
             break;
         case 'confirmPassword':
-            errors.confirmPassword = fieldValue == password ? null : 'Passwords mismatch';
+            errors.confirmPassword = fieldValue == password ? null : 'Passwords do not match';
             break;
         case 'favors':
             const favorsRegex = /^[a-zA-Z, ]+$/;

@@ -70,7 +70,7 @@ export const saveFavorCategoriesBatch = async (uid, favors) => {
 
 export const saveFavor = async (userId, favorDetails) => {
     try {
-        if (!favorDetails.recipients || favorDetails.recipients.length < 0 || !favorDetails.type || !favorDetails.type.trim()) {
+        if (!favorDetails.recipients || favorDetails.recipients.length < 1 || !favorDetails.type || !favorDetails.type.trim()) {
             return { success: false, message: 'Please enter a required fields' };
         }
 
@@ -79,7 +79,7 @@ export const saveFavor = async (userId, favorDetails) => {
         const querySnapshot = await checkDuplicate(q);
 
         if (querySnapshot.duplicate) {
-            return { success: false, message: 'Duplicate Favor' };
+            return { success: false, message: 'Duplicate Favor Type' };
         }
 
         const filteredRecipients = favorDetails.recipients.filter((recipient) => {
@@ -112,7 +112,7 @@ export const saveFavor = async (userId, favorDetails) => {
 
 export const updateFavorById = async (favorId, userId, favorDetails) => {
     try {
-        if (!favorDetails.recipients || favorDetails.recipients.length < 0 || !favorDetails.type || !favorDetails.type.trim()) {
+        if (!favorDetails.recipients || favorDetails.recipients.length < 1 || !favorDetails.type || !favorDetails.type.trim()) {
             return { success: false, message: 'Please enter a required fields' };
         }
 
@@ -145,7 +145,7 @@ export const updateFavorById = async (favorId, userId, favorDetails) => {
         const favorRef = doc(db, 'favors', favorId);
         await updateDoc(favorRef, {
             type: favorDetails.type,
-            recipients: favorDetails.recipients,
+            recipients: uniqueRecipients,
             updatedOn: new Date()
         });
 

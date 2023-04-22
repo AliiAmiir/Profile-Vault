@@ -38,8 +38,6 @@ export const saveUser = async (uid, userDetails) => {
             phone: userDetails.phone,
             gender: userDetails.gender,
             dateOfBirth: userDetails.dateOfBirth,
-            hobbies: userDetails.hobbies,
-            movieGenres: userDetails.movieGenres,
             createdOn: new Date(),
             updatedOn: new Date(),
         });

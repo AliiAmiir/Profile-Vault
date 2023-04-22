@@ -1,24 +1,41 @@
 import { collection, query, where, getDocs, addDoc, updateDoc, deleteDoc, doc, orderBy, limit } from 'firebase/firestore';
 import { db } from '../config/firebaseConfig';
+import { computeCapitalizedFirstLetter } from '../utils/computeUtil';
 
-export const savePreference = async (userId, preference) => {
+export const savePreference = async (userId, preferenceDetails) => {
     try {
-        if (!preference.name || !preference.name.trim() || !preference.type || !preference.type.trim()) {
-            return { success: false, message: 'Please enter a required fields' };
+        console.log('savePreference', userId, preferenceDetails);
+
+        if (!preferenceDetails.names || preferenceDetails.names.length < 1 || !preferenceDetails.type || !preferenceDetails.type.trim()) {
+            return { success: false, message: 'Please enter the required fields' };
         }
 
-        const q = query(collection(db, 'preferences'), where('uid', '==', userId), where('name', '==', preference.name), where('type', '==', preference.type));
+        const q = query(collection(db, 'preferences'), where('uid', '==', userId), where('type', '==', preferenceDetails.type));
 
         const querySnapshot = await checkDuplicate(q);
 
         if (querySnapshot.duplicate) {
-            return { success: false, message: 'Duplicate Preference' };
+            return { success: false, message: 'Duplicate Preference Type' };
+        }
+
+        const filteredNames = preferenceDetails.names.filter((name) => {
+            if (!name || !name.trim()) {
+                return false;
+            } else {
+                return name.trim();
+            }
+        }).map((name) => computeCapitalizedFirstLetter(name));
+
+        const uniqueNames = [...new Set(filteredNames)];
+
+        if (uniqueNames.length < 1) {
+            return { success: false, message: 'Please enter a valid Preference' };
         }
 
         await addDoc(collection(db, 'preferences'), {
             uid: userId,
-            name: preference.name,
-            type: preference.type,
+            names: uniqueNames,
+            type: preferenceDetails.type,
             createdOn: new Date(),
             updatedOn: new Date()
         });
@@ -29,13 +46,52 @@ export const savePreference = async (userId, preference) => {
     }
 };
 
+export const saveMoviePreferences = async (uid, preferences) => {
+    try {
+        if (!preferences || preferences.length < 1) {
+            return;
+        }
+
+        const q = query(collection(db, 'preferences'), where('uid', '==', uid));
+
+        const querySnapshot = await checkDuplicate(q);
+
+        if (querySnapshot.duplicate) {
+            return { success: false, message: 'Preferences for this User already exist' };
+        }
+
+        const filteredPreferences = preferences.filter((preference) => {
+            if (!preference || !preference.trim()) {
+                return false;
+            } else {
+                return preference.trim();
+            }
+        }).map((preference) => computeCapitalizedFirstLetter(preference));
+
+        const uniquePreferences = [...new Set(filteredPreferences)];
+
+        await addDoc(collection(db, 'preferences'), {
+            uid: userId,
+            names: uniquePreferences,
+            type: 'Movies',
+            createdOn: new Date(),
+            updatedOn: new Date()
+        });
+
+        return { success: true, message: 'Saved Preference Categories' };
+    } catch (error) {
+        console.error(error);
+        throw error;
+    }
+}
+
 export const updatePreferenceById = async (preferenceId, preference) => {
     try {
-        if (!preference.name || !preference.name.trim() || !preference.type || !preference.type.trim()) {
+        if (!preference.names || preference.names.length < 1 || !preference.type || !preference.type.trim()) {
             return { success: false, message: 'Please enter a required fields' };
         }
 
-        const q = query(collection(db, 'preferences'), where('uid', '==', preference.uid), where('name', '==', preference.name), where('type', '==', preference.type));
+        const q = query(collection(db, 'preferences'), where('uid', '==', preference.uid), where('type', '==', preference.type));
 
         const duplicateSnapshot = await checkDuplicate(q);
 
@@ -47,8 +103,22 @@ export const updatePreferenceById = async (preferenceId, preference) => {
             }
         }
 
+        const filteredNames = preference.names.filter((name) => {
+            if (!name || !name.trim()) {
+                return false;
+            } else {
+                return name.trim();
+            }
+        }).map((name) => computeCapitalizedFirstLetter(name));
+
+        const uniqueNames = [...new Set(filteredNames)];
+
+        if (uniqueNames.length < 1) {
+            return { success: false, message: 'Please enter a valid Preference' };
+        }
+
         await updateDoc(doc(db, 'preferences', preferenceId), {
-            name: preference.name,
+            names: uniqueNames,
             type: preference.type,
             updatedOn: new Date()
         });
@@ -81,7 +151,12 @@ export const fetchUserPreferences = async (userId, docLimit) => {
         let preferences = [];
 
         querySnapshot.forEach((doc) => {
-            preferences.push({ key: doc.id, ...doc.data() });
+            if (doc.data().names) {
+                let names = doc.data().names.join(', ');
+                preferences.push({ key: doc.id, ...doc.data(), names });
+            } else {
+                preferences.push({ key: doc.id, ...doc.data() });
+            }
         });
 
         return { success: true, data: preferences };

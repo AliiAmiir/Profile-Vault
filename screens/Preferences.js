@@ -21,7 +21,7 @@ export default class PersonalPreferences extends Component {
 
     this.state = {
       loading: true,
-      newPreferenceName: '',
+      newPreferenceNames: '',
       newPreferenceType: '',
       errors: {},
       savedPreferences: [],
@@ -57,15 +57,15 @@ export default class PersonalPreferences extends Component {
   handleSavePreference = async () => {
     try {
       const newPreference = {
-        name: this.state.newPreferenceName,
         type: this.state.newPreferenceType,
+        names: this.state.newPreferenceNames.split(','),
       };
 
       const response = await savePreference(auth.currentUser.uid, newPreference);
 
       if (response && response.success) {
         Alert.alert(response.message || 'Saved Preference');
-        this.setState({ newPreferenceName: '', newPreferenceType: '', showPreferenceInputForm: false })
+        this.setState({ newPreferenceNames: '', newPreferenceType: '', showPreferenceInputForm: false })
       } else {
         Alert.alert(response.message || 'Failed to save Preference');
       }
@@ -80,24 +80,21 @@ export default class PersonalPreferences extends Component {
   handleUpdateItem = async (item) => {
     try {
       let preference = {
-        name: item.name,
         type: item.type,
         uid: item.uid,
       };
 
-      let response = await updatePreferenceById(item.key, preference);
-      let message = 'Updated Preference';
-
-      if (response && response.success) {
-        message = response.message || 'Updated Preference';
-
-        this.setState({ newPreferenceName: '' })
-      } else {
-        message = response.message || 'Failed to update Preference';
-        this.setState({ newPreferenceName: '' })
+      if(item.names) {
+        preference.names = item.names.split(',');
       }
 
-      Alert.alert(message);
+      let response = await updatePreferenceById(item.key, preference);
+
+      if (response && response.success) {
+        Alert.alert(response.message || 'Updated Preference');
+      } else {
+        Alert.alert(response.message || 'Failed to update Preference');
+      }
 
       await this.fetchPreferences();
     } catch (error) {
@@ -146,8 +143,8 @@ export default class PersonalPreferences extends Component {
       <View style={[containerStyles.defaultContainer, { justifyContent: 'flex-start' }, containerStyles.formContainer]}>
         {this.state.showPreferenceInputForm && !this.state.showEditPreferencesForm && (
           <View>
-            <FormInputText placeholder="Preference Name" value={this.state.newPreferenceName} onChangeText={(value) => this.handleChange('newPreferenceName', value)} autoCapitalize="sentences" />
             <FormInputText placeholder="Preference Type" value={this.state.newPreferenceType} onChangeText={(value) => this.handleChange('newPreferenceType', value)} autoCapitalize="sentences" />
+            <FormInputText placeholder="Preference Names (Comma separated)" value={this.state.newPreferenceNames} onChangeText={(value) => this.handleChange('newPreferenceNames', value)} autoCapitalize="sentences" />
             <FormButton title='Save Preference' onPress={this.handleSavePreference} />
             <FormButton title='Cancel' color={'#F2F2F7'} textColor={'#000000'} onPress={this.handleShowPreferenceInputForm} />
           </View>
@@ -173,8 +170,8 @@ export default class PersonalPreferences extends Component {
             <View>
               <View style={containerStyles.updateRowContainer}>
                 <View style={[containerStyles.textInputContainer, { flex: 4 }]}>
-                  <TextInput value={item.name} onChangeText={(value) => this.handleUpdateChange(item.key, { field: 'name', value: value })} autoCapitalize={'sentences'} style={formInputTextStyles.input} />
                   <TextInput value={item.type} onChangeText={(value) => this.handleUpdateChange(item.key, { field: 'type', value: value })} autoCapitalize={'sentences'} style={formInputTextStyles.input} />
+                  <TextInput value={item.names} onChangeText={(value) => this.handleUpdateChange(item.key, { field: 'names', value: value })} autoCapitalize={'sentences'} style={formInputTextStyles.input} />
                 </View>
               </View>
               <View style={containerStyles.rowContainer}>
@@ -192,7 +189,15 @@ export default class PersonalPreferences extends Component {
 
         {!this.state.showEditPreferencesForm && !this.state.showPreferenceInputForm && (
           <FlatList data={this.state.savedPreferences} renderItem={({ item }) => (
-            <FormText value={`${item.type} - ${item.name}`} />
+            <View style={containerStyles.textInputContainer}>
+              {item.names && item.names.length > 0 && (
+                <TextInput editable={false} value={`${item.type} for ${item.names}`} style={formInputTextStyles.input} />
+              )}
+
+              {!item.names && (
+                <TextInput editable={false} value={`${item.type} - No values added`} style={formInputTextStyles.input} />
+              )}
+            </View>
           )} style={containerStyles.buttonContainer}>
           </FlatList>
         )}

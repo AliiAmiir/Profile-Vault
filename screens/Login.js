@@ -19,18 +19,15 @@ export default class Register extends Component {
 
     this.state = {
       loading: true,
-      isSignedIn: false,
+      isSignInEnabled: false,
       email: '',
       password: '',
     }
   }
 
-  handleEmailChange = (email) => {
-    this.setState({ email: email });
-  };
-
-  handlePasswordChange = (password) => {
-    this.setState({ password: password });
+  handleChange = (key, value) => {
+    const isSignInEnabled = (this.state.email  && this.state.password);
+    this.setState({ [key]: value, isSignInEnabled: isSignInEnabled });
   };
 
   handleRegistrationNavigation = () => {
@@ -40,11 +37,18 @@ export default class Register extends Component {
 
   onLogin = async () => {
     try {
+      if (!this.state.email || !this.state.password) {
+        Alert.alert('Required fields missing');
+        return;
+      }
+
       await signInWithEmailAndPassword(auth, this.state.email, this.state.password);
     } catch (error) {
       console.log(error.message);
-      if (error.code === 'auth/wrong-password' || error.code === 'auth/invalid-email' || error.code === 'auth/user-not-found') {
+      if (error.code === 'auth/wrong-password' || error.code === 'auth/invalid-email' || error.code === 'auth/user-not-found' || error.code === 'auth/missing-password') {
         Alert.alert('Incorrect Email or Password');
+      } else {
+        Alert.alert('Unexpected Error Occured');
       }
     }
   }
@@ -64,11 +68,11 @@ export default class Register extends Component {
       <View style={containerStyles.defaultContainer}>
         <Logo />
         <View style={containerStyles.textInputContainer}>
-          <FormInputText keyboardType="email-address" label="Email" placeholder="john.smith@comany.com" value={this.state.email} onChangeText={this.handleEmailChange} />
-          <FormInputText label="Password" placeholder="password" value={this.state.password} onChangeText={this.handlePasswordChange} secureTextEntry />
+          <FormInputText keyboardType="email-address" label="Email" placeholder="john.smith@comany.com" value={this.state.email} onChangeText={(value) => this.handleChange('email', value)} />
+          <FormInputText label="Password" placeholder="password" value={this.state.password} onChangeText={(value) => this.handleChange('password', value)} secureTextEntry />
         </View>
         <View style={containerStyles.buttonContainer}>
-          <FormButton title='Login' onPress={this.onLogin} />
+          <FormButton title='Login' opacity={this.state.isSignInEnabled ? 1 : 0.5} onPress={this.state.isSignInEnabled ? this.onLogin : null} />
           <FormButton title='New User? Sign Up Here!' color={'#F2F2F7'} textColor={'#000000'} onPress={this.handleRegistrationNavigation} />
         </View>
       </View>
