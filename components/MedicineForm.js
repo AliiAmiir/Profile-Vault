@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { View, Text, TouchableOpacity } from 'react-native';
+import { View, Text } from 'react-native';
 import { Button } from 'react-native-elements';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
@@ -8,7 +8,7 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import { containerStyles, textStyles } from '../styles/globalStyle';
 import FormInputText from './FormInputText';
 
-export const MedicineForm = ({ index, medicine, handleChange, addMedicineRow, removeMedicineRow, errorText }) => {
+export const MedicineForm = ({ index, medicine, handleChange, removeMedicineRow, errorText }) => {
     return (
         <View style={containerStyles.textInputContainer}>
             <View style={containerStyles.rowContainerSpaceBetween}>
@@ -19,7 +19,6 @@ export const MedicineForm = ({ index, medicine, handleChange, addMedicineRow, re
                 </View>
 
                 <View style={containerStyles.rowPasswordButtonContainer}>
-                    <Button onPress={addMedicineRow} type='clear' icon={<Icon name="plus" size={20} color="#6374D1" />} />
                     <Button onPress={() => removeMedicineRow(index)} type='clear' icon={<Icon name="trash" size={20} color="#CD5151" />} />
                 </View>
             </View>
@@ -35,7 +34,6 @@ MedicineForm.propTypes = {
         frequency: PropTypes.string,
     }),
     handleChange: PropTypes.func.isRequired,
-    addMedicineRow: PropTypes.func,
     removeMedicineRow: PropTypes.func,
     errorText: PropTypes.string,
 };
@@ -74,7 +72,7 @@ MedicineDisplayForm.defaultProps = {
     }
 };
 
-export const MedicineUpdateForm = ({ itemKey, index, medicine, handleChange, addMedicineRow, removeMedicineRow }) => {
+export const MedicineUpdateForm = ({ itemKey, index, medicine, handleChange, removeMedicineRow }) => {
     return (
         <View style={containerStyles.textInputContainer}>
             <View style={containerStyles.rowContainerSpaceBetween}>
@@ -85,7 +83,6 @@ export const MedicineUpdateForm = ({ itemKey, index, medicine, handleChange, add
                 </View>
 
                 <View style={containerStyles.rowPasswordButtonContainer}>
-                    <Button onPress={() => addMedicineRow(itemKey)} type='clear' icon={<Icon name="plus" size={20} color="#6374D1" />} />
                     <Button onPress={() => removeMedicineRow(itemKey)} type='clear' icon={<Icon name="trash" size={20} color="#CD5151" />} />
                 </View>
             </View>
@@ -102,7 +99,6 @@ MedicineUpdateForm.propTypes = {
         frequency: PropTypes.string,
     }),
     handleChange: PropTypes.func.isRequired,
-    addMedicineRow: PropTypes.func,
     removeMedicineRow: PropTypes.func,
 };
 

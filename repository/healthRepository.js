@@ -3,9 +3,15 @@ import { db } from '../config/firebaseConfig';
 
 export const saveHealth = async (userId, healthDetails) => {
     try {
+        if (!healthDetails.checkUpType || !healthDetails.checkUpType.trim() || !healthDetails.diagnosis || !healthDetails.diagnosis.trim() || !healthDetails.doctor || !healthDetails.doctor.trim() || !healthDetails.checkUpDate) {
+            return { success: false, message: 'Missing required fields' };
+        }
+
         await addDoc(collection(db, 'health'), {
             uid: userId,
             checkUpType: healthDetails.checkUpType,
+            diagnosis: healthDetails.diagnosis,
+            doctor: healthDetails.doctor,
             checkUpDate: healthDetails.checkUpDate,
             medicines: healthDetails.medicines,
             createdOn: new Date(),
@@ -20,8 +26,14 @@ export const saveHealth = async (userId, healthDetails) => {
 
 export const updateHealth = async (healthId, healthDetails) => {
     try {
+        if (!healthDetails.checkUpType || !healthDetails.checkUpType.trim() || !healthDetails.diagnosis || !healthDetails.diagnosis.trim() || !healthDetails.doctor || !healthDetails.doctor.trim() || !healthDetails.checkUpDate) {
+            return { success: false, message: 'Missing required fields' };
+        }
+        
         await updateDoc(doc(db, 'health', healthId), {
             checkUpType: healthDetails.checkUpType,
+            diagnosis: healthDetails.diagnosis,
+            doctor: healthDetails.doctor,
             checkUpDate: healthDetails.checkUpDate,
             medicines: healthDetails.medicines,
             updatedOn: new Date(),

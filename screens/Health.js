@@ -21,6 +21,8 @@ export default class Health extends Component {
     this.state = {
       loading: true,
       newHealthCheckUpType: '',
+      newHealthDiagnosis: '',
+      newDoctorName: '',
       newHealthCheckUpDate: new Date(),
       showDatePicker: false,
       newHealthMedicines: [{ name: '', dosage: '', frequency: '' }],
@@ -145,7 +147,11 @@ export default class Health extends Component {
     try {
       const healthDetails = {
         checkUpType: this.state.newHealthCheckUpType,
+        doctor: this.state.newDoctorName,
+        diagnosis: this.state.newHealthDiagnosis,
+        doctor: this.state.newDoctorName,
         checkUpDate: this.state.newHealthCheckUpDate,
+        diagnosis: this.state.newHealthDiagnosis,
         medicines: this.state.newHealthMedicines,
       };
 
@@ -153,10 +159,9 @@ export default class Health extends Component {
 
       if (response && response.success) {
         Alert.alert(response.message || 'Saved Health');
-        this.setState({ newHealthCheckUpType: '', newHealthCheckUpDate: new Date(), newHealthMedicines: [{ name: '', dosage: '', frequency: '' }], showHealthInputForm: false })
+        this.setState({ newHealthCheckUpType: '', newHealthDiagnosis: '', newDoctorName: '', newHealthCheckUpDate: new Date(), newHealthMedicines: [{ name: '', dosage: '', frequency: '' }], showHealthInputForm: false })
       } else {
         Alert.alert(response.message || 'Failed to save Health');
-        this.setState({ newHealthCheckUpType: '', newHealthCheckUpDate: new Date(), newHealthMedicines: [{ name: '', dosage: '', frequency: '' }], showHealthInputForm: false })
       }
 
       await this.fetchUserHealth();
@@ -174,6 +179,8 @@ export default class Health extends Component {
 
       const healthDetails = {
         checkUpType: health.checkUpType,
+        doctor: health.doctor,
+        diagnosis: health.diagnosis,
         checkUpDate: health.checkUpDate,
         medicines: health.medicines,
       };
@@ -239,6 +246,8 @@ export default class Health extends Component {
           {this.state.showHealthInputForm && (
             <HealthForm
               checkUpType={this.state.newHealthCheckUpType}
+              doctor={this.state.newDoctorName}
+              diagnosis={this.state.newHealthDiagnosis}
               checkUpDate={this.state.newHealthCheckUpDate}
               medicines={this.state.newHealthMedicines}
               handleChange={this.handleChange}
@@ -261,6 +270,8 @@ export default class Health extends Component {
             <FlatList data={this.state.savedHealthDetails} renderItem={({ item }) => (
               <HealthDisplayForm
                 checkUpType={item.checkUpType}
+                doctor={item.doctor}
+                diagnosis={item.diagnosis}
                 checkUpDate={item.checkUpDate}
                 medicines={item.medicines}
               />
@@ -274,6 +285,8 @@ export default class Health extends Component {
               <HealthUpdateForm
                 itemKey={item.key}
                 checkUpType={item.checkUpType}
+                doctor={item.doctor}
+                diagnosis={item.diagnosis}
                 checkUpDate={item.checkUpDate}
                 medicines={item.medicines}
                 handleChange={this.handleUpdateChange}
