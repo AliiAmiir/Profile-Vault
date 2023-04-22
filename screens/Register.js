@@ -19,7 +19,7 @@ import RegisterationForm from '../components/RegistrationForm';
 // Import Repositories
 import { saveUser } from '../repository/userRepository';
 import { saveFavorCategoriesBatch } from '../repository/favorsRepository';
-import { saveMoviePreferencesBatch } from '../repository/preferencesRepository';
+import { saveMoviePreferences } from '../repository/preferencesRepository';
 
 export default class Register extends Component {
   constructor(props) {
@@ -92,7 +92,7 @@ export default class Register extends Component {
 
       const movieGenres = this.state.movieGenres.split(',');
       if (movieGenres && movieGenres.length > 0) {
-        await saveMoviePreferencesBatch(user.uid, movieGenres);
+        await saveMoviePreferences(user.uid, movieGenres);
       }
     } catch (error) {
       console.log(error.message);

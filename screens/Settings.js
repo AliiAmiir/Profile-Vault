@@ -205,7 +205,7 @@ export default class Settings extends Component {
           </ScrollView>
         )}
 
-        {this.state.showEditUserForm && (<FormButton title='Cancel User Update' color={'#F2F2F7'} textColor={'#000000'} onPress={this.handleShowEditUserForm} />)}
+        {this.state.showEditUserForm && (<FormButton title='Cancel' color={'#F2F2F7'} textColor={'#000000'} onPress={this.handleShowEditUserForm} />)}
 
         {!this.state.showEditUserForm && (<FormButton title='Edit User Details' color={'#F2F2F7'} textColor={'#000000'} onPress={this.handleShowEditUserForm} />)}
 

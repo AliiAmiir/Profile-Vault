@@ -71,7 +71,7 @@ export const saveMoviePreferences = async (uid, preferences) => {
         const uniquePreferences = [...new Set(filteredPreferences)];
 
         await addDoc(collection(db, 'preferences'), {
-            uid: userId,
+            uid: uid,
             names: uniquePreferences,
             type: 'Movies',
             createdOn: new Date(),
