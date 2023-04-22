@@ -75,7 +75,14 @@ export default class Settings extends Component {
 
   async fetchUserData() {
     try {
-      const userData = await fetchUserById(auth.currentUser.uid);
+      const response = await fetchUserById(auth.currentUser.uid);
+      
+      if (!response || !response.success) {
+        Alert.alert('Unable to fetch user details');
+        return;
+      }
+
+      const userData = response.data;
 
       this.setState({
         loading: false,

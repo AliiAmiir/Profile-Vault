@@ -14,6 +14,10 @@ import { containerStyles } from '../styles/globalStyle';
 import FormButton from '../components/FormButton';
 import { JobForm, JobDisplayForm, JobUpdateForm } from '../components/JobForm';
 
+// Import Utils
+import { exportFile } from '../utils/exportFileUtil';
+import { async } from '@firebase/util';
+
 export default class Job extends Component {
   constructor(props) {
     super(props);
@@ -172,7 +176,6 @@ export default class Job extends Component {
     }
   };
 
-
   handledeleteJob = async (key) => {
     try {
       const response = await deleteJob(key);
@@ -205,6 +208,31 @@ export default class Job extends Component {
     }
   };
 
+  handleExport = async () => {
+    try {
+      if (!this.state.savedJobs || this.state.savedJobs.length < 1) {
+        Alert.alert('No relevant data found');
+        return;
+      }
+
+      const jobDetails = [];
+      this.state.savedJobs.forEach((job) => {
+        jobDetails.push({
+          company: job.company,
+          title: job.title,
+          dateFrom: job.dateFrom.toLocaleDateString(),
+          dateTo: job.dateTo.toLocaleDateString(),
+        });
+      });
+
+      const fileName = 'jobs_' + auth.currentUser.uid + '.json';
+      await exportFile(jobDetails, fileName);
+    } catch (error) {
+      console.log(error.message);
+      Alert.alert('Unexpected Error Occurred');
+    }
+  }
+
   componentDidMount() {
     this.fetchUserJobs();
   }
@@ -213,6 +241,10 @@ export default class Job extends Component {
     return (
       <View style={[containerStyles.defaultContainer, { justifyContent: 'flex-start' }]}>
         <View style={containerStyles.formContainer}>
+          {!this.state.showJobInputForm && !this.state.showEditJobForm && (
+            <FormButton title='Export Job Details' onPress={this.handleExport} />
+          )}
+
           {!this.state.showJobInputForm && !this.state.showEditJobForm && (
             <FormButton title='Add a Job' color={'#F2F2F7'} textColor={'#000000'} onPress={this.handleShowJobInputForm} />
           )}

@@ -1,7 +1,6 @@
 export const computeInitials = (firstName, lastName) => {
     let initials = 'N/A';
     if (!firstName || !firstName.trim() || !lastName || !lastName.trim()) {
-        console.log('First name and/or Last name can not be null');
         return initials;
     }
 
