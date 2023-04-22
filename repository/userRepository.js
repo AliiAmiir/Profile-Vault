@@ -11,10 +11,11 @@ export const fetchUserById = async (userId) => {
             let user = querySnapshot.docs[0].data();
             user.dateOfBirth = user.dateOfBirth.toDate();
             user.userDocKey = querySnapshot.docs[0].id;
-            return user;
+            
+            return { success: true, data: user };
         }
 
-        return null;
+        return { success: false, message: 'User not found' };
     } catch (error) {
         return error;
     }

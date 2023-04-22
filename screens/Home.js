@@ -1,5 +1,6 @@
-import React, { Component } from 'react';
+import React, { Component, useRef, useCallback } from 'react';
 import { View, Text, ScrollView, Alert } from 'react-native';
+import { useFocusEffect } from '@react-navigation/native';
 
 // Import Utils
 import { computeAge } from '../utils/computeUtil';
@@ -20,8 +21,113 @@ import { containerStyles, textStyles } from '../styles/globalStyle';
 // Import Components
 import UserAvatar from '../components/UserAvatar';
 
+const fetchHomeScreenData = async () => {
+  try {
+    const userData = await fetchUserData();
+    const goalsData = await fetchGoals();
+    const preferencesData = await fetchPreferences();
+    const favorsData = await fetchFavors();
+    const tripsData = await fetchUpcomingTrips();
 
-export default class Home extends Component {
+    return ({
+      userData: userData,
+      goalsData: goalsData,
+      preferencesData: preferencesData,
+      favorsData: favorsData,
+      tripsData: tripsData,
+    });
+  } catch (error) {
+    console.log(error.message);
+    throw error;
+  }
+}
+
+const fetchUserData = async () => {
+  try {
+    const response = await fetchUserById(auth.currentUser.uid);
+    if (!response || !response.success) {
+      throw new Error(response.message || 'Failed to fetch User Data');
+    }
+
+    const userData = response.data;
+
+    const age = computeAge(userData.dateOfBirth)
+
+    return ({
+      firstName: userData.firstName,
+      lastName: userData.lastName,
+      email: userData.email,
+      dateOfBirth: userData.dateOfBirth,
+      phone: userData.phone,
+      age: age,
+    });
+  } catch (error) {
+    console.log(error.message);
+    throw error;
+  }
+}
+
+const fetchGoals = async () => {
+  try {
+    const response = await fetchUserGoals(auth.currentUser.uid, 3);
+
+    if (response && response.success) {
+      return response.data;
+    } else {
+      throw new Error(response.message || 'Failed to fetch User Goals');
+    }
+  } catch (error) {
+    console.log(error.message);
+    throw error;
+  }
+}
+
+const fetchPreferences = async () => {
+  try {
+    const response = await fetchUserPreferences(auth.currentUser.uid, 3);
+
+    if (response && response.success) {
+      return response.data;
+    } else {
+      throw new Error(response.message || 'Failed to fetch User Preferences');
+    }
+  } catch (error) {
+    console.log(error.message);
+    throw error;
+  }
+}
+
+const fetchFavors = async () => {
+  try {
+    const response = await fetchFavorsForHome(auth.currentUser.uid);
+
+    if (response && response.success) {
+      return response.data;
+    } else {
+      throw new Error(response.message || 'Failed to fetch Favors');
+    }
+  } catch (error) {
+    console.log(error.message);
+    throw error;
+  }
+}
+
+const fetchUpcomingTrips = async() =>{
+  try {
+    const response = await fetchUpcomingTripsForHome(auth.currentUser.uid);
+
+    if (response && response.success) {
+      return response.data;
+    } else {
+      throw new Error(response.message || 'Failed to fetch Upcoming Trips');
+    }
+  } catch (error) {
+    console.log(error.message);
+    throw error;
+  }
+}
+
+class Home extends Component {
   constructor(props) {
     super(props);
 
@@ -51,31 +157,9 @@ export default class Home extends Component {
 
   async fetchHomeScreenData() {
     try {
-      // Fetch User Data
-      await this.fetchUserData();
 
-      // Fetch Goals
-      await this.fetchGoals();
-
-      // Fetch Preferences
-      await this.fetchPreferences();
-
-      // Fetch Favors
-      await this.fetchFavors();
-
-      // Fetch Upcoming Trips
-      await this.fetchUpcomingTrips();
-    } catch (error) {
-      console.log(error.message);
-      Alert.alert('Unexpected Error Occurred');
-    }
-  }
-
-  async fetchUserData() {
-    try {
-      const userData = await fetchUserById(auth.currentUser.uid);
-      const age = computeAge(userData.dateOfBirth)
-
+      const { userData, goalsData, preferencesData, favorsData, tripsData } = await fetchHomeScreenData();
+      
       this.setState({
         loading: false,
         firstName: userData.firstName,
@@ -83,71 +167,15 @@ export default class Home extends Component {
         email: userData.email,
         dateOfBirth: userData.dateOfBirth,
         phone: userData.phone,
-        age: age,
+        age: userData.age,
+        goals: goalsData,
+        preferences: preferencesData,
+        favors: favorsData,
+        upcomingTrips: tripsData,
       });
     } catch (error) {
       console.log(error.message);
-      throw error;
-    }
-  }
-
-  async fetchGoals() {
-    try {
-      const response = await fetchUserGoals(auth.currentUser.uid, 3);
-
-      if (response && response.success) {
-        this.setState({ goals: response.data });
-      } else {
-        Alert.alert(response.message || 'Failed to fetch User Goals');
-      }
-    } catch (error) {
-      console.log(error.message);
-      throw error;
-    }
-  }
-
-  async fetchUpcomingTrips() {
-    try {
-      const response = await fetchUpcomingTripsForHome(auth.currentUser.uid);
-
-      if (response && response.success) {
-        this.setState({ upcomingTrips: response.data });
-      } else {
-        Alert.alert(response.message || 'Failed to fetch Upcoming Trips');
-      }
-    } catch (error) {
-      console.log(error.message);
-      throw error;
-    }
-  }
-
-  async fetchFavors() {
-    try {
-      const response = await fetchFavorsForHome(auth.currentUser.uid);
-
-      if (response && response.success) {
-        this.setState({ favors: response.data });
-      } else {
-        Alert.alert(response.message || 'Failed to fetch Favors');
-      }
-    } catch (error) {
-      console.log(error.message);
-      throw error;
-    }
-  }
-
-  async fetchPreferences() {
-    try {
-      const response = await fetchUserPreferences(auth.currentUser.uid, 3);
-
-      if (response && response.success) {
-        this.setState({ preferences: response.data });
-      } else {
-        Alert.alert(response.message || 'Failed to fetch Preferences');
-      }
-    } catch (error) {
-      console.log(error.message);
-      throw error;
+      Alert.alert('Unexpected Error Occurred');
     }
   }
 
@@ -225,7 +253,7 @@ export default class Home extends Component {
             {this.state.preferences && this.state.preferences.length > 0 && (<View style={containerStyles.textContainer}>
               <Text style={textStyles.textSubHeading}>Preferences</Text>
               {this.state.preferences.map((preference, index) => (
-                <Text style={textStyles.boldText} key={index}>{`${preference.type} - ${preference.name}`}</Text>
+                <Text style={textStyles.boldText} key={index}>{`${preference.type} - ${preference.names}`}</Text>
               ))}
               <Text style={textStyles.subText}>For more details, navigate to Preferences</Text>
             </View>
@@ -242,3 +270,19 @@ export default class Home extends Component {
     );
   }
 }
+
+function HomeWrapper(props) {
+  const homeRef = useRef();
+
+  useFocusEffect(
+    useCallback(() => {
+      if (homeRef.current) {
+        homeRef.current.fetchHomeScreenData();
+      }
+    }, [])
+  );
+
+  return <Home ref={homeRef} {...props} />;
+}
+
+export default HomeWrapper;
