@@ -12,6 +12,7 @@ import PersonalGoal from '../screens/PersonalGoal';
 import Relatives from '../screens/Relatives';
 import Trips from '../screens/Trips';
 import Manage from '../screens/Manage';
+import ForgotPassword from '../screens/ForgotPassword';
 
 const AuthStack = createStackNavigator();
 const ManageStack = createStackNavigator();
@@ -21,6 +22,7 @@ export const AuthScreenStack = () => {
         <AuthStack.Navigator>
             <AuthStack.Screen name="Login" component={Login} />
             <AuthStack.Screen name="Register" component={Register} />
+            <AuthStack.Screen name="ForgotPassword" component={ForgotPassword} />
         </AuthStack.Navigator>
     )
 };

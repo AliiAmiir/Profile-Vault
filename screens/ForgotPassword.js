@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
-import { View, Alert, Button } from 'react-native';
-import { signInWithEmailAndPassword } from "firebase/auth";
+import { View, Alert } from 'react-native';
+import { sendPasswordResetEmail } from "firebase/auth";
 
 // Import Configs
 import { auth } from '../config/firebaseConfig';
@@ -19,35 +19,33 @@ export default class Register extends Component {
 
     this.state = {
       loading: true,
-      isSignInEnabled: false,
       email: '',
-      password: '',
+      isResetEnabled: false,
     }
   }
 
   handleChange = (key, value) => {
-    const isSignInEnabled = (this.state.email  && this.state.password);
-    this.setState({ [key]: value, isSignInEnabled: isSignInEnabled });
+    if (key === 'email' && !value || value === '') {
+      this.setState({ [key]: value, isResetEnabled: false });
+      return;
+    }
+
+    const isResetEnabled = this.state.email;
+    this.setState({ [key]: value, isResetEnabled: isResetEnabled });
   };
 
-  handleRegistrationNavigation = () => {
-    const { navigation } = this.props;
-    navigation.navigate('Register');
-  };
-
-  handleForgotPasswordNavigation = () => {
-    const { navigation } = this.props;
-    navigation.navigate('ForgotPassword');
-  };
-
-  onLogin = async () => {
+  onResetPassword = async () => {
     try {
-      if (!this.state.email || !this.state.password) {
+      if (!this.state.email) {
         Alert.alert('Required fields missing');
         return;
       }
 
-      await signInWithEmailAndPassword(auth, this.state.email, this.state.password);
+      await sendPasswordResetEmail(auth, this.state.email);
+      Alert.alert('Password Reset Email Sent');
+
+      const { navigation } = this.props;
+      navigation.navigate('Login');
     } catch (error) {
       console.log(error.message);
       if (error.code === 'auth/wrong-password' || error.code === 'auth/invalid-email' || error.code === 'auth/user-not-found' || error.code === 'auth/missing-password') {
@@ -74,12 +72,9 @@ export default class Register extends Component {
         <Logo />
         <View style={containerStyles.textInputContainer}>
           <FormInputText keyboardType="email-address" label="Email" placeholder="john.smith@comany.com" value={this.state.email} onChangeText={(value) => this.handleChange('email', value)} />
-          <FormInputText label="Password" placeholder="password" value={this.state.password} onChangeText={(value) => this.handleChange('password', value)} secureTextEntry />
-          <Button title='Forgot Password?' onPress={this.handleForgotPasswordNavigation} />
         </View>
         <View style={containerStyles.buttonContainer}>
-          <FormButton title='Login' opacity={this.state.isSignInEnabled ? 1 : 0.5} onPress={this.state.isSignInEnabled ? this.onLogin : null} />
-          <FormButton title='New User? Sign Up Here!' color={'#F2F2F7'} textColor={'#000000'} onPress={this.handleRegistrationNavigation} />
+          <FormButton style title='Reset Password' opacity={this.state.isResetEnabled ? 1 : 0.5} onPress={this.state.isResetEnabled ? this.onResetPassword : null} />
         </View>
       </View>
     );
