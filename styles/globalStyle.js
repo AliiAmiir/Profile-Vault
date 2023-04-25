@@ -64,6 +64,14 @@ export const containerStyles = StyleSheet.create({
     paddingVertical: 15,
     paddingHorizontal: 15
   },
+  homeTextContainer: {
+    marginTop: 25,
+    paddingVertical: 15,
+    paddingHorizontal: 15,
+    shadowColor: '#F2F2F7',   
+    backgroundColor: '#FFFFFF', 
+    shadowOpacity: 0.5,
+  },
   buttonContainer: {
     paddingHorizontal: 20,
     paddingTop: 20,

@@ -12,7 +12,11 @@ export const NavigatorTab = (loginDetails) => {
     return (
         <NavigationContainer>
             {isSignedIn ? (
-                <Tab.Navigator initialRouteName="Home">
+                <Tab.Navigator initialRouteName="Home" screenOptions={{
+                    tabBarIcon: () => null,
+                    tabBarLabelStyle: { textAlign: 'center', marginBottom: 10, fontSize: 18, }, tabBarItemStyle: { justifyContent: 'center', },
+                    headerStyle: { backgroundColor: '#6374D1' }, headerTintColor: '#FFFFFF', headerTitleStyle: { fontSize: 18, fontWeight: 'bold', },
+                }}>
                     <Tab.Screen name="Home" component={Home} />
                     <Tab.Screen name="Manage" component={ManageScreenStack} />
                     <Tab.Screen name="Settings" component={Settings} />
