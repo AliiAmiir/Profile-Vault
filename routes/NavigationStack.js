@@ -12,15 +12,21 @@ import PersonalGoal from '../screens/PersonalGoal';
 import Relatives from '../screens/Relatives';
 import Trips from '../screens/Trips';
 import Manage from '../screens/Manage';
+import ForgotPassword from '../screens/ForgotPassword';
 
 const AuthStack = createStackNavigator();
 const ManageStack = createStackNavigator();
 
 export const AuthScreenStack = () => {
     return (
-        <AuthStack.Navigator>
+        <AuthStack.Navigator screenOptions={{
+            tabBarIcon: () => null,
+            tabBarLabelStyle: { textAlign: 'center', marginBottom: 10, fontSize: 18, }, tabBarItemStyle: { justifyContent: 'center', },
+            headerStyle: { backgroundColor: '#6374D1' }, headerTintColor: '#FFFFFF', headerTitleStyle: { fontSize: 18, fontWeight: 'bold', },
+        }}>
             <AuthStack.Screen name="Login" component={Login} />
             <AuthStack.Screen name="Register" component={Register} />
+            <AuthStack.Screen name="ForgotPassword" component={ForgotPassword} />
         </AuthStack.Navigator>
     )
 };

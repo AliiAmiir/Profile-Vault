@@ -59,7 +59,7 @@ export const JobDisplayForm = function ({ company, title, dateFrom, dateTo }) {
     return (
         <View style={containerStyles.textInputContainer}>
             <Text style={textStyles.textSubHeading}>{company}</Text>
-            <Text style={textStyles.boldText}>Degree: <Text style={textStyles.subText}>{title}</Text></Text>
+            <Text style={textStyles.boldText}>Title: <Text style={textStyles.subText}>{title}</Text></Text>
             <Text style={textStyles.boldText}>Start date: <Text style={textStyles.subText}>{dateFrom.toLocaleDateString()}</Text></Text>
             <Text style={textStyles.boldText}>End date: <Text style={textStyles.subText}>{dateTo.toLocaleDateString()}</Text></Text>
         </View>
