@@ -57,7 +57,7 @@ JobForm.defaultProps = {
 
 export const JobDisplayForm = function ({ company, title, dateFrom, dateTo }) {
     return (
-        <View style={containerStyles.textInputContainer}>
+        <View style={containerStyles.shadowTextContainer}>
             <Text style={textStyles.textSubHeading}>{company}</Text>
             <Text style={textStyles.boldText}>Title: <Text style={textStyles.subText}>{title}</Text></Text>
             <Text style={textStyles.boldText}>Start date: <Text style={textStyles.subText}>{dateFrom.toLocaleDateString()}</Text></Text>

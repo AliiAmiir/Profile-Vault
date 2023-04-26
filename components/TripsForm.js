@@ -112,7 +112,7 @@ export const TripsDisplayForm = function ({ city, state, country, tripCost, date
     const totalCost = `$${tripCost}`;
 
     return (
-        <View style={containerStyles.textInputContainer}>
+        <View style={containerStyles.shadowTextContainer}>
             <Text style={textStyles.textSubHeading}>{location}</Text>
             <Text style={textStyles.boldText}>{tripDuration}</Text>
             <Text style={textStyles.boldText}>Hotel: <Text style={textStyles.subText}>{hotelDetails}</Text></Text>

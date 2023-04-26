@@ -49,7 +49,7 @@ RelativesForm.defaultProps = {
 
 export const RelativesDisplayForm = function ({ name, relation, dateOfBirth }) {
     return (
-        <View style={containerStyles.textInputContainer}>
+        <View style={containerStyles.shadowTextContainer}>
             <Text style={textStyles.textSubHeading}>{name}</Text>
             <Text style={textStyles.boldText}>Relation: <Text style={textStyles.subText}>{relation}</Text></Text>
             <Text style={textStyles.boldText}>Birthday: <Text style={textStyles.subText}>{dateOfBirth.toLocaleDateString()}</Text></Text>

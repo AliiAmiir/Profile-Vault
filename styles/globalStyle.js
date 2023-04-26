@@ -64,7 +64,7 @@ export const containerStyles = StyleSheet.create({
     paddingVertical: 15,
     paddingHorizontal: 15
   },
-  homeTextContainer: {
+  shadowTextContainer: {
     marginTop: 25,
     paddingVertical: 15,
     paddingHorizontal: 15,

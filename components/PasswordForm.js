@@ -47,7 +47,7 @@ PasswordForm.defaultProps = {
 
 export const PasswordDisplayForm = function ({ website, email, password, showPassword, onPressShowPassword }) {
     return (
-        <View style={containerStyles.textInputContainer}>
+        <View style={containerStyles.shadowTextContainer}>
             <View style={containerStyles.rowContainerSpaceBetween}>
                 <View style={[containerStyles.rowPasswordButtonContainer]}>
                     <Text style={textStyles.textSubHeading}>{website}</Text>

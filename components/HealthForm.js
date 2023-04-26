@@ -77,7 +77,7 @@ HealthForm.defaultProps = {
 
 export const HealthDisplayForm = function ({ checkUpType, diagnosis, doctor, checkUpDate, medicines }) {
     return (
-        <View style={containerStyles.textInputContainer}>
+        <View style={containerStyles.shadowTextContainer}>
             <View style={containerStyles.textInputContainer}>
                 <Text style={textStyles.textSubHeading}>{checkUpType}</Text>
                 <Text style={textStyles.boldText}>{checkUpDate.toLocaleDateString()}</Text>

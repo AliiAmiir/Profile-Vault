@@ -57,7 +57,7 @@ EducationForm.defaultProps = {
 
 export const EducationDisplayForm = function ({ institute, degree, dateFrom, dateTo }) {
     return (
-        <View style={containerStyles.textInputContainer}>
+        <View style={containerStyles.shadowTextContainer}>
             <Text style={textStyles.textSubHeading}>{institute}</Text>
             <Text style={textStyles.boldText}>Degree: <Text style={textStyles.subText}>{degree}</Text></Text>
             <Text style={textStyles.boldText}>Enrollment date: <Text style={textStyles.subText}>{dateFrom.toLocaleDateString()}</Text></Text>

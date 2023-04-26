@@ -192,7 +192,7 @@ class Home extends Component {
               </View>
             </View>
 
-            {this.state.goals && this.state.goals.length > 0 && (<View style={containerStyles.homeTextContainer}>
+            {this.state.goals && this.state.goals.length > 0 && (<View style={containerStyles.shadowTextContainer}>
               <Text style={textStyles.textSubHeading}>Goals</Text>
               {this.state.goals.map((goal, index) => (
                 <Text style={textStyles.boldText} key={index}>{goal.name}: <Text style={textStyles.subText}>{`${goal.counter} day(s) streak`}</Text></Text>
@@ -201,13 +201,13 @@ class Home extends Component {
             </View>
             )}
 
-            {(!this.state.goals || this.state.goals.length < 1) && (<View style={containerStyles.homeTextContainer}>
+            {(!this.state.goals || this.state.goals.length < 1) && (<View style={containerStyles.shadowTextContainer}>
               <Text style={textStyles.textSubHeading}>Goals</Text>
               <Text>No Goal(s) to display yet</Text>
             </View>
             )}
 
-            {this.state.upcomingTrips && this.state.upcomingTrips.length > 0 && (<View style={containerStyles.homeTextContainer}>
+            {this.state.upcomingTrips && this.state.upcomingTrips.length > 0 && (<View style={containerStyles.shadowTextContainer}>
               <Text style={textStyles.textSubHeading}>Trips</Text>
               {this.state.upcomingTrips.map((trip, index) => (
                 <View key={index}>
@@ -220,13 +220,13 @@ class Home extends Component {
             </View>
             )}
 
-            {(!this.state.upcomingTrips || this.state.upcomingTrips.length < 1) && (<View style={containerStyles.homeTextContainer}>
+            {(!this.state.upcomingTrips || this.state.upcomingTrips.length < 1) && (<View style={containerStyles.shadowTextContainer}>
               <Text style={textStyles.textSubHeading}>Trips</Text>
               <Text>No Trip(s) to display yet</Text>
             </View>
             )}
 
-            {this.state.favors && this.state.favors.length > 0 && (<View style={containerStyles.homeTextContainer}>
+            {this.state.favors && this.state.favors.length > 0 && (<View style={containerStyles.shadowTextContainer}>
               <Text style={textStyles.textSubHeading}>Favors</Text>
               {this.state.favors.map((favor, index) => (
                 <View key={index}>
@@ -243,14 +243,14 @@ class Home extends Component {
             </View>
             )}
 
-            {(!this.state.favors || this.state.favors.length < 1) && (<View style={containerStyles.homeTextContainer}>
+            {(!this.state.favors || this.state.favors.length < 1) && (<View style={containerStyles.shadowTextContainer}>
               <Text style={textStyles.textSubHeading}>Favors</Text>
               <Text>No Favor(s) to display yet</Text>
             </View>
             )}
 
 
-            {this.state.preferences && this.state.preferences.length > 0 && (<View style={containerStyles.homeTextContainer}>
+            {this.state.preferences && this.state.preferences.length > 0 && (<View style={containerStyles.shadowTextContainer}>
               <Text style={textStyles.textSubHeading}>Preferences</Text>
               {this.state.preferences.map((preference, index) => (
                 <Text style={textStyles.boldText} key={index}>{`${preference.type} - ${preference.names}`}</Text>
@@ -259,7 +259,7 @@ class Home extends Component {
             </View>
             )}
 
-            {(!this.state.preferences || this.state.preferences.length < 1) && (<View style={containerStyles.homeTextContainer}>
+            {(!this.state.preferences || this.state.preferences.length < 1) && (<View style={containerStyles.shadowTextContainer}>
               <Text style={textStyles.textSubHeading}>Preferences</Text>
               <Text>No Preference(s) to display yet</Text>
             </View>
