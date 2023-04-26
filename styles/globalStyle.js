@@ -98,7 +98,9 @@ export const containerStyles = StyleSheet.create({
     flex: 1,
     flexDirection: 'column',
     padding: 10,
-  }
+  },
+  manageIconContainer: {
+  },
 });
 
 export const logoStyles = StyleSheet.create({
@@ -156,6 +158,15 @@ export const formButtonStyles = StyleSheet.create({
     paddingHorizontal: 5,
     justifyContent: 'center',
     alignContent: 'center',
+  },
+  manageButton: {
+    backgroundColor: '#6374D1',
+    paddingVertical: 15,
+    borderRadius: 5,
+    marginVertical: 15,
+    borderColor: '#2089DC', 
+    borderWidth: 1,
+    backgroundColor: 'transparent'
   },
 });
 

@@ -8,7 +8,7 @@ import { manageScreenButtons } from '../utils/buttonComponentsUtil';
 import { containerStyles } from '../styles/globalStyle';
 
 // Import Components
-import FormButton from '../components/FormButton';
+import CustomManageButton from '../components/CustomManageButton';
 
 export default class Manage extends Component {
   constructor(props) {
@@ -35,8 +35,10 @@ export default class Manage extends Component {
   render() {
     return (
       <View style={containerStyles.defaultContainer}>
-        <FlatList data={manageScreenButtons} keyExtractor={(item) => item.componentName} renderItem={({item}) => (
-          <FormButton title={item.name} onPress={() => this.handleNavigation(item.componentName)} />
+        <FlatList data={manageScreenButtons} keyExtractor={(item) => item.componentName} renderItem={({ item }) => (
+          <View>
+            <CustomManageButton title={item.name} iconName={item.icon} onPress={() => this.handleNavigation(item.componentName)} />
+          </View>
         )} style={containerStyles.buttonContainer}>
         </FlatList>
       </View>
