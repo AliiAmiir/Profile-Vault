@@ -50,7 +50,7 @@ export const fetchUserPasswords = async (userId) => {
         let passwords = [];
 
         querySnapshot.forEach((doc) => {
-            passwords.push({ key: doc.id, ...doc.data() });
+            passwords.push({ key: doc.id, ...doc.data(), showPassword: false });
         });
 
         return { success: true, message: 'Fetched Passwords', data: passwords };

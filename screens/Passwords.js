@@ -27,12 +27,15 @@ export default class Passwords extends Component {
       savedPasswords: [],
       showPasswordInputForm: false,
       showEditPasswordForm: false,
-      showPassword: false,
     }
   }
 
-  handleShowPassword = () => {
-    this.setState({ showPassword: !this.state.showPassword });
+  handleShowPasswordByKey = (key) => {
+    let index = this.state.savedPasswords.findIndex(x => x.key === key);
+    let savedPasswords = this.state.savedPasswords;
+
+    savedPasswords[index].showPassword = !savedPasswords[index].showPassword;
+    this.setState({ savedPasswords: savedPasswords });
   };
 
   handleShowPasswordInputForm = () => {
@@ -152,14 +155,15 @@ export default class Passwords extends Component {
 
           {!this.state.showEditPasswordForm && !this.state.showPasswordInputForm && (<FormButton title='Edit Passwords' color={'#F2F2F7'} textColor={'#000000'} onPress={this.handleShowEditPasswordForm} />)}
 
-          {!this.state.showEditPasswordForm && (
+          {!this.state.showEditPasswordForm && !this.state.showPasswordInputForm && (
             <FlatList data={this.state.savedPasswords} renderItem={({ item }) => (
               <PasswordDisplayForm
+                itemKey={item.key}
                 website={item.website}
                 email={item.email}
                 password={item.password}
-                showPassword={this.state.showPassword}
-                onPressShowPassword={this.handleShowPassword}
+                showPassword={item.showPassword}
+                onPressShowPassword={this.handleShowPasswordByKey}
               />
             )}
               keyExtractor={item => item.key}

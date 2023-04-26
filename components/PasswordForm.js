@@ -45,7 +45,7 @@ PasswordForm.defaultProps = {
     errors: null,
 };
 
-export const PasswordDisplayForm = function ({ website, email, password, showPassword, onPressShowPassword }) {
+export const PasswordDisplayForm = function ({ itemKey, website, email, password, showPassword, onPressShowPassword }) {
     return (
         <View style={containerStyles.shadowTextContainer}>
             <View style={containerStyles.rowContainerSpaceBetween}>
@@ -57,8 +57,8 @@ export const PasswordDisplayForm = function ({ website, email, password, showPas
                 </View>
 
                 <View style={containerStyles.rowPasswordButtonContainer}>
-                    {!showPassword && (<Button onPress={onPressShowPassword} type='clear' icon={<Icon name="eye" size={20} color="black" />} />)}
-                    {showPassword && (<Button onPress={onPressShowPassword} type='clear' icon={<Icon name="eye-slash" size={20} color="black" />} />)}
+                    {!showPassword && (<Button onPress={() => onPressShowPassword(itemKey)} type='clear' icon={<Icon name="eye" size={20} color="black" />} />)}
+                    {showPassword && (<Button onPress={() => onPressShowPassword(itemKey)} type='clear' icon={<Icon name="eye-slash" size={20} color="black" />} />)}
                 </View>
             </View>
         </View>
@@ -66,6 +66,7 @@ export const PasswordDisplayForm = function ({ website, email, password, showPas
 }
 
 PasswordDisplayForm.propTypes = {
+    itemKey: PropTypes.string.isRequired,
     website: PropTypes.string,
     email: PropTypes.string,
     password: PropTypes.string,
