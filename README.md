@@ -115,8 +115,5 @@ More flexible data export formats
 Improved mobile UI/UX
 Automated testing
 Production deployment
-License
-
-This project was originally developed as a collaborative project. Please refer to the repository history and any included licensing information for attribution and usage requirements.
 
 Profile Vault — A centralized mobile solution for managing personal information.
