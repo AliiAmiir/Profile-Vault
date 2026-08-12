@@ -1,48 +1,67 @@
-Profile Vault
+**Profile Vault**
 
 A mobile application designed to provide users with a centralized platform for managing and organizing personal information.
 
-Overview
+**Overview**
 
 Profile Vault is a React Native mobile application originally developed as a collaborative software engineering project. The application provides a structured interface for managing user information, with authentication, data management, and export functionality.
 
 The project was built with a focus on creating a practical, user-friendly mobile experience while integrating frontend components with cloud-based backend services.
 
-Features
+**Features**
+
 🔐 User Authentication — Secure user authentication and account management using Firebase
+
 👤 Profile Management — Create and manage personal information through a dedicated interface
+
 📋 Data Management — View and organize stored profile information
+
 💾 Data Export — Export and save user information in a structured format
+
 📱 Cross-Platform Mobile App — Built with React Native for mobile deployment
+
 🎨 Custom UI Components — Reusable components and styling for a consistent application experience
-Tech Stack
-Frontend
-React Native
-JavaScript
-React Native Components
-Backend & Services
-Firebase
-Firebase Authentication
-Development Tools
-Node.js
-npm
-Git & GitHub
+
+**Tech Stack**
+
+Frontend - React Native, JavaScript, React Native Components
+
+Backend & Services - Firebase, Firebase Authentication
+
+Development Tools - Node.js, npm, Git & GitHub
+
 Project Structure
+
 Profile-Vault/
+
 ├── assets/          # Application assets
+
 ├── components/      # Reusable UI components
+
 ├── config/          # Application configuration
+
 ├── repository/      # Data/repository layer
+
 ├── routes/          # Application navigation and routes
+
 ├── screens/         # Application screens
+
 ├── styles/          # Shared styling
+
 ├── utils/            # Utility functions
+
 ├── App.js            # Application entry point
+
 ├── app.json          # Application configuration
+
 ├── babel.config.js  # Babel configuration
+
 ├── metro.config.js  # Metro configuration
+
 └── package.json     # Dependencies and scripts
+
 Getting Started
+
 Prerequisites
 
 Make sure you have the following installed:
